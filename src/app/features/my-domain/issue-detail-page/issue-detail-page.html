@@ -1,0 +1,47 @@
+<app-breadcrumbs [items]="crumbs()" />
+
+@if (issue(); as i) {
+  <header class="page-head">
+    <div>
+      <p class="mono-font muted">{{ i.id }}</p>
+      <h1 class="wrap">{{ i.title }}</h1>
+    </div>
+    <span class="row"><app-badge [label]="i.status" tone="info" icon="flag" /><app-origin-tag kind="synthetic" /></span>
+  </header>
+
+  <div class="callout warning" role="note">
+    <app-icon name="beaker" [size]="16" />
+    <div>This is a mock issue created for the workshop. No real ticket exists.</div>
+  </div>
+
+  <section class="card" aria-labelledby="i-h">
+    <h2 id="i-h" class="sr-only">Issue details</h2>
+    <dl class="kv-grid">
+      <div class="kv"><dt>Status</dt><dd>{{ i.status }}</dd></div>
+      <div class="kv"><dt>Raised by</dt><dd>{{ i.raisedBy }}</dd></div>
+      <div class="kv"><dt>Assigned to</dt><dd>{{ i.assignee }}</dd></div>
+      <div class="kv"><dt>Created</dt><dd>{{ created() }}</dd></div>
+      @if (rule(); as r) {
+        <div class="kv"><dt>Failed rule</dt><dd><a class="mono-font" [routerLink]="['/my-domain', 'products', r.productId, 'rules', r.rule.id]">{{ r.rule.id }}</a></dd></div>
+        <div class="kv"><dt>Data product</dt><dd><a [routerLink]="['/my-domain', 'products', r.productId]">{{ r.productName }}</a></dd></div>
+      }
+    </dl>
+    <p class="summary">{{ i.summary }}</p>
+  </section>
+
+  <section class="card" aria-labelledby="i-next">
+    <h2 id="i-next">Next step</h2>
+    <p class="muted">Correcting the data is handled by Data Remediation ({{ ticket }}).</p>
+    <p class="row">
+      <button type="button" class="btn" disabled><app-icon name="play" [size]="14" />Open in Data Remediation</button>
+      <app-badge label="Future capability" tone="neutral" icon="clock" />
+    </p>
+    @if (rule(); as r) {
+      <p><a class="btn small" [routerLink]="['/my-domain', 'products', r.productId, 'rules', r.rule.id]"><app-icon name="arrow-right" [size]="14" />Back to the failed rule</a></p>
+    }
+  </section>
+} @else {
+  <app-state-panel kind="not-found" title="Issue not found" message="This issue does not exist in the demo data, or the link is wrong.">
+    <a class="btn primary" routerLink="/my-domain/home">Back to My Domain</a>
+  </app-state-panel>
+}

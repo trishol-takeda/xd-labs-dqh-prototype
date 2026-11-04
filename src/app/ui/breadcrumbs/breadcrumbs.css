@@ -1,0 +1,4 @@
+.crumbs { display: flex; flex-wrap: wrap; gap: 4px 6px; font-size: var(--typography-label-md-size); color: var(--muted); }
+.crumbs li { display: inline-flex; align-items: center; gap: 6px; }
+.crumbs a { color: var(--color-text-secondary); }
+[aria-current='page'] { color: var(--ink); font-weight: var(--prim-typography-weight-semibold); }

@@ -1,0 +1,35 @@
+<app-breadcrumbs [items]="crumbs()" />
+
+@if (view(); as v) {
+  <header class="page-head">
+    <div>
+      <h1>{{ v.name }}</h1>
+      <p class="muted">{{ v.ruleCount }} {{ v.ruleCount === 1 ? 'rule' : 'rules' }} in {{ product()?.name }}</p>
+    </div>
+    <app-origin-tag kind="repository" />
+  </header>
+
+  <ul class="plain tile-grid">
+    <li class="tile"><span class="label">Rules</span><span class="big">{{ v.ruleCount }}</span><span class="muted small">{{ v.activeCount }} active · {{ v.ruleCount - v.activeCount }} inactive</span></li>
+    <li class="tile"><span class="label">Failing rules <app-origin-tag kind="synthetic" [short]="true" /></span><span class="big" [class.tone-danger]="v.failingCount">{{ v.failingCount }}</span><span class="muted small">Latest demo run</span></li>
+    <li class="tile"><span class="label">Score <app-origin-tag kind="synthetic" [short]="true" /></span><span [class]="'big ' + tone()">{{ v.score === null ? '—' : v.score.toFixed(1) + '%' }}</span><span class="muted small">Record-weighted, active rules only</span></li>
+    <li class="tile">
+      <span class="label">Related tables</span>
+      @for (t of v.tableIds; track t) {
+        <a class="mono-font wrap" [routerLink]="['/my-domain', 'products', productId(), 'tables', t]">{{ t }}</a>
+      }
+    </li>
+  </ul>
+
+  <section class="card" aria-labelledby="dr-h">
+    <div class="card-head">
+      <h2 id="dr-h">{{ v.name }} rules</h2>
+      <app-origin-tag kind="synthetic" />
+    </div>
+    <app-rules-table [rows]="rows()" [defaultColumns]="ruleColumns" />
+  </section>
+} @else {
+  <app-state-panel kind="not-found" title="Dimension not found" message="This product has no rules in that dimension.">
+    <a class="btn primary" [routerLink]="['/my-domain', 'products', productId(), 'dimensions']">Back to dimensions</a>
+  </app-state-panel>
+}

@@ -1,0 +1,86 @@
+@if (product(); as p) {
+  @if (staleTables().length) {
+    <div class="callout warning" role="status">
+      <app-icon name="clock" [size]="16" />
+      <div>
+        <strong>Stale data.</strong> {{ staleTables().length === 1 ? 'One table has' : staleTables().length + ' tables have' }} not refreshed for more than {{ staleAfter }} days:
+        @for (t of staleTables(); track t.table.id; let last = $last) {<span class="mono-font">{{ t.table.name }}</span>{{ last ? '.' : ', ' }}}
+        Scores may not reflect the current data.
+      </div>
+    </div>
+  }
+
+  <div class="grid-2">
+    <section class="card" aria-labelledby="o-score">
+      <div class="card-head">
+        <h2 id="o-score">Data quality score</h2>
+        <app-origin-tag kind="synthetic" />
+      </div>
+      @if (score() !== null) {
+        <p [class]="'big ' + tone()">{{ score()!.toFixed(1) }}%</p>
+        <p [class]="tone()">{{ deltaText() }}</p>
+        <p class="hint"><app-icon name="info" [size]="14" />{{ store.demo()?.scoreMethod }} Not a production score.</p>
+      } @else {
+        <p class="big tone-neutral">—</p>
+        <p class="muted">No score: this product has no rules in the repository.</p>
+      }
+    </section>
+
+    <section class="card" aria-labelledby="o-about">
+      <div class="card-head">
+        <h2 id="o-about">About this data product</h2>
+        <app-origin-tag kind="provisional" />
+      </div>
+      <dl class="kv-grid">
+        <div class="kv"><dt>Domain</dt><dd>{{ domainName() }}</dd></div>
+        <div class="kv"><dt>Sub-domain</dt><dd>{{ subdomainName() }}</dd></div>
+        <div class="kv"><dt>Data trustee</dt><dd>{{ p.trustee ?? 'Not assigned' }}</dd></div>
+        <div class="kv"><dt>Data owner</dt><dd>{{ p.owner ?? 'Not assigned' }}</dd></div>
+        <div class="kv"><dt>Data steward</dt><dd>{{ p.steward ?? 'Not assigned' }}</dd></div>
+        <div class="kv"><dt>Classification</dt><dd>{{ p.classification ?? 'Not provided' }}</dd></div>
+        <div class="kv">
+          <dt>Last refresh</dt>
+          <dd>
+            {{ refreshed() ?? 'Not available' }}
+            @if (refreshStale()) { <app-badge label="Stale" tone="warning" icon="clock" /> }
+          </dd>
+        </div>
+      </dl>
+      <p class="hint"><app-icon name="info" [size]="14" />Owner, steward, classification and last refresh are demo values. Trustee roles are demo roles for the workshop user.</p>
+    </section>
+  </div>
+
+  <section aria-label="Summary">
+    <ul class="plain tile-grid">
+      <li><a class="tile link-tile" [routerLink]="['/my-domain', 'products', p.id, 'tables']"><span class="label">Tables</span><span class="big">{{ tables().length }}</span><span class="muted small">{{ tables().length ? 'View tables' : 'None in the repository' }}</span></a></li>
+      <li><a class="tile link-tile" [routerLink]="['/my-domain', 'products', p.id, 'dimensions']"><span class="label">Dimensions</span><span class="big">{{ dimensions().length }}</span><span class="muted small">{{ dimensions().length ? 'View dimensions' : 'None in the repository' }}</span></a></li>
+      <li><a class="tile link-tile" [routerLink]="['/my-domain', 'products', p.id, 'rules']"><span class="label">Rules</span><span class="big">{{ rows().length }}</span><span class="muted small">{{ activeCount() }} active · {{ rows().length - activeCount() }} inactive</span></a></li>
+      <li><a class="tile link-tile" [routerLink]="['/my-domain', 'products', p.id, 'rules']" [queryParams]="failingQuery"><span class="label">Failing rules <app-origin-tag kind="synthetic" [short]="true" /></span><span class="big" [class.tone-danger]="failing().length">{{ failing().length }}</span><span class="muted small">Failed on the latest demo run</span></a></li>
+    </ul>
+  </section>
+
+  @if (mapping(); as m) {
+    <div class="callout neutral">
+      <app-icon name="info" [size]="16" />
+      <div><strong>Table mapping is {{ m.status }}.</strong> {{ m.evidence }}</div>
+    </div>
+  }
+
+  @if (preview().length) {
+    <section class="card" aria-labelledby="o-fail">
+      <div class="card-head">
+        <h2 id="o-fail">Failing rules to look at first</h2>
+        <a [routerLink]="['/my-domain', 'products', p.id, 'rules']" [queryParams]="failingQuery">See all {{ failing().length }} failing rules</a>
+      </div>
+      <ul class="plain fail-list">
+        @for (r of preview(); track r.rule.id) {
+          <li>
+            <a [routerLink]="['/my-domain', 'products', p.id, 'rules', r.rule.id]"><span class="mono-font">{{ r.rule.id }}</span></a>
+            <span class="wrap">{{ r.displayName }}</span>
+            <span class="muted small">{{ r.rule.dimension }} · {{ r.result.failed.toLocaleString('en-GB') }} failed records</span>
+          </li>
+        }
+      </ul>
+    </section>
+  }
+}

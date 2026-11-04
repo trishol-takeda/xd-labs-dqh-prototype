@@ -1,0 +1,75 @@
+<header class="page-head">
+  <div>
+    <h1>Welcome {{ store.userName() }}!</h1>
+    <p class="muted">Your ownership. Your quality. Your next actions.</p>
+  </div>
+  <p class="small muted updated">Updated {{ updated() }} <app-origin-tag kind="synthetic" [short]="true" /></p>
+</header>
+
+<section class="card scope" aria-label="Data products in scope">
+  <div class="row scope-row">
+    <strong id="scope-label">Select data products:</strong>
+    <ul class="plain row chips" aria-labelledby="scope-label">
+      @for (p of scopeProducts(); track p.id) {
+        <li><button type="button" class="scope-chip" [attr.aria-pressed]="isOn(p.id)" (click)="toggle(p.id)">{{ p.name }}</button></li>
+      }
+    </ul>
+    <span class="row actions">
+      <a class="btn small" routerLink="/my-domain/products"><app-icon name="layers" [size]="14" />Browse data products</a>
+      <a class="btn small" routerLink="/my-domain/setup"><app-icon name="pencil" [size]="14" />Edit Scope</a>
+    </span>
+  </div>
+</section>
+
+@if (active().length === 0) {
+  <section class="card">
+    <app-state-panel kind="empty" title="No data products selected" message="Switch at least one data product on above, or use Edit Scope to choose different ones." [compact]="true" />
+  </section>
+} @else {
+  @if (withoutData().length) {
+    <div class="callout warning" role="status">
+      <app-icon name="info" [size]="16" />
+      <div>
+        <strong>Partial data.</strong> No rule repository metadata yet for
+        @for (p of withoutData(); track p.id; let last = $last) {<a [routerLink]="['/my-domain', 'products', p.id]">{{ p.name }}</a>{{ last ? '.' : ', ' }}}
+        Their scores and rules are left out below.
+      </div>
+    </div>
+  }
+
+  <section class="card" aria-labelledby="h-score">
+    <div class="card-head">
+      <h2 id="h-score">My data quality score</h2>
+      <app-origin-tag kind="synthetic" />
+    </div>
+    <div class="tile-grid">
+      <div class="tile">
+        <span class="label">Domain score · {{ store.scopeDomain()?.name }}</span>
+        <span class="big" [class]="'big ' + domainTile().tone">{{ score(domainTile().score) }}</span>
+        <span [class]="domainTile().tone">{{ deltaText(domainTile().delta, 'Improved since last visit') }}</span>
+      </div>
+      <div class="tile">
+        <span class="label">Lowest data product score</span>
+        @if (lowest(); as low) {
+          <span class="big" [class]="'big ' + low.tile.tone">{{ score(low.tile.score) }}</span>
+          <a [class]="low.tile.tone" [routerLink]="['/my-domain', 'products', low.product.id]">{{ low.product.name }}</a>
+          <span [class]="low.tile.tone">{{ deltaText(low.tile.delta, 'since last visit') }}</span>
+        } @else {
+          <span class="big tone-neutral">—</span>
+          <span class="muted">No scored data product in scope</span>
+        }
+      </div>
+    </div>
+    <p class="hint"><app-icon name="info" [size]="14" />Demo scores: {{ store.demo()?.scoreMethod }} They are not production scores.</p>
+  </section>
+
+  <section class="card flush-x" aria-labelledby="h-rules">
+    <div class="card-pad">
+      <h2 id="h-rules">Rules under data products</h2>
+      <p class="muted small">Rules come from the rule repository. Score, checks and fail are synthetic demo results.</p>
+    </div>
+    <div class="card-pad">
+      <app-rules-table [rows]="rows()" [defaultColumns]="columns" [defaultFailingOnly]="true" />
+    </div>
+  </section>
+}

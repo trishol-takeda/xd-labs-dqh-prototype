@@ -1,0 +1,66 @@
+<app-breadcrumbs [items]="crumbs()" />
+
+@if (view(); as v) {
+  <header class="page-head">
+    <div>
+      <h1 class="mono-font wrap">{{ v.table.name }}</h1>
+      <p class="muted wrap">{{ v.table.qualifiedName }}</p>
+    </div>
+    <app-origin-tag kind="repository" />
+  </header>
+
+  @if (v.stale) {
+    <div class="callout warning" role="status"><app-icon name="clock" [size]="16" /><div><strong>Stale data.</strong> This table was last refreshed on {{ refreshed() }}. Scores may not reflect the current data.</div></div>
+  }
+
+  <ul class="plain tile-grid">
+    <li class="tile"><span class="label">Rules</span><span class="big">{{ v.table.ruleCount }}</span><span class="muted small">{{ v.table.activeRuleCount }} active</span></li>
+    <li class="tile"><span class="label">Columns with rules</span><span class="big">{{ v.table.columns.length }}</span><span class="muted small">Source: {{ v.table.sourceSystems.join(', ') }}</span></li>
+    <li class="tile"><span class="label">Rows <app-origin-tag kind="synthetic" [short]="true" /></span><span class="big">{{ v.demo ? full(v.demo.rowCount) : '—' }}</span><span class="muted small">Refreshed {{ refreshed() }}</span></li>
+    <li class="tile"><span class="label">Score <app-origin-tag kind="synthetic" [short]="true" /></span><span [class]="'big ' + tone()">{{ scoreText() }}</span><span class="muted small">{{ v.failingRules }} failing rules</span></li>
+  </ul>
+
+  <section class="card" aria-labelledby="c-h">
+    <div class="card-head">
+      <div>
+        <h2 id="c-h">Columns</h2>
+        <p class="muted small">Only columns that have at least one rule are listed; the repository holds no other column metadata. Choose a column to filter the rules below.</p>
+      </div>
+    </div>
+    <div class="table-wrap readable" tabindex="0" role="region" aria-label="Columns, scrolls sideways">
+      <table>
+        <caption class="sr-only">Columns of {{ v.table.name }} that have rules</caption>
+        <thead>
+          <tr>
+            <th scope="col">Column</th>
+            <th scope="col" class="num">Rules</th>
+            <th scope="col" class="num">Failing <app-origin-tag kind="synthetic" [short]="true" /></th>
+            <th scope="col">Dimensions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (c of columns(); track c.name) {
+            <tr>
+              <td class="mono-font wrap"><a [routerLink]="[]" [queryParams]="{ col: c.name, fail: '0' }" queryParamsHandling="merge" fragment="rules">{{ c.name }}</a></td>
+              <td class="num">{{ c.ruleCount }}</td>
+              <td class="num" [class.tone-danger]="c.failingCount">{{ c.failingCount }}</td>
+              <td>{{ c.dimensions.join(', ') }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card" id="rules" aria-labelledby="tr-h">
+    <div class="card-head">
+      <h2 id="tr-h">Rules on this table</h2>
+      <app-origin-tag kind="synthetic" />
+    </div>
+    <app-rules-table [rows]="rows()" [defaultColumns]="ruleColumns" />
+  </section>
+} @else {
+  <app-state-panel kind="not-found" title="Table not found" message="This table is not part of the data product, or the link is wrong.">
+    <a class="btn primary" [routerLink]="['/my-domain', 'products', productId(), 'tables']">Back to tables</a>
+  </app-state-panel>
+}

@@ -1,0 +1,18 @@
+@if (kind() === 'loading') {
+  <div class="panel loading" role="status" aria-live="polite" aria-busy="true">
+    <span class="sr-only">Loading…</span>
+    <app-skeleton size="lg" width="40%" />
+    <app-skeleton size="md" />
+    <app-skeleton size="md" width="85%" />
+    <app-skeleton size="md" width="70%" />
+  </div>
+} @else {
+  <div class="panel" [class.compact]="compact()" [attr.role]="live()">
+    <span class="glyph" [class.danger]="kind() === 'error'"><app-icon [name]="icon()" [size]="compact() ? 20 : 28" /></span>
+    <h2>{{ title() }}</h2>
+    @if (message()) {
+      <p>{{ message() }}</p>
+    }
+    <div class="actions"><ng-content /></div>
+  </div>
+}

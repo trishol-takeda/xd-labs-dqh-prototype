@@ -1,0 +1,173 @@
+<div class="head">
+  <p class="summary" role="status" aria-live="polite">{{ summary() }} · {{ sortNote() }}</p>
+</div>
+
+<div class="toolbar">
+  <div class="search">
+    <app-icon name="search" [size]="16" />
+    <label class="sr-only" for="rt-search">Search rules</label>
+    <input id="rt-search" type="search" placeholder="Search rules, columns or data products" [value]="query().search" (input)="setText('q', $any($event.target).value)" />
+  </div>
+
+  <div class="filters">
+    <label class="sr-only" for="rt-dim">Dimension</label>
+    <select id="rt-dim" [value]="query().dimension" (change)="setText('dim', $any($event.target).value)">
+      <option value="">All dimensions</option>
+      @for (d of dimensions(); track d) {
+        <option [value]="d" [selected]="d === query().dimension">{{ d }}</option>
+      }
+    </select>
+    @if (tables().length > 1) {
+      <label class="sr-only" for="rt-tbl">Table</label>
+      <select id="rt-tbl" [value]="query().table" (change)="setText('tbl', $any($event.target).value)">
+        <option value="">All tables</option>
+        @for (t of tables(); track t) {
+          <option [value]="t" [selected]="t === query().table">{{ t }}</option>
+        }
+      </select>
+    }
+    <label class="sr-only" for="rt-st">Latest run</label>
+    <select id="rt-st" [value]="query().status" (change)="setText('st', $any($event.target).value)">
+      <option value="">Any last run</option>
+      @for (s of statuses; track s) {
+        <option [value]="s" [selected]="s === query().status">{{ statusInfo[s].label }}</option>
+      }
+    </select>
+    <label class="sr-only" for="rt-act">Active status</label>
+    <select id="rt-act" [value]="query().active" (change)="setText('act', $any($event.target).value)">
+      <option value="">Active and inactive</option>
+      <option value="yes" [selected]="query().active === 'yes'">Active only</option>
+      <option value="no" [selected]="query().active === 'no'">Inactive only</option>
+    </select>
+    <button type="button" class="chip" [attr.aria-pressed]="query().failingOnly" (click)="setFailingOnly(!query().failingOnly)">
+      <app-icon name="alert" [size]="13" />Failing only
+    </button>
+    @if (filtersActive()) {
+      <button type="button" class="btn small ghost" (click)="clearFilters()"><app-icon name="x" [size]="13" />Clear filters</button>
+    }
+  </div>
+
+  <div class="menus">
+    <details class="menu">
+      <summary class="btn small"><app-icon name="eye" [size]="14" />Show/Hide Column</summary>
+      <fieldset class="panel" aria-label="Columns shown">
+        <legend class="sr-only">Columns shown</legend>
+        @for (c of allColumns; track c.id) {
+          <label class="check">
+            <input type="checkbox" [checked]="visibleIds().has(c.id)" (change)="toggleColumn(c.id, $any($event.target).checked)" />{{ c.label }}
+          </label>
+        }
+      </fieldset>
+    </details>
+    <details class="menu">
+      <summary class="btn small icon-only" aria-label="Table settings"><app-icon name="sliders" [size]="14" /></summary>
+      <div class="panel">
+        <label class="field" for="rt-size">Rows per page</label>
+        <select id="rt-size" [value]="pageSize()" (change)="setPageSize($any($event.target).value)">
+          @for (s of pageSizes; track s) {
+            <option [value]="s" [selected]="s === pageSize()">{{ s }}</option>
+          }
+        </select>
+      </div>
+    </details>
+  </div>
+</div>
+
+@if (rows().length === 0) {
+  <app-state-panel kind="empty" title="No rules for this selection" message="The rule repository has no rules for what you picked." [compact]="true" />
+} @else {
+  <div class="table-wrap readable" tabindex="0" role="region" aria-label="Rules table, scrolls sideways">
+    <table>
+      <caption class="sr-only">{{ summary() }}</caption>
+      <thead>
+        <tr>
+          @for (c of visibleColumns(); track c.id) {
+            <th scope="col" [class.num]="c.numeric" [attr.aria-sort]="c.sortKey ? ariaSort(c) : null">
+              @if (c.sortKey) {
+                <button type="button" class="th-btn" (click)="sortBy(c)">
+                  {{ c.label }}
+                  @if (isSorted(c)) {
+                    <app-icon [name]="query().direction === 'asc' ? 'arrow-up' : 'arrow-down'" [size]="13" />
+                  }
+                </button>
+              } @else {
+                {{ c.label }}
+              }
+            </th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of pageRows(); track row.rule.id) {
+          <tr>
+            @for (c of visibleColumns(); track c.id) {
+              @switch (c.id) {
+                @case ('id') {
+                  <td><a class="mono-font" [routerLink]="ruleLink(row)">{{ row.rule.id }}</a></td>
+                }
+                @case ('name') {
+                  <td class="wrap cell-name" [class.fallback]="row.nameIsFallback" [attr.title]="row.nameIsFallback ? 'No name in the rule repository. The description is shown.' : null">{{ row.displayName }}</td>
+                }
+                @case ('description') {
+                  <td class="wrap">{{ row.rule.description ?? '—' }}</td>
+                }
+                @case ('score') {
+                  <td class="num" [class]="'num ' + tone(row)">{{ scoreText(row) }}</td>
+                }
+                @case ('checks') {
+                  <td class="num">{{ row.result.status === 'not-run' ? '—' : full(row.result.checks) }}</td>
+                }
+                @case ('failed') {
+                  <td class="num">{{ failText(row) }}</td>
+                }
+                @case ('status') {
+                  <td><app-badge [label]="statusInfo[row.result.status].label" [tone]="statusInfo[row.result.status].tone" [icon]="statusInfo[row.result.status].icon" /></td>
+                }
+                @case ('sql') {
+                  <td>
+                    @if (row.rule.sql) {
+                      <a [routerLink]="ruleLink(row)" fragment="sql" class="sql-link"><app-icon name="file" [size]="14" />View SQL<span class="sr-only"> for {{ row.rule.id }}</span></a>
+                    } @else {
+                      <span class="muted">No SQL</span>
+                    }
+                  </td>
+                }
+                @case ('dimension') {
+                  <td>{{ row.rule.dimension ?? '—' }}</td>
+                }
+                @case ('product') {
+                  <td><a [routerLink]="['/my-domain', 'products', row.productId]">{{ row.productName }}</a></td>
+                }
+                @case ('table') {
+                  <td class="mono-font wrap">{{ row.rule.tableId }}</td>
+                }
+                @case ('column') {
+                  <td class="mono-font wrap">{{ row.rule.column ?? '—' }}</td>
+                }
+                @case ('priority') {
+                  <td>{{ row.rule.priority ?? '—' }}</td>
+                }
+                @case ('active') {
+                  <td>
+                    <app-badge [label]="row.rule.active ? 'Active' : 'Inactive'" [tone]="row.rule.active ? 'info' : 'neutral'" [icon]="row.rule.active ? 'play' : 'minus'" />
+                  </td>
+                }
+                @case ('updated') {
+                  <td>{{ updatedText(row) }}</td>
+                }
+              }
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (filtered().length === 0) {
+    <app-state-panel kind="no-results" title="No rules match" message="Change the search or filters to see more rules." [compact]="true">
+      <button type="button" class="btn small" (click)="clearFilters()">Clear filters</button>
+    </app-state-panel>
+  } @else {
+    <app-pagination [page]="page()" [pageSize]="pageSize()" [total]="filtered().length" (pageChange)="setPage($event)" />
+  }
+}
