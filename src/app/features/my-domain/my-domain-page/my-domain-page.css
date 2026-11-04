@@ -1,0 +1,7 @@
+.empty { max-width: 560px; margin: 64px auto; padding: 0 16px; text-align: center; display: grid; gap: 8px; justify-items: center; }
+.icon {
+  width: 56px; height: 56px; border-radius: var(--border-radius-xl); display: grid; place-items: center;
+  background: var(--color-background-surface-raised); color: var(--muted);
+}
+h1 { margin: 0; font-size: var(--typography-heading-lg-size); line-height: var(--typography-heading-lg-line-height); }
+p { margin: 0; color: var(--muted); }

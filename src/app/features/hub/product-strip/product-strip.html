@@ -1,0 +1,16 @@
+<section aria-labelledby="products-title" class="stack" style="gap: 8px">
+  <h2 id="products-title">Data products</h2>
+  <ul class="plain strip">
+    @for (p of products(); track p.name) {
+      <li>
+        <button type="button" class="product" [attr.aria-pressed]="p.name === selected()" (click)="select.emit(p.name)">
+          <span class="name wrap">{{ p.name }}</span>
+          <span class="small muted">{{ p.domain }}</span>
+          <span class="score mono">{{ p.score.toFixed(1) }}<small>%</small></span>
+          <span class="small muted">Quality score</span>
+          <span class="open" [class.none]="!p.open">{{ p.open }} open cause{{ p.open === 1 ? '' : 's' }}</span>
+        </button>
+      </li>
+    }
+  </ul>
+</section>

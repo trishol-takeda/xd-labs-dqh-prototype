@@ -1,0 +1,44 @@
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topbar on-dark">
+  <div class="topbar-inner">
+    <a class="brand" routerLink="/" aria-label="DQ Remediation, home">
+      <span class="logo"><app-icon name="spark" [size]="18" /></span>
+      <span>
+        <strong>DQ Remediation</strong>
+        <small>BICN-190272 · XD Labs workshop prototype</small>
+      </span>
+    </a>
+  </div>
+  <p class="banner">
+    <app-icon name="beaker" [size]="14" />
+    Prototype · mock DQH data · rule runs are simulated, no service is connected
+  </p>
+</header>
+
+<nav class="tabs" aria-label="Primary">
+  <ul class="plain tabs-inner">
+    @for (tab of tabs; track tab.route) {
+      <li>
+        <a [routerLink]="tab.route" routerLinkActive="active" ariaCurrentWhenActive="page">
+          <app-icon [name]="tab.icon" [size]="16" />{{ tab.label }}
+        </a>
+      </li>
+    }
+  </ul>
+</nav>
+
+<main id="main" tabindex="-1">
+  <router-outlet />
+</main>
+
+<div class="toast-region" role="status" aria-live="polite" aria-atomic="true">
+  @if (store.toast(); as toast) {
+    <div [class]="'toast ' + toast.kind">
+      <app-icon [name]="toast.kind === 'error' ? 'alert' : 'check'" [size]="16" /><span>{{ toast.text }}</span>
+      <button type="button" class="btn small ghost" (click)="store.dismissToast()" aria-label="Dismiss message">
+        <app-icon name="x" [size]="14" />
+      </button>
+    </div>
+  }
+</div>

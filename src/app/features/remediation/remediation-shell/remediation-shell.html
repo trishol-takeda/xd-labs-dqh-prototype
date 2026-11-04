@@ -1,0 +1,15 @@
+<nav class="subnav" aria-label="Data Remediation sections">
+  <ul class="plain subnav-inner">
+    @for (item of sections; track item.route) {
+      <li>
+        <a [routerLink]="item.route" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page">
+          <app-icon [name]="item.icon" [size]="15" />{{ item.label }}
+        </a>
+      </li>
+    }
+  </ul>
+</nav>
+
+<app-prototype-controls />
+
+<router-outlet />

@@ -1,0 +1,1249 @@
+{
+ "source": "DQH_rule_categorisation.xlsx (Rule descriptions, Table to product); KEEP rules only",
+ "products": {
+  "Deviations": {
+   "domain": "Quality",
+   "totalRules": 24,
+   "tables": [
+    "ref_pr_element_detail_trkw_glbl",
+    "txn_deviation_event_trkw_glbl",
+    "txn_grid_affected_material_and_lot_trkw_glbl",
+    "txn_grid_deviation_li_root_cause_trkw_glbl"
+   ]
+  },
+  "Change Control": {
+   "domain": "Quality",
+   "totalRules": 16,
+   "tables": [
+    "ref_pr_element_detail_trkw_glbl",
+    "txn_change_control_trkw_glbl",
+    "txn_grid_affected_material_and_lot_trkw_glbl"
+   ]
+  },
+  "Batch Genealogy": {
+   "domain": "Manufacturing",
+   "totalRules": 10,
+   "tables": [
+    "txn_genealogy_mes_glbl"
+   ]
+  },
+  "Manufacturing Execution": {
+   "domain": "Manufacturing",
+   "totalRules": 16,
+   "tables": [
+    "mfg_exec"
+   ]
+  },
+  "QC Results": {
+   "domain": "Quality",
+   "totalRules": 25,
+   "tables": [
+    "txn_lot_result_approved_lims_glbl",
+    "txn_result_approved_lims_glbl",
+    "txn_test_approved_lims_glbl"
+   ]
+  },
+  "Lot Genealogy": {
+   "domain": "Supply Chain",
+   "totalRules": 26,
+   "tables": [
+    "ref_track_back_erp_glbl",
+    "ref_track_forward_erp_glbl"
+   ]
+  },
+  "Product Specifications": {
+   "domain": "Quality",
+   "totalRules": 12,
+   "tables": [
+    "ref_product_lims_glbl",
+    "ref_product_spec_lims_glbl"
+   ]
+  },
+  "Transportation": {
+   "domain": "Supply Chain",
+   "totalRules": 122,
+   "tables": [
+    "gmsgq_dim_sapbw_node_distn_glbl",
+    "gmsgq_dim_sapbw_node_geo_glbl",
+    "gmsgq_transport_emission_factors",
+    "gmsgq_txn_sapbw_e2e_shipment_glbl"
+   ]
+  },
+  "Material Master": {
+   "domain": "Supply Chain",
+   "totalRules": 15,
+   "tables": [
+    "gmsgq_jde_proddta_f4102_adt",
+    "ref_materialmstr_erp_glbl",
+    "ref_materialmstr_plant_erp_glbl"
+   ]
+  },
+  "Critical Process Parameters": {
+   "domain": "Manufacturing",
+   "totalRules": 5,
+   "tables": [
+    "ref_mfg_proc_critical_proc_param"
+   ]
+  },
+  "Warehousing": {
+   "domain": "Supply Chain",
+   "totalRules": 8,
+   "tables": [
+    "gmsgq_wh_partner_data"
+   ]
+  }
+ },
+ "rules": {
+  "SC.TP.CDE_1": {
+   "table": "gmsgq_dim_sapbw_node_distn_glbl",
+   "column": "BUSINESS_KEY",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Business key is filled in",
+   "whatItChecks": "Business key is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Business key. The value was not captured at source or was lost in loading. Provide the missing Business key in the source system."
+  },
+  "SC.TP.CDE_4": {
+   "table": "gmsgq_dim_sapbw_node_distn_glbl",
+   "column": "ORIG_NODE_GEO_KEY",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Origin node geographic key is filled in",
+   "whatItChecks": "Origin node geographic key is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Origin node geographic key. The value was not captured at source or was lost in loading. Provide the missing Origin node geographic key in the source system."
+  },
+  "SC.TP.CDE_12": {
+   "table": "gmsgq_dim_sapbw_node_geo_glbl",
+   "column": "BUSINESS_KEY",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Business key is filled in",
+   "whatItChecks": "Business key is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Business key. The value was not captured at source or was lost in loading. Provide the missing Business key in the source system."
+  },
+  "SC.TP.CDE_22": {
+   "table": "gmsgq_dim_sapbw_node_geo_glbl",
+   "column": "LOND_VAL",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Longitude value is filled in",
+   "whatItChecks": "Longitude value is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Longitude value. The value was not captured at source or was lost in loading. Provide the missing Longitude value in the source system."
+  },
+  "SC.MM.909": {
+   "table": "gmsgq_jde_proddta_f4102_adt",
+   "column": "IBECO",
+   "shape": "Reference lookup",
+   "dimension": "Integrity",
+   "origin": "Authored",
+   "plainName": "ECO / change PR number (IBECO) exists in master data",
+   "whatItChecks": "Every JDE item must carry an ECO / change PR number (IBECO).",
+   "failureMeans": "The item has no ECO / change PR number, so its change history cannot be traced. Add it in JDE."
+  },
+  "SC.TP.817": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "TSP_PROVIDER_NM",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "Authored",
+   "plainName": "Transport provider name is filled in",
+   "whatItChecks": "Transport provider name must be filled in and must not be 'No data available'.",
+   "failureMeans": "The shipment has no transport provider recorded."
+  },
+  "SC.TP.CDE_39": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "MAT_DESC",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Material description is filled in",
+   "whatItChecks": "Material description is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Material description. The value was not captured at source or was lost in loading. Provide the missing Material description in the source system."
+  },
+  "SC.TP.CDE_47": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "MAT_ID",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Material ID is filled in",
+   "whatItChecks": "Material ID is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Material ID. The value was not captured at source or was lost in loading. Provide the missing Material ID in the source system."
+  },
+  "SC.TP.CDE_38": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ORIG_CTRY_CD",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Origin country code is filled in",
+   "whatItChecks": "Origin country code is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Origin country code. The value was not captured at source or was lost in loading. Provide the missing Origin country code in the source system."
+  },
+  "SC.TP.CDE_36": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ORIG_STREET_NM",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Origin street name is filled in",
+   "whatItChecks": "Origin street name is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Origin street name. The value was not captured at source or was lost in loading. Provide the missing Origin street name in the source system."
+  },
+  "SC.TP.903": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "MAT_TYPE_CD",
+   "shape": "Presence (no placeholder value)",
+   "dimension": "Completeness",
+   "origin": "Authored",
+   "plainName": "Material type code is a real value",
+   "whatItChecks": "Material type must be filled in and must not be '-'.",
+   "failureMeans": "The shipment has no material type."
+  },
+  "SC.TP.795": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "CARRIER_REF_NUM",
+   "shape": "Allowed values",
+   "dimension": "Validity",
+   "origin": "Authored",
+   "plainName": "Carrier reference number uses an approved value",
+   "whatItChecks": "Carrier reference number must be filled in and must not be '-'.",
+   "failureMeans": "The shipment has no carrier reference. Obtain it from the carrier and record it at source."
+  },
+  "SC.TP.799": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "DISTN_UOM_CD",
+   "shape": "Allowed values",
+   "dimension": "Validity",
+   "origin": "Authored",
+   "plainName": "Distance unit of measure code uses an approved value",
+   "whatItChecks": "Distance unit must be KM or mi.",
+   "failureMeans": "The distance unit is missing or not KM/mi."
+  },
+  "SC.TP.880": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ESTD_SHIP_CHARGE_WT_UOM_CD",
+   "shape": "Allowed values",
+   "dimension": "Validity",
+   "origin": "Authored",
+   "plainName": "Estimated shipment chargeable weight unit of measure code uses an approved value",
+   "whatItChecks": "Estimated chargeable weight unit must be KG, G or lbs.",
+   "failureMeans": "The weight unit is missing or not KG/G/lbs."
+  },
+  "SC.TP.801": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "INCOTERMS_CD",
+   "shape": "Allowed values",
+   "dimension": "Validity",
+   "origin": "Authored",
+   "plainName": "Incoterms code uses an approved value",
+   "whatItChecks": "Incoterms code must be one of the standard Incoterms (EXW, FOB, DAP, DDP, …).",
+   "failureMeans": "The Incoterms code is missing or not a recognised term. Correct it on the shipment."
+  },
+  "SC.TP.802": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "INCOTERMS_LOC_NM",
+   "shape": "Allowed values",
+   "dimension": "Validity",
+   "origin": "Authored",
+   "plainName": "Incoterms location name uses an approved value",
+   "whatItChecks": "Incoterms location must be filled in and must not be '-'.",
+   "failureMeans": "The shipment has no Incoterms location."
+  },
+  "SC.TP.812": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "SHIP_ARCHETYPE_DESC",
+   "shape": "Allowed values",
+   "dimension": "Validity",
+   "origin": "Authored",
+   "plainName": "Shipment archetype description uses an approved value",
+   "whatItChecks": "Shipment archetype must be filled in and must not be '-'.",
+   "failureMeans": "The shipment has no archetype classification."
+  },
+  "SC.TP.845": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "SHIP_TEMP_CD",
+   "shape": "Allowed values",
+   "dimension": "Validity",
+   "origin": "Authored",
+   "plainName": "Shipment temperature code uses an approved value",
+   "whatItChecks": "Shipping temperature code must be one of T1–T13 or TX.",
+   "failureMeans": "The temperature code is missing or not an approved code."
+  },
+  "SC.TP.906": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "CO2_EMISSIONS_VAL_KG",
+   "shape": "Numeric bound",
+   "dimension": "Validity",
+   "origin": "Authored",
+   "plainName": "CO2 emissions value (kg) is within range",
+   "whatItChecks": "CO2 emissions (kg) must be greater than zero.",
+   "failureMeans": "The emissions value is missing or zero."
+  },
+  "SC.TP.905": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "CO2_FCTR_VAL",
+   "shape": "Numeric bound",
+   "dimension": "Validity",
+   "origin": "Authored",
+   "plainName": "CO2 factor value is within range",
+   "whatItChecks": "CO2 factor must be between 0 and 1.",
+   "failureMeans": "The CO2 factor is missing or outside 0–1."
+  },
+  "SC.TP.792": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "CONTAINER_QTY",
+   "shape": "Numeric bound",
+   "dimension": "Validity",
+   "origin": "Authored",
+   "plainName": "Container quantity is within range",
+   "whatItChecks": "Container quantity must be a whole number greater than zero.",
+   "failureMeans": "The shipment has no container quantity, or it is zero or not a whole number."
+  },
+  "SC.TP.888": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ESTD_SHIP_COST_LCL_CRNCY_VAL",
+   "shape": "Numeric bound",
+   "dimension": "Validity",
+   "origin": "Authored",
+   "plainName": "Estimated shipment cost local currency value is within range",
+   "whatItChecks": "Estimated shipping cost (local currency) must be greater than zero.",
+   "failureMeans": "The cost is missing or zero."
+  },
+  "SC.TP.895": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "INV_SHIP_COST_EUR_VAL",
+   "shape": "Numeric bound",
+   "dimension": "Validity",
+   "origin": "Authored",
+   "plainName": "Invoiced shipment cost EUR value is within range",
+   "whatItChecks": "Invoiced shipping cost in EUR must be greater than zero.",
+   "failureMeans": "The cost is missing or zero."
+  },
+  "SC.TP.889": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "INV_SHIP_COST_LCL_CRNCY_VAL",
+   "shape": "Numeric bound",
+   "dimension": "Validity",
+   "origin": "Authored",
+   "plainName": "Invoiced shipment cost local currency value is within range",
+   "whatItChecks": "Invoiced shipping cost (local currency) must be greater than zero.",
+   "failureMeans": "The cost is missing or zero."
+  },
+  "SC.TP.894": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "INV_SHIP_COST_USD_VAL",
+   "shape": "Numeric bound",
+   "dimension": "Validity",
+   "origin": "Authored",
+   "plainName": "Invoiced shipment cost USD value is within range",
+   "whatItChecks": "Invoiced shipping cost in USD must be greater than zero.",
+   "failureMeans": "The cost is missing or zero."
+  },
+  "SC.TP.886": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "SHIP_MAT_QTY",
+   "shape": "Numeric bound",
+   "dimension": "Validity",
+   "origin": "Authored",
+   "plainName": "Shipment material quantity is within range",
+   "whatItChecks": "Shipped material quantity must be zero or more.",
+   "failureMeans": "The quantity is missing or negative."
+  },
+  "SC.TP.836": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "EST_ARRIVE_TIME_VAL",
+   "shape": "Format pattern",
+   "dimension": "Validity",
+   "origin": "Authored",
+   "plainName": "Estimated arrival time value is in the right format",
+   "whatItChecks": "Estimated arrival time must be a 6-digit time (HHMMSS).",
+   "failureMeans": "The time is missing or not 6 digits."
+  },
+  "SC.TP.834": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "GOODS_ISSUE_TS",
+   "shape": "Format pattern",
+   "dimension": "Validity",
+   "origin": "Authored",
+   "plainName": "Goods issue time is in the right format",
+   "whatItChecks": "Goods-issue time must be a 6-digit time (HHMMSS).",
+   "failureMeans": "The time is missing or not 6 digits."
+  },
+  "SC.TP.901": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "DEST_SITE_ID",
+   "shape": "Reference lookup",
+   "dimension": "Integrity",
+   "origin": "Authored",
+   "plainName": "Destination site ID exists in master data",
+   "whatItChecks": "Destination site must exist in the SAP plant master (T001W).",
+   "failureMeans": "The destination site is missing or unknown to SAP."
+  },
+  "SC.TP.786": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ORIG_CTRY_CD",
+   "shape": "Reference lookup",
+   "dimension": "Integrity",
+   "origin": "Authored",
+   "plainName": "Origin country code exists in master data",
+   "whatItChecks": "The origin country code must be a valid ISO-2 country code.",
+   "failureMeans": "The origin country code is missing or not a recognised country. Correct it at source."
+  },
+  "SC.TP.851": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "LAST_SHIP_STAT_DT",
+   "shape": "Date logic",
+   "dimension": "Timeliness",
+   "origin": "Authored",
+   "plainName": "Last shipment status date is a plausible date",
+   "whatItChecks": "Last shipment status date must not be in the future.",
+   "failureMeans": "The status date is missing or in the future."
+  },
+  "SC.TP.806": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "REQ_PICK_UP_DT",
+   "shape": "Date logic",
+   "dimension": "Consistency",
+   "origin": "Authored",
+   "plainName": "Requested pick up date is a plausible date",
+   "whatItChecks": "Requested pick-up date must fall on or after the document creation date and on or before the estimated departure date.",
+   "failureMeans": "The pick-up date is missing or out of sequence with creation/departure dates. Check the dates on the shipment."
+  },
+  "SC.TP.892": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "DLVR_FLASH_NUM",
+   "shape": "Conditional dependency",
+   "dimension": "Consistency",
+   "origin": "Authored",
+   "plainName": "Delivery flash number is consistent with related fields",
+   "whatItChecks": "If a PO flash number or flash site is recorded, the delivery flash number must also be recorded.",
+   "failureMeans": "A flash reference is partially filled – the delivery flash number is missing."
+  },
+  "SC.TP.902": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "FLASH_SITE_ID",
+   "shape": "Conditional dependency",
+   "dimension": "Consistency",
+   "origin": "Authored",
+   "plainName": "Flash site ID is consistent with related fields",
+   "whatItChecks": "If a delivery or PO flash number is recorded, the flash site must also be recorded.",
+   "failureMeans": "A flash reference is partially filled – the flash site is missing."
+  },
+  "SC.TP.841": {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "FLIGHT_VESSEL_2_NM",
+   "shape": "Conditional dependency",
+   "dimension": "Consistency",
+   "origin": "Authored",
+   "plainName": "Flight vessel 2 name is consistent with related fields",
+   "whatItChecks": "Second flight/vessel name must be blank (single-leg shipments).",
+   "failureMeans": "A second leg is recorded where none is expected."
+  },
+  "SC.WH.CDE_98": {
+   "table": "gmsgq_wh_partner_data",
+   "column": "MD5_KEY",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "MD5 key is filled in",
+   "whatItChecks": "MD5 key is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no MD5 key. The value was not captured at source or was lost in loading. Provide the missing MD5 key in the source system."
+  },
+  "SC.WH.CDE_94": {
+   "table": "gmsgq_wh_partner_data",
+   "column": "PLANT_ID",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Plant ID is filled in",
+   "whatItChecks": "Plant ID is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Plant ID. The value was not captured at source or was lost in loading. Provide the missing Plant ID in the source system."
+  },
+  "MF.ME.CDE_391": {
+   "table": "mfg_exec",
+   "column": "ACTV_ACTL_VAL",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Activity actual value is filled in",
+   "whatItChecks": "Activity actual value is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Activity actual value. The value was not captured at source or was lost in loading. Provide the missing Activity actual value in the source system."
+  },
+  "MF.ME.CDE_373": {
+   "table": "mfg_exec",
+   "column": "BUSINESS_KEY",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Business key is filled in",
+   "whatItChecks": "Business key is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Business key. The value was not captured at source or was lost in loading. Provide the missing Business key in the source system."
+  },
+  "MF.ME.CDE_379": {
+   "table": "mfg_exec",
+   "column": "MFG_ORD_ID",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Manufacturing order ID is filled in",
+   "whatItChecks": "Manufacturing order ID is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Manufacturing order ID. The value was not captured at source or was lost in loading. Provide the missing Manufacturing order ID in the source system."
+  },
+  "MF.ME.CDE_378": {
+   "table": "mfg_exec",
+   "column": "MFG_ORD_KEY",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Manufacturing order key is filled in",
+   "whatItChecks": "Manufacturing order key is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Manufacturing order key. The value was not captured at source or was lost in loading. Provide the missing Manufacturing order key in the source system."
+  },
+  "MF.ME.CDE_382": {
+   "table": "mfg_exec",
+   "column": "MFG_ORD_STAT_DESC",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Manufacturing order status description is filled in",
+   "whatItChecks": "Manufacturing order status description is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Manufacturing order status description. The value was not captured at source or was lost in loading. Provide the missing Manufacturing order status description in the source system."
+  },
+  "MF.ME.CDE_383": {
+   "table": "mfg_exec",
+   "column": "PROD_UNIT_ID",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Product unit ID is filled in",
+   "whatItChecks": "Product unit ID is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Product unit ID. The value was not captured at source or was lost in loading. Provide the missing Product unit ID in the source system."
+  },
+  "MF.ME.CDE_372": {
+   "table": "mfg_exec",
+   "column": "SITE_NM",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Site name is filled in",
+   "whatItChecks": "Site name is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Site name. The value was not captured at source or was lost in loading. Provide the missing Site name in the source system."
+  },
+  "MF.ME.CDE_374": {
+   "table": "mfg_exec",
+   "column": "SPEC_TYPE",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Specification type is filled in",
+   "whatItChecks": "Specification type is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Specification type. The value was not captured at source or was lost in loading. Provide the missing Specification type in the source system."
+  },
+  "MF.ME.535": {
+   "table": "mfg_exec",
+   "column": "ACTV_EXEC_DTS",
+   "shape": "Date logic",
+   "dimension": "Consistency",
+   "origin": "Authored",
+   "plainName": "Activity execution date/time is a plausible date",
+   "whatItChecks": "Activity execution time must not be in the future at load time.",
+   "failureMeans": "The execution time is later than now – a data entry or clock issue at source."
+  },
+  "MF.ME.532": {
+   "table": "mfg_exec",
+   "column": "SHOP_FLOOR_ORD_START_DTS",
+   "shape": "Date logic",
+   "dimension": "Consistency",
+   "origin": "Authored",
+   "plainName": "Shop floor order start date/time is a plausible date",
+   "whatItChecks": "Shop-floor order start and end times must not be in the future at load time.",
+   "failureMeans": "An order start or end time is later than now – a data entry or clock issue at source."
+  },
+  "MF.ME.526": {
+   "table": "mfg_exec",
+   "column": "TGT_BATCH_NBR",
+   "shape": "Conditional dependency",
+   "dimension": "Consistency",
+   "origin": "Authored",
+   "plainName": "Target batch number is consistent with related fields",
+   "whatItChecks": "When a target batch number is given, the target material number must also be given.",
+   "failureMeans": "A target batch is recorded without its target material. Complete both in the MES."
+  },
+  "MF.CPP.CDE_211": {
+   "table": "ref_mfg_proc_critical_proc_param",
+   "column": "MD5_KEY",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "MD5 key is filled in",
+   "whatItChecks": "MD5 key is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no MD5 key. The value was not captured at source or was lost in loading. Provide the missing MD5 key in the source system."
+  },
+  "MF.CPP.CDE_212": {
+   "table": "ref_mfg_proc_critical_proc_param",
+   "column": "NOR_LOWER_LIMIT_VAL",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Normal operating range lower limit value is filled in",
+   "whatItChecks": "Normal operating range lower limit value is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Normal operating range lower limit value. The value was not captured at source or was lost in loading. Provide the missing Normal operating range lower limit value in the source system."
+  },
+  "QUA.DEV.CDE_230": {
+   "table": "ref_pr_element_detail_trkw_glbl",
+   "column": "BUSINESS_KEY",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Business key is filled in",
+   "whatItChecks": "Business key is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Business key. The value was not captured at source or was lost in loading. Provide the missing Business key in the source system."
+  },
+  "QUA.DEV.CDE_231": {
+   "table": "ref_pr_element_detail_trkw_glbl",
+   "column": "MD5_KEY",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "MD5 key is filled in",
+   "whatItChecks": "MD5 key is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no MD5 key. The value was not captured at source or was lost in loading. Provide the missing MD5 key in the source system."
+  },
+  "QUA.PSP.4": {
+   "table": "ref_product_lims_glbl",
+   "column": "CODE",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "Authored",
+   "plainName": "Code is filled in",
+   "whatItChecks": "Every active product must have a standard code.",
+   "failureMeans": "The product has no code. Add one in LIMS."
+  },
+  "QUA.PSP.3": {
+   "table": "ref_product_lims_glbl",
+   "column": "PROD_DESC presence for active",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "Authored",
+   "plainName": "Product description is filled in",
+   "whatItChecks": "Every active product definition must have a readable description.",
+   "failureMeans": "The product has no description. Add one in LIMS."
+  },
+  "QUA.PSP.CDE_146": {
+   "table": "ref_product_lims_glbl",
+   "column": "SITE_NM",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Site name is filled in",
+   "whatItChecks": "Site name is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Site name. The value was not captured at source or was lost in loading. Provide the missing Site name in the source system."
+  },
+  "QUA.PSP.8": {
+   "table": "ref_product_lims_glbl",
+   "column": "VERSION",
+   "shape": "Numeric bound",
+   "dimension": "Validity",
+   "origin": "Authored",
+   "plainName": "Version is within range",
+   "whatItChecks": "Product version must be 1 or higher.",
+   "failureMeans": "The version is missing or below 1."
+  },
+  "SC.LG.CDE_159": {
+   "table": "ref_track_back_erp_glbl",
+   "column": "cmpnt_batch_id",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Component batch ID is filled in",
+   "whatItChecks": "Component batch ID is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Component batch ID. The value was not captured at source or was lost in loading. Provide the missing Component batch ID in the source system."
+  },
+  "SC.LG.CDE_160": {
+   "table": "ref_track_back_erp_glbl",
+   "column": "cmpnt_mat_id",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Component material ID is filled in",
+   "whatItChecks": "Component material ID is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Component material ID. The value was not captured at source or was lost in loading. Provide the missing Component material ID in the source system."
+  },
+  "SC.LG.CDE_158": {
+   "table": "ref_track_back_erp_glbl",
+   "column": "cmpnt_mat_short_id",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Component material short ID is filled in",
+   "whatItChecks": "Component material short ID is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Component material short ID. The value was not captured at source or was lost in loading. Provide the missing Component material short ID in the source system."
+  },
+  "SC.LG.CDE_161": {
+   "table": "ref_track_back_erp_glbl",
+   "column": "cmpnt_plant_id",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Component plant ID is filled in",
+   "whatItChecks": "Component plant ID is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Component plant ID. The value was not captured at source or was lost in loading. Provide the missing Component plant ID in the source system."
+  },
+  "SC.LG.CDE_162": {
+   "table": "ref_track_back_erp_glbl",
+   "column": "parent_batch_id",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Parent batch ID is filled in",
+   "whatItChecks": "Parent batch ID is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Parent batch ID. The value was not captured at source or was lost in loading. Provide the missing Parent batch ID in the source system."
+  },
+  "SC.LG.CDE_163": {
+   "table": "ref_track_back_erp_glbl",
+   "column": "parent_mat_id",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Parent material ID is filled in",
+   "whatItChecks": "Parent material ID is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Parent material ID. The value was not captured at source or was lost in loading. Provide the missing Parent material ID in the source system."
+  },
+  "SC.LG.CDE_164": {
+   "table": "ref_track_back_erp_glbl",
+   "column": "parent_plant_id",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Parent plant ID is filled in",
+   "whatItChecks": "Parent plant ID is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Parent plant ID. The value was not captured at source or was lost in loading. Provide the missing Parent plant ID in the source system."
+  },
+  "SC.LG.CDE_165": {
+   "table": "ref_track_back_erp_glbl",
+   "column": "root_batch_id",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Root batch ID is filled in",
+   "whatItChecks": "Root batch ID is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Root batch ID. The value was not captured at source or was lost in loading. Provide the missing Root batch ID in the source system."
+  },
+  "SC.LG.CDE_166": {
+   "table": "ref_track_back_erp_glbl",
+   "column": "root_plant_id",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Root plant ID is filled in",
+   "whatItChecks": "Root plant ID is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Root plant ID. The value was not captured at source or was lost in loading. Provide the missing Root plant ID in the source system."
+  },
+  "SC.LG.CDE_174": {
+   "table": "ref_track_forward_erp_glbl",
+   "column": "cmpnt_batch_id",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Component batch ID is filled in",
+   "whatItChecks": "Component batch ID is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Component batch ID. The value was not captured at source or was lost in loading. Provide the missing Component batch ID in the source system."
+  },
+  "SC.LG.CDE_175": {
+   "table": "ref_track_forward_erp_glbl",
+   "column": "cmpnt_mat_id",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Component material ID is filled in",
+   "whatItChecks": "Component material ID is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Component material ID. The value was not captured at source or was lost in loading. Provide the missing Component material ID in the source system."
+  },
+  "SC.LG.CDE_173": {
+   "table": "ref_track_forward_erp_glbl",
+   "column": "cmpnt_mat_short_id",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Component material short ID is filled in",
+   "whatItChecks": "Component material short ID is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Component material short ID. The value was not captured at source or was lost in loading. Provide the missing Component material short ID in the source system."
+  },
+  "SC.LG.CDE_176": {
+   "table": "ref_track_forward_erp_glbl",
+   "column": "cmpnt_plant_id",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Component plant ID is filled in",
+   "whatItChecks": "Component plant ID is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Component plant ID. The value was not captured at source or was lost in loading. Provide the missing Component plant ID in the source system."
+  },
+  "SC.LG.CDE_177": {
+   "table": "ref_track_forward_erp_glbl",
+   "column": "parent_batch_id",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Parent batch ID is filled in",
+   "whatItChecks": "Parent batch ID is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Parent batch ID. The value was not captured at source or was lost in loading. Provide the missing Parent batch ID in the source system."
+  },
+  "SC.LG.CDE_178": {
+   "table": "ref_track_forward_erp_glbl",
+   "column": "parent_mat_id",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Parent material ID is filled in",
+   "whatItChecks": "Parent material ID is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Parent material ID. The value was not captured at source or was lost in loading. Provide the missing Parent material ID in the source system."
+  },
+  "SC.LG.CDE_172": {
+   "table": "ref_track_forward_erp_glbl",
+   "column": "parent_mat_short_id",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Parent material short ID is filled in",
+   "whatItChecks": "Parent material short ID is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Parent material short ID. The value was not captured at source or was lost in loading. Provide the missing Parent material short ID in the source system."
+  },
+  "SC.LG.CDE_179": {
+   "table": "ref_track_forward_erp_glbl",
+   "column": "parent_plant_id",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Parent plant ID is filled in",
+   "whatItChecks": "Parent plant ID is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Parent plant ID. The value was not captured at source or was lost in loading. Provide the missing Parent plant ID in the source system."
+  },
+  "QUA.CC.CDE_233": {
+   "table": "txn_change_control_trkw_glbl",
+   "column": "BUSINESS_KEY",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Business key is filled in",
+   "whatItChecks": "Business key is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Business key. The value was not captured at source or was lost in loading. Provide the missing Business key in the source system."
+  },
+  "QUA.CC.CDE_234": {
+   "table": "txn_change_control_trkw_glbl",
+   "column": "CHANGE",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Change is filled in",
+   "whatItChecks": "Change is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Change. The value was not captured at source or was lost in loading. Provide the missing Change in the source system."
+  },
+  "QUA.CC.CDE_235": {
+   "table": "txn_change_control_trkw_glbl",
+   "column": "CHANGE_CLASSIFICATION",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Change classification is filled in",
+   "whatItChecks": "Change classification is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Change classification. The value was not captured at source or was lost in loading. Provide the missing Change classification in the source system."
+  },
+  "QUA.CC.CDE_250": {
+   "table": "txn_change_control_trkw_glbl",
+   "column": "CHANGE_OWNER",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Change owner is filled in",
+   "whatItChecks": "Change owner is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Change owner. The value was not captured at source or was lost in loading. Provide the missing Change owner in the source system."
+  },
+  "QUA.CC.CDE_236": {
+   "table": "txn_change_control_trkw_glbl",
+   "column": "CHANGE_PARTY",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Change party is filled in",
+   "whatItChecks": "Change party is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Change party. The value was not captured at source or was lost in loading. Provide the missing Change party in the source system."
+  },
+  "QUA.CC.CDE_251": {
+   "table": "txn_change_control_trkw_glbl",
+   "column": "CHANGE_PLAN_STARTED_BY",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Change plan started by is filled in",
+   "whatItChecks": "Change plan started by is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Change plan started by. The value was not captured at source or was lost in loading. Provide the missing Change plan started by in the source system."
+  },
+  "QUA.CC.CDE_241": {
+   "table": "txn_change_control_trkw_glbl",
+   "column": "CHANGE_PLAN_STARTED_DATE",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Change plan started date is filled in",
+   "whatItChecks": "Change plan started date is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Change plan started date. The value was not captured at source or was lost in loading. Provide the missing Change plan started date in the source system."
+  },
+  "QUA.CC.CDE_237": {
+   "table": "txn_change_control_trkw_glbl",
+   "column": "EMERGENCY_CHANGE",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Emergency change is filled in",
+   "whatItChecks": "Emergency change is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Emergency change. The value was not captured at source or was lost in loading. Provide the missing Emergency change in the source system."
+  },
+  "QUA.CC.CDE_267": {
+   "table": "txn_change_control_trkw_glbl",
+   "column": "MD5_KEY",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "MD5 key is filled in",
+   "whatItChecks": "MD5 key is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no MD5 key. The value was not captured at source or was lost in loading. Provide the missing MD5 key in the source system."
+  },
+  "QUA.CC.CDE_238": {
+   "table": "txn_change_control_trkw_glbl",
+   "column": "PV_IMPACT",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Pharmacovigilance impact is filled in",
+   "whatItChecks": "Pharmacovigilance impact is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Pharmacovigilance impact. The value was not captured at source or was lost in loading. Provide the missing Pharmacovigilance impact in the source system."
+  },
+  "QUA.DEV.CDE_269": {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "BUSINESS_KEY",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Business key is filled in",
+   "whatItChecks": "Business key is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Business key. The value was not captured at source or was lost in loading. Provide the missing Business key in the source system."
+  },
+  "QUA.DEV.CDE_270": {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "CAPA_Required",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "CAPA required is filled in",
+   "whatItChecks": "CAPA required is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no CAPA required. The value was not captured at source or was lost in loading. Provide the missing CAPA required in the source system."
+  },
+  "QUA.DEV.CDE_271": {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "Deviation_Event_Party",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Deviation event party is filled in",
+   "whatItChecks": "Deviation event party is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Deviation event party. The value was not captured at source or was lost in loading. Provide the missing Deviation event party in the source system."
+  },
+  "QUA.DEV.CDE_272": {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "Deviation_Event_Scope",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Deviation event scope is filled in",
+   "whatItChecks": "Deviation event scope is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Deviation event scope. The value was not captured at source or was lost in loading. Provide the missing Deviation event scope in the source system."
+  },
+  "QUA.DEV.CDE_273": {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "Deviation_Event_Type",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Deviation event type is filled in",
+   "whatItChecks": "Deviation event type is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Deviation event type. The value was not captured at source or was lost in loading. Provide the missing Deviation event type in the source system."
+  },
+  "QUA.DEV.CDE_285": {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "MD5_KEY",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "MD5 key is filled in",
+   "whatItChecks": "MD5 key is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no MD5 key. The value was not captured at source or was lost in loading. Provide the missing MD5 key in the source system."
+  },
+  "QUA.DEV.CDE_274": {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "Pharmacovigilance_Impact",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Pharmacovigilance impact is filled in",
+   "whatItChecks": "Pharmacovigilance impact is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Pharmacovigilance impact. The value was not captured at source or was lost in loading. Provide the missing Pharmacovigilance impact in the source system."
+  },
+  "QUA.DEV.CDE_275": {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "Report_to_Health_Authority",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Report to health authority is filled in",
+   "whatItChecks": "Report to health authority is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Report to health authority. The value was not captured at source or was lost in loading. Provide the missing Report to health authority in the source system."
+  },
+  "QUA.DEV.CDE_279": {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "Sent_for_Final_QA_Approval_On",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Sent for final QA approval on is filled in",
+   "whatItChecks": "Sent for final QA approval on is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Sent for final QA approval on. The value was not captured at source or was lost in loading. Provide the missing Sent for final QA approval on in the source system."
+  },
+  "QUA.DEV.CDE_276": {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "Takeda_Lot_Potential_Impact",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Takeda lot potential impact is filled in",
+   "whatItChecks": "Takeda lot potential impact is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Takeda lot potential impact. The value was not captured at source or was lost in loading. Provide the missing Takeda lot potential impact in the source system."
+  },
+  "QUA.DEV.1": {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "CAPA_Required",
+   "shape": "Allowed values",
+   "dimension": "Validity",
+   "origin": "Authored",
+   "plainName": "CAPA required uses an approved value",
+   "whatItChecks": "CAPA Required must be Yes or No.",
+   "failureMeans": "CAPA Required holds a value other than Yes/No. Correct it in TrackWise."
+  },
+  "QUA.DEV.7": {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "CAPA_Required",
+   "shape": "Allowed values",
+   "dimension": "Validity",
+   "origin": "Authored",
+   "plainName": "CAPA required uses an approved value",
+   "whatItChecks": "CAPA Required must be Yes or No.",
+   "failureMeans": "CAPA Required holds a value other than Yes/No."
+  },
+  "QUA.DEV.5": {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "Report_to_Health_Authority",
+   "shape": "Allowed values",
+   "dimension": "Validity",
+   "origin": "Authored",
+   "plainName": "Report to health authority uses an approved value",
+   "whatItChecks": "Report to Health Authority must be Yes, No, N/A, Pending, Required or Not Required (blank allowed).",
+   "failureMeans": "The field holds an unapproved value."
+  },
+  "QUA.DEV.2": {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "Report_to_Health_Authority",
+   "shape": "Allowed values",
+   "dimension": "Validity",
+   "origin": "Authored",
+   "plainName": "Report to health authority uses an approved value",
+   "whatItChecks": "Report to Health Authority must be Yes, No, N/A or Pending (blank allowed).",
+   "failureMeans": "The field holds an unapproved value. Correct it in TrackWise."
+  },
+  "QUA.DEV.6": {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "Target_Date",
+   "shape": "Date logic",
+   "dimension": "Consistency",
+   "origin": "Authored",
+   "plainName": "Target date is a plausible date",
+   "whatItChecks": "Deviation target date must not be earlier than the opened date.",
+   "failureMeans": "The target date is before the opened date. Correct the dates in TrackWise."
+  },
+  "MF.BG.CDE_361": {
+   "table": "txn_genealogy_mes_glbl",
+   "column": "LOT_ID",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Lot ID is filled in",
+   "whatItChecks": "Lot ID is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Lot ID. The value was not captured at source or was lost in loading. Provide the missing Lot ID in the source system."
+  },
+  "MF.BG.CDE_362": {
+   "table": "txn_genealogy_mes_glbl",
+   "column": "LOT_INT_ID",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Lot internal ID is filled in",
+   "whatItChecks": "Lot internal ID is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Lot internal ID. The value was not captured at source or was lost in loading. Provide the missing Lot internal ID in the source system."
+  },
+  "MF.BG.CDE_365": {
+   "table": "txn_genealogy_mes_glbl",
+   "column": "MATERIAL_ID",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Material ID is filled in",
+   "whatItChecks": "Material ID is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Material ID. The value was not captured at source or was lost in loading. Provide the missing Material ID in the source system."
+  },
+  "MF.BG.CDE_367": {
+   "table": "txn_genealogy_mes_glbl",
+   "column": "MATERIAL_QUANTITY",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Material quantity is filled in",
+   "whatItChecks": "Material quantity is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Material quantity. The value was not captured at source or was lost in loading. Provide the missing Material quantity in the source system."
+  },
+  "MF.BG.CDE_368": {
+   "table": "txn_genealogy_mes_glbl",
+   "column": "MATERIAL_UNIT",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Material unit is filled in",
+   "whatItChecks": "Material unit is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Material unit. The value was not captured at source or was lost in loading. Provide the missing Material unit in the source system."
+  },
+  "MF.BG.CDE_369": {
+   "table": "txn_genealogy_mes_glbl",
+   "column": "MFG_START_DATE",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Manufacturing start date is filled in",
+   "whatItChecks": "Manufacturing start date is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Manufacturing start date. The value was not captured at source or was lost in loading. Provide the missing Manufacturing start date in the source system."
+  },
+  "MF.BG.CDE_363": {
+   "table": "txn_genealogy_mes_glbl",
+   "column": "MFG_TYPE",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Manufacturing type is filled in",
+   "whatItChecks": "Manufacturing type is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Manufacturing type. The value was not captured at source or was lost in loading. Provide the missing Manufacturing type in the source system."
+  },
+  "MF.BG.CDE_360": {
+   "table": "txn_genealogy_mes_glbl",
+   "column": "SITE_NM",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Site name is filled in",
+   "whatItChecks": "Site name is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Site name. The value was not captured at source or was lost in loading. Provide the missing Site name in the source system."
+  },
+  "QUA.DEV.CDE_287": {
+   "table": "txn_grid_affected_material_and_lot_trkw_glbl",
+   "column": "BUSINESS_KEY",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Business key is filled in",
+   "whatItChecks": "Business key is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Business key. The value was not captured at source or was lost in loading. Provide the missing Business key in the source system."
+  },
+  "QUA.DEV.CDE_293": {
+   "table": "txn_grid_affected_material_and_lot_trkw_glbl",
+   "column": "MATERIAL_DESC",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Material description is filled in",
+   "whatItChecks": "Material description is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Material description. The value was not captured at source or was lost in loading. Provide the missing Material description in the source system."
+  },
+  "QUA.DEV.CDE_296": {
+   "table": "txn_grid_affected_material_and_lot_trkw_glbl",
+   "column": "MD5_KEY",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "MD5 key is filled in",
+   "whatItChecks": "MD5 key is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no MD5 key. The value was not captured at source or was lost in loading. Provide the missing MD5 key in the source system."
+  },
+  "QUA.DEV.CDE_298": {
+   "table": "txn_grid_deviation_li_root_cause_trkw_glbl",
+   "column": "BUSINESS_KEY",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Business key is filled in",
+   "whatItChecks": "Business key is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Business key. The value was not captured at source or was lost in loading. Provide the missing Business key in the source system."
+  },
+  "QUA.DEV.CDE_299": {
+   "table": "txn_grid_deviation_li_root_cause_trkw_glbl",
+   "column": "MD5_KEY",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "MD5 key is filled in",
+   "whatItChecks": "MD5 key is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no MD5 key. The value was not captured at source or was lost in loading. Provide the missing MD5 key in the source system."
+  },
+  "QUA.QCR.CDE_302": {
+   "table": "txn_lot_result_approved_lims_glbl",
+   "column": "SITE_NM",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Site name is filled in",
+   "whatItChecks": "Site name is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Site name. The value was not captured at source or was lost in loading. Provide the missing Site name in the source system."
+  },
+  "QUA.QCR.CDE_317": {
+   "table": "txn_result_approved_lims_glbl",
+   "column": "BUSINESS_KEY",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Business key is filled in",
+   "whatItChecks": "Business key is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Business key. The value was not captured at source or was lost in loading. Provide the missing Business key in the source system."
+  },
+  "QUA.QCR.CDE_342": {
+   "table": "txn_test_approved_lims_glbl",
+   "column": "TEST_KEY",
+   "shape": "Presence (not null / not blank)",
+   "dimension": "Completeness",
+   "origin": "CDE template",
+   "plainName": "Test key is filled in",
+   "whatItChecks": "Test key is a critical data element and must be filled in for every active record.",
+   "failureMeans": "The record has no Test key. The value was not captured at source or was lost in loading. Provide the missing Test key in the source system."
+  }
+ },
+ "tablesWithoutStableKey": {
+  "source": "SYNTHETIC placeholder: the real list of six tables comes from the Rules team",
+  "tables": [
+   "gmsgq_wh_partner_data",
+   "gmsgq_jde_proddta_f4102_adt",
+   "ref_track_back_erp_glbl",
+   "ref_track_forward_erp_glbl",
+   "ref_mfg_proc_critical_proc_param",
+   "ref_product_lims_glbl"
+  ]
+ }
+}

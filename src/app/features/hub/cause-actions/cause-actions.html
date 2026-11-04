@@ -1,0 +1,69 @@
+<section class="card stack" aria-labelledby="actions-title">
+  <h3 id="actions-title">What you can do</h3>
+
+  @switch (cause().state) {
+    @case ('New') {
+      <p>Read what is going wrong above. If the probable cause looks right, confirm it. Then you can choose what to do.</p>
+      <div class="row">
+        <button type="button" class="btn primary" (click)="confirm()"><app-icon name="check" [size]="15" />Confirm this cause</button>
+      </div>
+    }
+    @case ('Closed') {
+      <div class="callout success">
+        <app-icon name="lock" />
+        <p>
+          <strong>Closed by the rule engine.</strong> The latest run no longer emits these records. If the same cause fails
+          again it reopens by itself. There is nothing to send.
+        </p>
+      </div>
+    }
+    @default {
+      @if (cause().state === 'Reopened') {
+        <div class="callout danger">
+          <app-icon name="refresh" />
+          <p><strong>This cause failed again after it closed.</strong> Review it and send it for correction.</p>
+        </div>
+      }
+
+      <ul class="plain choices">
+        @for (key of keys; track key) {
+          <li>
+            <button type="button" class="choice" [class.primary]="key === 'send'" [attr.aria-expanded]="active() === key" (click)="open(key)">
+              <strong>{{ copy[key].label }}</strong>
+              <span class="small">{{ copy[key].help }}</span>
+            </button>
+          </li>
+        }
+      </ul>
+
+      @if (active(); as key) {
+        <form class="form" (submit)="$event.preventDefault(); submit()">
+          <label class="field">
+            {{ copy[key].reason }}
+            <textarea [value]="text()" (input)="text.set($any($event.target).value)" rows="3"></textarea>
+          </label>
+          @if (key === 'send') {
+            <p class="hint">
+              <app-icon name="info" [size]="14" />
+              It goes to the {{ cause().ownerRole }} ({{ cause().channel }}), with the sample records. You cannot change the channel.
+            </p>
+          }
+          <div class="row">
+            <button type="submit" class="btn primary" [disabled]="!text().trim()">{{ copy[key].label }}</button>
+            <button type="button" class="btn ghost" (click)="open(key)">Cancel</button>
+          </div>
+        </form>
+      }
+
+      @if (lastRequest(); as request) {
+        <div class="callout info" role="status">
+          <app-icon name="check" />
+          <div>
+            <strong>{{ request.text }}</strong>
+            <p class="small">Recorded {{ formatDate(request.at, true) }} by {{ request.by }}.</p>
+          </div>
+        </div>
+      }
+    }
+  }
+</section>
