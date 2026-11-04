@@ -1,0 +1,1778 @@
+{
+ "source": {
+  "file": "rule_repo_sample.xlsx",
+  "sheet": "Sheet1",
+  "rawRows": 120,
+  "continuationRowsMerged": 20,
+  "rules": 100
+ },
+ "cleaning": [
+  "20 rows held only a wrapped line of SQL (no rule id). Each was appended to the SQL of the rule above it.",
+  "The text \"null\" is read as missing. Names, descriptions and SQL are never replaced with generated text.",
+  "active_rule TRUE/FALSE becomes the boolean \"active\". It says whether the rule is switched on, not whether it passed.",
+  "updated_date is the date the rule definition was changed. It is not an execution date."
+ ],
+ "tables": [
+  {
+   "id": "ref_materialmstr_erp_glbl",
+   "name": "ref_materialmstr_erp_glbl",
+   "qualifiedName": "us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl",
+   "ruleCount": 29,
+   "activeRuleCount": 15,
+   "sourceSystems": [
+    "PRDCLNT100"
+   ],
+   "sourceCategories": [
+    "ERP"
+   ],
+   "columns": [
+    {
+     "name": "BATCH_MGMT_REQ_FLG",
+     "ruleCount": 1
+    },
+    {
+     "name": "CROSS_PLANT_MAT_STAT_CD",
+     "ruleCount": 1
+    },
+    {
+     "name": "GLOBAL_BRAND_NM",
+     "ruleCount": 3
+    },
+    {
+     "name": "MIN_REMN_SHELF_LIFE_QTY",
+     "ruleCount": 1
+    },
+    {
+     "name": "POTENCY_STD_VAL",
+     "ruleCount": 1
+    },
+    {
+     "name": "SHELF_LIFE_TOTAL_VAL",
+     "ruleCount": 13
+    },
+    {
+     "name": "SORT_FIELD_1_CD",
+     "ruleCount": 1
+    },
+    {
+     "name": "SORT_FIELD_2_CD",
+     "ruleCount": 1
+    },
+    {
+     "name": "TEMPERATURE_COND_CD",
+     "ruleCount": 2
+    },
+    {
+     "name": "TRADE_NM",
+     "ruleCount": 1
+    },
+    {
+     "name": "TSP_GRP_CD",
+     "ruleCount": 1
+    },
+    {
+     "name": "WEIGHT_GROSS_VAL",
+     "ruleCount": 1
+    },
+    {
+     "name": "WEIGHT_NET_VAL",
+     "ruleCount": 2
+    }
+   ]
+  },
+  {
+   "id": "ref_materialmstr_plant_erp_glbl",
+   "name": "ref_materialmstr_plant_erp_glbl",
+   "qualifiedName": "us_gmsgq_prd.gms_us_hub.ref_materialmstr_plant_erp_glbl",
+   "ruleCount": 9,
+   "activeRuleCount": 9,
+   "sourceSystems": [
+    "PRDCLNT100"
+   ],
+   "sourceCategories": [
+    "ERP"
+   ],
+   "columns": [
+    {
+     "name": "LOT_SIZE_KEY_CD",
+     "ruleCount": 1
+    },
+    {
+     "name": "MAT_FREIGHT_GROUP_NM",
+     "ruleCount": 1
+    },
+    {
+     "name": "MRP_CTRL_CD",
+     "ruleCount": 1
+    },
+    {
+     "name": "MRP_GROUP_CD",
+     "ruleCount": 1
+    },
+    {
+     "name": "MRP_TYPE_CD",
+     "ruleCount": 1
+    },
+    {
+     "name": "PLANT_SPECIFIC_MAT_STAT_CD",
+     "ruleCount": 1
+    },
+    {
+     "name": "PROCUREMENT_SERIAL_TYPE_CD",
+     "ruleCount": 1
+    },
+    {
+     "name": "PROCUREMENT_TYPE_CD",
+     "ruleCount": 1
+    },
+    {
+     "name": "PROD_SCHED_CD",
+     "ruleCount": 1
+    }
+   ]
+  },
+  {
+   "id": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "name": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "qualifiedName": "us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "ruleCount": 62,
+   "activeRuleCount": 62,
+   "sourceSystems": [
+    "Supply Chain",
+    "SUPPLY CHAIN"
+   ],
+   "sourceCategories": [
+    "Transport Operations",
+    "TRANSPORTATION"
+   ],
+   "columns": [
+    {
+     "name": "ACTL_ARRIVE_DEST_PORT_2_TM",
+     "ruleCount": 1
+    },
+    {
+     "name": "ACTL_DEPART_ORIG_PORT_1_TM",
+     "ruleCount": 1
+    },
+    {
+     "name": "ACTL_DEPART_ORIG_PORT_2_TM",
+     "ruleCount": 1
+    },
+    {
+     "name": "AWB_BL_CMR_NUM",
+     "ruleCount": 1
+    },
+    {
+     "name": "BATCH_ID",
+     "ruleCount": 1
+    },
+    {
+     "name": "BUSINESS_KEY",
+     "ruleCount": 1
+    },
+    {
+     "name": "CARRIER_REF_NUM",
+     "ruleCount": 1
+    },
+    {
+     "name": "co2_emissions_ratio_val_kg",
+     "ruleCount": 1
+    },
+    {
+     "name": "CO2_EMISSIONS_VAL_KG",
+     "ruleCount": 1
+    },
+    {
+     "name": "co2_fctr_val",
+     "ruleCount": 1
+    },
+    {
+     "name": "CO2_FCTR_VAL",
+     "ruleCount": 1
+    },
+    {
+     "name": "CONFIRM_SHIP_CHARGE_WT_UOM_CD",
+     "ruleCount": 1
+    },
+    {
+     "name": "CONFIRM_SHIP_CHARGE_WT_VAL",
+     "ruleCount": 2
+    },
+    {
+     "name": "CONFIRM_SHIP_GROSS_WT_UOM_CD",
+     "ruleCount": 2
+    },
+    {
+     "name": "CONFIRM_SHIP_GROSS_WT_VAL",
+     "ruleCount": 2
+    },
+    {
+     "name": "CONTAINER_TYPE_DESC",
+     "ruleCount": 1
+    },
+    {
+     "name": "DANGER_GOODS_DESC",
+     "ruleCount": 1
+    },
+    {
+     "name": "DANGER_GOODS_FLG",
+     "ruleCount": 1
+    },
+    {
+     "name": "DEST_CTRY_NM",
+     "ruleCount": 1
+    },
+    {
+     "name": "DEST_PORT_1_CD",
+     "ruleCount": 1
+    },
+    {
+     "name": "DEST_PORT_FINAL_CD",
+     "ruleCount": 1
+    },
+    {
+     "name": "DEST_SITE_ID",
+     "ruleCount": 1
+    },
+    {
+     "name": "DISTN_UOM_CD",
+     "ruleCount": 1
+    },
+    {
+     "name": "DLVR_NUM",
+     "ruleCount": 1
+    },
+    {
+     "name": "DOC_CRT_DT",
+     "ruleCount": 1
+    },
+    {
+     "name": "E2ESHIPMENT_KEY",
+     "ruleCount": 1
+    },
+    {
+     "name": "EST_ARRIVE_TIME_VAL",
+     "ruleCount": 1
+    },
+    {
+     "name": "EST_SHIP_COST_CRNCY_CD",
+     "ruleCount": 1
+    },
+    {
+     "name": "ESTD_SHIP_CHARGE_WT_VAL",
+     "ruleCount": 2
+    },
+    {
+     "name": "ESTD_SHIP_COST_EUR_VAL",
+     "ruleCount": 1
+    },
+    {
+     "name": "ESTD_SHIP_COST_USD_VAL",
+     "ruleCount": 1
+    },
+    {
+     "name": "ESTD_SHIP_GROSS_WT_VAL",
+     "ruleCount": 1
+    },
+    {
+     "name": "FINAL_DEST_NODE_GEO_KEY",
+     "ruleCount": 1
+    },
+    {
+     "name": "FLIGHT_VESSEL_1_NM",
+     "ruleCount": 1
+    },
+    {
+     "name": "FLIGHT_VESSEL_2_NM",
+     "ruleCount": 1
+    },
+    {
+     "name": "GOODS_ISSUE_DT",
+     "ruleCount": 1
+    },
+    {
+     "name": "INCOTERMS_CD",
+     "ruleCount": 1
+    },
+    {
+     "name": "INCOTERMS_LOC_NM",
+     "ruleCount": 1
+    },
+    {
+     "name": "INV_SHIP_COST_JPY_VAL",
+     "ruleCount": 1
+    },
+    {
+     "name": "MAT_ID",
+     "ruleCount": 1
+    },
+    {
+     "name": "MILK_RUN_FLG",
+     "ruleCount": 1
+    },
+    {
+     "name": "ORIG_CITY_NM",
+     "ruleCount": 1
+    },
+    {
+     "name": "ORIG_NODE_GEO_KEY",
+     "ruleCount": 1
+    },
+    {
+     "name": "ORIG_PLANT_ID",
+     "ruleCount": 2
+    },
+    {
+     "name": "ORIG_STREET_NM",
+     "ruleCount": 1
+    },
+    {
+     "name": "ORIG_ZIP_CD",
+     "ruleCount": 1
+    },
+    {
+     "name": "PO_FLASH_NUM",
+     "ruleCount": 1
+    },
+    {
+     "name": "PO_NUM",
+     "ruleCount": 2
+    },
+    {
+     "name": "SHIP_BOOK_BY_PARTNER_NM",
+     "ruleCount": 1
+    },
+    {
+     "name": "SHIP_NUM",
+     "ruleCount": 1
+    },
+    {
+     "name": "SHIP_TEMP_DESC",
+     "ruleCount": 1
+    },
+    {
+     "name": "SLS_UNIT_CD",
+     "ruleCount": 1
+    },
+    {
+     "name": "SRC_VENDOR_DATA_LOAD_DT",
+     "ruleCount": 1
+    },
+    {
+     "name": "TSP_PROVIDER_NM",
+     "ruleCount": 1
+    },
+    {
+     "name": "TSP_UNIT_NM",
+     "ruleCount": 1
+    },
+    {
+     "name": "UNIQUE_SHIP_ID",
+     "ruleCount": 1
+    }
+   ]
+  }
+ ],
+ "rules": [
+  {
+   "id": "MM.0026.0136",
+   "name": null,
+   "description": "Gross Weight cannot be lower than Net Weight",
+   "priority": "1 - Critical",
+   "dimension": "Consistency",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "WEIGHT_NET_VAL",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": true,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT 'MM.0026.0136' AS dq_rule_id, CASE WHEN t0.WEIGHT_GROSS_VAL < t0.WEIGHT_NET_VAL THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 WHERE t0.SRC_SYS_CD = 'PRDCLNT100' AND (MAT_DEL_FLG IS NULL OR t0.MAT_DEL_FLG = '') AND (CROSS_PLANT_MAT_STAT_CD IS NULL OR t0.CROSS_PLANT_MAT_STAT_CD = 'NR') AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "MM.0034.0137",
+   "name": null,
+   "description": "Transportation Group must be maintained for Finished Products",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "TSP_GRP_CD",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": true,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT 'MM.0034.0137' AS dq_rule_id, CASE WHEN (TSP_GRP_CD IS NULL OR TRIM(TSP_GRP_CD) = '') THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 WHERE t0.SRC_SYS_CD = 'PRDCLNT100' AND (MAT_DEL_FLG IS NULL OR t0.MAT_DEL_FLG = '') AND (CROSS_PLANT_MAT_STAT_CD IS NULL OR t0.CROSS_PLANT_MAT_STAT_CD = 'NR') AND t0.MAT_TYPE_CD = 'FINI' AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "MM.0032.0145",
+   "name": null,
+   "description": "Temperature Conditions is a mandatory field",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "TEMPERATURE_COND_CD",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": true,
+   "definitionUpdatedAt": "2025-06-19T08:30:57.475+00:00",
+   "sql": "SELECT 'MM.0032.0145' AS dq_rule_id, CASE WHEN (TEMPERATURE_COND_CD IS NULL OR TRIM(TEMPERATURE_COND_CD) = '') THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 WHERE t0.MAT_TYPE_CD in ('FINI','TRAD') and t0.SRC_SYS_CD = 'PRDCLNT100' and (MAT_DEL_FLG is NULL or t0.MAT_DEL_FLG = '') and (CROSS_PLANT_MAT_STAT_CD is null or t0.CROSS_PLANT_MAT_STAT_CD = 'NR') AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "MM.0082.0145",
+   "name": null,
+   "description": "Cross-plant status is a mandatory field",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "CROSS_PLANT_MAT_STAT_CD",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": true,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT 'MM.0082.0145' AS dq_rule_id, CASE WHEN t0.CROSS_PLANT_MAT_STAT_CD IS NULL OR TRIM(CROSS_PLANT_MAT_STAT_CD) = '' THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 WHERE t0.SRC_SYS_CD = 'PRDCLNT100' AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "MM.0065.0138",
+   "name": null,
+   "description": "Material types FINI,HALB,RAW should always have batch management indicator",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "BATCH_MGMT_REQ_FLG",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": true,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT 'MM.0065.0138' AS dq_rule_id, CASE WHEN (BATCH_MGMT_REQ_FLG IS NULL OR TRIM(BATCH_MGMT_REQ_FLG) = '') THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 WHERE t0.SRC_SYS_CD = 'PRDCLNT100' AND (MAT_DEL_FLG IS NULL OR t0.MAT_DEL_FLG = '') AND (CROSS_PLANT_MAT_STAT_CD IS NULL OR t0.CROSS_PLANT_MAT_STAT_CD = 'NR') AND t0.MAT_TYPE_CD IN ('FINI', 'HALB', 'RAW') AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "MM.0088.0144",
+   "name": null,
+   "description": "Minimum Shelf life is a mandatory field",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "MIN_REMN_SHELF_LIFE_QTY",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": true,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT 'MM.0088.0144' AS dq_rule_id, CASE WHEN (MIN_REMN_SHELF_LIFE_QTY IS NULL OR TRIM(MIN_REMN_SHELF_LIFE_QTY) = '' OR t0.MIN_REMN_SHELF_LIFE_QTY = 0) THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 WHERE t0.SRC_SYS_CD = 'PRDCLNT100' AND (MAT_DEL_FLG IS NULL OR t0.MAT_DEL_FLG = '') AND (CROSS_PLANT_MAT_STAT_CD IS NULL OR t0.CROSS_PLANT_MAT_STAT_CD = 'NR') AND t0.MAT_TYPE_CD IN ('FINI', 'HALB', 'RAW') AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "MM.0032.0173",
+   "name": null,
+   "description": "Temp. Condition Code within range",
+   "priority": "1 - Critical",
+   "dimension": "Accuracy",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "TEMPERATURE_COND_CD",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": true,
+   "definitionUpdatedAt": "2025-06-19T08:30:56.259+00:00",
+   "sql": "SELECT 'MM.0032.0173' AS dq_rule_id, CASE WHEN t0.TEMPERATURE_COND_CD in ('23','25','26','29','31','32','33','35','49','58','59','64','66','B1','B2','B3','B4','B5','B6','B7','B8','B9','BA','BB','BC','BD','BE','BF','BG','BH','SA','SB','SG','SI','SK','SU','SX','V3','VA','VD') THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 WHERE t0.MAT_TYPE_CD in ('FINI','TRAD') and t0.SRC_SYS_CD = 'PRDCLNT100' and (MAT_DEL_FLG is NULL or t0.MAT_DEL_FLG = '') and (CROSS_PLANT_MAT_STAT_CD is null or t0.CROSS_PLANT_MAT_STAT_CD = 'NR') AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "MM.2706.0124",
+   "name": null,
+   "description": "Field Sort Field 2 cannot be empty",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "SORT_FIELD_2_CD",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": true,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT 'MM.2706.0124' AS dq_rule_id, CASE WHEN (SORT_FIELD_2_CD IS NULL OR TRIM(SORT_FIELD_2_CD) = '') THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 WHERE t0.SRC_SYS_CD = 'PRDCLNT100' AND (MAT_DEL_FLG IS NULL OR t0.MAT_DEL_FLG = '') AND (CROSS_PLANT_MAT_STAT_CD IS NULL OR t0.CROSS_PLANT_MAT_STAT_CD = 'NR') AND t0.MAT_TYPE_CD IN ('FINI', 'HALB') AND t0.LAB_DESIGN_OFFICE_CD <> 'JHC' AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "MM.2705.0123",
+   "name": null,
+   "description": "Field Sort Field 1 cannot be empty",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "SORT_FIELD_1_CD",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": true,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT 'MM.2705.0123' AS dq_rule_id, CASE WHEN (SORT_FIELD_1_CD IS NULL OR TRIM(SORT_FIELD_1_CD) = '') THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 WHERE t0.SRC_SYS_CD = 'PRDCLNT100' AND (MAT_DEL_FLG IS NULL OR t0.MAT_DEL_FLG = '') AND (CROSS_PLANT_MAT_STAT_CD IS NULL OR t0.CROSS_PLANT_MAT_STAT_CD = 'NR') AND t0.MAT_TYPE_CD IN ('FINI', 'HALB') AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "MM.0089.0121",
+   "name": null,
+   "description": "Total Shelf Life Field cannot be empty",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "SHELF_LIFE_TOTAL_VAL",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": true,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT 'MM.0089.0121' AS dq_rule_id, CASE WHEN (SHELF_LIFE_TOTAL_VAL IS NULL OR TRIM(SHELF_LIFE_TOTAL_VAL) = '' OR t0.SHELF_LIFE_TOTAL_VAL = 0) THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 WHERE t0.SRC_SYS_CD = 'PRDCLNT100' AND (MAT_DEL_FLG IS NULL OR t0.MAT_DEL_FLG = '') AND (CROSS_PLANT_MAT_STAT_CD IS NULL OR t0.CROSS_PLANT_MAT_STAT_CD = 'NR') AND t0.MAT_TYPE_CD IN ('FINI', 'TRAD') AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "MM.2709.0146",
+   "name": null,
+   "description": "Strength is a mandatory field",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "POTENCY_STD_VAL",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": true,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT 'MM.2709.0146' AS dq_rule_id, CASE WHEN (POTENCY_STD_VAL IS NULL OR TRIM(POTENCY_STD_VAL) = '') THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 WHERE t0.SRC_SYS_CD = 'PRDCLNT100' AND (MAT_DEL_FLG IS NULL OR t0.MAT_DEL_FLG = '') AND (CROSS_PLANT_MAT_STAT_CD IS NULL OR t0.CROSS_PLANT_MAT_STAT_CD = 'NR') AND t0.MAT_TYPE_CD IN ('FINI', 'TRAD', 'HALB', 'ZDMY') AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "MM.2707.0127",
+   "name": null,
+   "description": "If field Material Type = FINI, TRAD or FERT then require entry from Global Brand",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "GLOBAL_BRAND_NM",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": true,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT 'MM.2707.0127' AS dq_rule_id, CASE WHEN (GLOBAL_BRAND_NM IS NULL OR TRIM(GLOBAL_BRAND_NM) = '') THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 WHERE t0.SRC_SYS_CD = 'PRDCLNT100' AND (MAT_DEL_FLG IS NULL OR t0.MAT_DEL_FLG = '') AND (CROSS_PLANT_MAT_STAT_CD IS NULL OR t0.CROSS_PLANT_MAT_STAT_CD = 'NR') AND t0.MAT_TYPE_CD IN ('FINI', 'TRAD', 'ZDMY', 'HALB') AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "MM.2708.0128",
+   "name": null,
+   "description": "If field Material Type = FINI, TRAD or FERT then require entry from Trade Name",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "TRADE_NM",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": true,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT 'MM.2708.0128' AS dq_rule_id, CASE WHEN (TRADE_NM IS NULL OR TRIM(TRADE_NM) = '') THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 WHERE t0.SRC_SYS_CD = 'PRDCLNT100' AND (MAT_DEL_FLG IS NULL OR t0.MAT_DEL_FLG = '') AND (CROSS_PLANT_MAT_STAT_CD IS NULL OR t0.CROSS_PLANT_MAT_STAT_CD = 'NR') AND t0.MAT_TYPE_CD IN ('FINI', 'TRAD', 'HALB', 'ZDMY') AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "MM.0026.0132",
+   "name": null,
+   "description": "Net weight needs to be maintained for Finished Products",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "WEIGHT_NET_VAL",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": true,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT 'MM.0026.0132' AS dq_rule_id, CASE WHEN (WEIGHT_NET_VAL IS NULL OR TRIM(WEIGHT_NET_VAL) = '' OR t0.WEIGHT_NET_VAL = 0) THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 WHERE t0.SRC_SYS_CD = 'PRDCLNT100' AND (MAT_DEL_FLG IS NULL OR t0.MAT_DEL_FLG = '') AND (CROSS_PLANT_MAT_STAT_CD IS NULL OR t0.CROSS_PLANT_MAT_STAT_CD = 'NR') AND t0.MAT_TYPE_CD = 'FINI' AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "MM.0025.0133",
+   "name": null,
+   "description": "Gross weight needs to be maintained for Finished Products",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "WEIGHT_GROSS_VAL",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": true,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT 'MM.0025.0133' AS dq_rule_id, CASE WHEN (WEIGHT_GROSS_VAL IS NULL OR TRIM(WEIGHT_GROSS_VAL) = '' OR t0.WEIGHT_GROSS_VAL = 0) THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 WHERE t0.SRC_SYS_CD = 'PRDCLNT100' AND (MAT_DEL_FLG IS NULL OR t0.MAT_DEL_FLG = '') AND (CROSS_PLANT_MAT_STAT_CD IS NULL OR t0.CROSS_PLANT_MAT_STAT_CD = 'NR') AND t0.MAT_TYPE_CD = 'FINI' AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "1",
+   "name": null,
+   "description": null,
+   "priority": "1 - Critical",
+   "dimension": "Consistency",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "SHELF_LIFE_TOTAL_VAL",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": false,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT            '1' AS dq_rule_id           ,CASE WHEN t0.SHELF_LIFE_TOTAL_VAL <> '24'              THEN false              ELSE true            END AS result            FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0            JOIN us_gmsgq_prd.gms_us_hub.ref_materialmstr_plant_erp_glbl as t1 on t0.MAT_ID = t1.MAT_ID            WHERE t0.SORT_FIELD_1_CD = 'E' AND t1.CTRY_ORIGIN_CD = 'IE' AND t0.ACTIVE_FLAG = 'Y' AND t1.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "2",
+   "name": null,
+   "description": null,
+   "priority": "1 - Critical",
+   "dimension": "Consistency",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "SHELF_LIFE_TOTAL_VAL",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": false,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT '2' AS dq_rule_id, CASE WHEN t0.SHELF_LIFE_TOTAL_VAL <> '24' THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 JOIN us_gmsgq_prd.gms_us_hub.ref_materialmstr_plant_erp_glbl as t1 on t0.MAT_ID = t1.MAT_ID WHERE t1.REGION_NM = 'BIOLOGICS' AND t1.CTRY_ORIGIN_CD = 'GB' AND t0.ACTIVE_FLAG = 'Y' AND t1.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "3",
+   "name": null,
+   "description": null,
+   "priority": "1 - Critical",
+   "dimension": "Consistency",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "SHELF_LIFE_TOTAL_VAL",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": false,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT '3' AS dq_rule_id,        CASE WHEN t0.SHELF_LIFE_TOTAL_VAL <> '36' THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 JOIN us_gmsgq_prd.gms_us_hub.ref_materialmstr_plant_erp_glbl AS t1   ON t0.MAT_ID = t1.MAT_ID WHERE t1.REGION_NM = 'ONCO EXTERNAL'   AND t1.CTRY_ORIGIN_CD = 'GB' AND t0.ACTIVE_FLAG = 'Y' AND t1.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "4",
+   "name": null,
+   "description": null,
+   "priority": "1 - Critical",
+   "dimension": "Consistency",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "SHELF_LIFE_TOTAL_VAL",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": false,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT '4' AS dq_rule_id,        CASE WHEN t0.SHELF_LIFE_TOTAL_VAL <> '36' THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 JOIN us_gmsgq_prd.gms_us_hub.ref_materialmstr_plant_erp_glbl AS t1   ON t0.MAT_ID = t1.MAT_ID WHERE t0.SORT_FIELD_2_CD = 'S'   AND t1.CTRY_ORIGIN_CD = 'DE' AND t0.ACTIVE_FLAG = 'Y' AND t1.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "5",
+   "name": null,
+   "description": null,
+   "priority": "1 - Critical",
+   "dimension": "Consistency",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "SHELF_LIFE_TOTAL_VAL",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": false,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT '5' AS dq_rule_id,        CASE WHEN t0.SHELF_LIFE_TOTAL_VAL <> '36' THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 JOIN us_gmsgq_prd.gms_us_hub.ref_materialmstr_plant_erp_glbl AS t1   ON t0.MAT_ID = t1.MAT_ID WHERE t0.SORT_FIELD_1_CD = 'E'   AND t1.CTRY_ORIGIN_CD = 'JP' AND t0.ACTIVE_FLAG = 'Y' AND t1.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "6",
+   "name": null,
+   "description": null,
+   "priority": "1 - Critical",
+   "dimension": "Consistency",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "SHELF_LIFE_TOTAL_VAL",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": false,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT '6' AS dq_rule_id,        CASE WHEN t0.SHELF_LIFE_TOTAL_VAL <> '48' THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 JOIN us_gmsgq_prd.gms_us_hub.ref_materialmstr_plant_erp_glbl AS t1   ON t0.MAT_ID = t1.MAT_ID WHERE t1.REGION_NM = 'BIOLOGICS'   AND t1.CTRY_ORIGIN_CD = 'IT' AND t0.ACTIVE_FLAG = 'Y' AND t1.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "7",
+   "name": null,
+   "description": null,
+   "priority": "1 - Critical",
+   "dimension": "Consistency",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "SHELF_LIFE_TOTAL_VAL",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": false,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT '7' AS dq_rule_id,        CASE WHEN t0.SHELF_LIFE_TOTAL_VAL <> '36' THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 JOIN us_gmsgq_prd.gms_us_hub.ref_materialmstr_plant_erp_glbl AS t1   ON t0.MAT_ID = t1.MAT_ID WHERE t1.REGION_NM = 'SM INTERNAL'   AND t1.CTRY_ORIGIN_CD = 'US' AND t0.ACTIVE_FLAG = 'Y' AND t1.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "8",
+   "name": null,
+   "description": null,
+   "priority": "1 - Critical",
+   "dimension": "Consistency",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "SHELF_LIFE_TOTAL_VAL",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": false,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT '8' AS dq_rule_id,        CASE WHEN t0.SHELF_LIFE_TOTAL_VAL <> '1200' THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 JOIN us_gmsgq_prd.gms_us_hub.ref_materialmstr_plant_erp_glbl AS t1   ON t0.MAT_ID = t1.MAT_ID WHERE t0.SORT_FIELD_1_CD = 'R'   AND t1.CTRY_ORIGIN_CD = 'IE' AND t0.ACTIVE_FLAG = 'Y' AND t1.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "9",
+   "name": null,
+   "description": null,
+   "priority": "1 - Critical",
+   "dimension": "Consistency",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "SHELF_LIFE_TOTAL_VAL",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": false,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT '9' AS dq_rule_id,        CASE WHEN t0.SHELF_LIFE_TOTAL_VAL <> '36' THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 JOIN us_gmsgq_prd.gms_us_hub.ref_materialmstr_plant_erp_glbl AS t1   ON t0.MAT_ID = t1.MAT_ID WHERE t0.SORT_FIELD_1_CD = '2'   AND t1.CTRY_ORIGIN_CD = 'JP' AND t0.ACTIVE_FLAG = 'Y' AND t1.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "10",
+   "name": null,
+   "description": null,
+   "priority": "1 - Critical",
+   "dimension": "Consistency",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "SHELF_LIFE_TOTAL_VAL",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": false,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT '10' AS dq_rule_id,        CASE WHEN t0.SHELF_LIFE_TOTAL_VAL <> '36' THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 JOIN us_gmsgq_prd.gms_us_hub.ref_materialmstr_plant_erp_glbl AS t1   ON t0.MAT_ID = t1.MAT_ID WHERE t0.SORT_FIELD_1_CD = '5'   AND t1.CTRY_ORIGIN_CD = 'JP' AND t0.ACTIVE_FLAG = 'Y' AND t1.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "11",
+   "name": null,
+   "description": null,
+   "priority": "1 - Critical",
+   "dimension": "Consistency",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "SHELF_LIFE_TOTAL_VAL",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": false,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT '11' AS dq_rule_id,        CASE WHEN t0.SHELF_LIFE_TOTAL_VAL <> '24' THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 JOIN us_gmsgq_prd.gms_us_hub.ref_materialmstr_plant_erp_glbl AS t1   ON t0.MAT_ID = t1.MAT_ID WHERE t1.SHELF_LIFE_REMAINING_MIN_VAL = '6'   AND t1.CTRY_ORIGIN_CD = 'CH' AND t0.ACTIVE_FLAG = 'Y' AND t1.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "12",
+   "name": null,
+   "description": null,
+   "priority": "1 - Critical",
+   "dimension": "Consistency",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "SHELF_LIFE_TOTAL_VAL",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": false,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT '12' AS dq_rule_id,        CASE WHEN t0.SHELF_LIFE_TOTAL_VAL <> '36' THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 JOIN us_gmsgq_prd.gms_us_hub.ref_materialmstr_plant_erp_glbl AS t1   ON t0.MAT_ID = t1.MAT_ID WHERE t1.REGION_NM = 'SM US'   AND t1.CTRY_ORIGIN_CD = 'IT' AND t0.ACTIVE_FLAG = 'Y' AND t1.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "6650",
+   "name": null,
+   "description": null,
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "GLOBAL_BRAND_NM",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": false,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT '6650' AS dq_rule_id,        CASE WHEN t0.global_brand_nm IS NULL OR t0.global_brand_nm = '' THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 WHERE t0.SRC_SYS_CD = 'PRDCLNT100'   AND t0.SORT_FIELD_1_CD IN ('S', 'T', 'B', '1', 'intermediates') AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "6651",
+   "name": null,
+   "description": null,
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "ref_materialmstr_erp_glbl",
+   "column": "GLOBAL_BRAND_NM",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": false,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT '6651' AS dq_rule_id,        CASE WHEN t0.global_brand_nm IS NULL OR t0.global_brand_nm = '' THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl t0 WHERE t0.SRC_SYS_CD = 'PRDCLNT100'   AND t0.SORT_FIELD_1_CD IN ('S', 'T', 'B', '1', 'intermediates') AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "MM.0361.0119",
+   "name": null,
+   "description": "Field MRP Group cannot be empty",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "ref_materialmstr_plant_erp_glbl",
+   "column": "MRP_GROUP_CD",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": true,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT 'MM.0361.0119' AS dq_rule_id, CASE WHEN t0.MRP_GROUP_CD IS NULL OR TRIM(MRP_GROUP_CD) = '' THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_plant_erp_glbl t0 WHERE t0.SRC_SYS_CD = 'PRDCLNT100' AND (DEL_FLG IS NULL OR t0.DEL_FLG = '') AND (PLANT_SPECIFIC_MAT_STAT_CD IS NULL OR t0.PLANT_SPECIFIC_MAT_STAT_CD = 'NR') AND t0.MRP_TYPE_CD <> 'ND' AND t0.MAT_TYPE_CLUSTER_CD IN ('FINI', 'HALB', 'RAW') AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "MM.0293.0126",
+   "name": null,
+   "description": "If field Procurement Type contains values X or E, field Production Supervisor cannot be empty",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "ref_materialmstr_plant_erp_glbl",
+   "column": "PROD_SCHED_CD",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": true,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT 'MM.0293.0126' AS dq_rule_id, CASE WHEN t0.PROD_SCHED_CD IS NULL OR TRIM(PROD_SCHED_CD) = '' THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_plant_erp_glbl t0 WHERE t0.SRC_SYS_CD = 'PRDCLNT100' AND (DEL_FLG IS NULL OR t0.DEL_FLG = '') AND (PLANT_SPECIFIC_MAT_STAT_CD IS NULL OR t0.PLANT_SPECIFIC_MAT_STAT_CD = 'NR') AND t0.MRP_TYPE_CD <> 'ND' AND t0.MAT_TYPE_CLUSTER_CD IN ('FINI', 'HALB', 'RAW', 'PACK', 'HIBE', 'TRAD') AND t0.PROCUREMENT_SERIAL_TYPE_CD IN ('X','E') AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "MM.0410.0158",
+   "name": null,
+   "description": "Material freight group should be blank for DIEN materials (Japan)",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "ref_materialmstr_plant_erp_glbl",
+   "column": "MAT_FREIGHT_GROUP_NM",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": true,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT 'MM.0410.0158' AS dq_rule_id, CASE WHEN t0.MAT_FREIGHT_GROUP_NM IS NOT NULL OR TRIM(MAT_FREIGHT_GROUP_NM) != '' THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_plant_erp_glbl t0 WHERE t0.SRC_SYS_CD = 'PRDCLNT100' AND (DEL_FLG IS NULL OR t0.DEL_FLG = '') AND (PLANT_SPECIFIC_MAT_STAT_CD IS NULL OR t0.PLANT_SPECIFIC_MAT_STAT_CD = 'NR') AND t0.MRP_TYPE_CD <> 'ND' AND t0.MAT_TYPE_CLUSTER_CD IN ('DIEN') AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "MM.0271.0125",
+   "name": null,
+   "description": "Field Procurement Type cannot be empty",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "ref_materialmstr_plant_erp_glbl",
+   "column": "PROCUREMENT_TYPE_CD",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": true,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT 'MM.0271.0125' AS dq_rule_id, CASE WHEN t0.PROCUREMENT_TYPE_CD IS NULL OR TRIM(PROCUREMENT_TYPE_CD) = '' THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_plant_erp_glbl t0 WHERE t0.SRC_SYS_CD = 'PRDCLNT100' AND (DEL_FLG IS NULL OR t0.DEL_FLG = '') AND (PLANT_SPECIFIC_MAT_STAT_CD IS NULL OR t0.PLANT_SPECIFIC_MAT_STAT_CD = 'NR') AND t0.MRP_TYPE_CD <> 'ND' AND t0.MAT_TYPE_CLUSTER_CD IN ('FINI', 'HALB', 'RAW', 'PACK', 'HIBE', 'TRAD') AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "MM.0270.0116",
+   "name": null,
+   "description": "Field Lot Size Cannot be Empty",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "ref_materialmstr_plant_erp_glbl",
+   "column": "LOT_SIZE_KEY_CD",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": true,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT 'MM.0270.0116' AS dq_rule_id, CASE WHEN t0.LOT_SIZE_KEY_CD IS NULL OR TRIM(LOT_SIZE_KEY_CD) = '' THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_plant_erp_glbl t0 WHERE t0.SRC_SYS_CD = 'PRDCLNT100' AND (DEL_FLG IS NULL OR t0.DEL_FLG = '') AND (PLANT_SPECIFIC_MAT_STAT_CD IS NULL OR t0.PLANT_SPECIFIC_MAT_STAT_CD = 'NR') AND t0.MRP_TYPE_CD <> 'ND' AND t0.MAT_TYPE_CLUSTER_CD IN ('FINI', 'HALB', 'RAW') AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "MM.0272.0147",
+   "name": null,
+   "description": "Procurement type should not be X.",
+   "priority": "1 - Critical",
+   "dimension": "Consistency",
+   "tableId": "ref_materialmstr_plant_erp_glbl",
+   "column": "PROCUREMENT_SERIAL_TYPE_CD",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": true,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT 'MM.0272.0147' AS dq_rule_id, CASE WHEN t0.PROCUREMENT_SERIAL_TYPE_CD = 'X' OR TRIM(PROCUREMENT_SERIAL_TYPE_CD) = 'X' THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_plant_erp_glbl t0 WHERE t0.SRC_SYS_CD = 'PRDCLNT100' AND (DEL_FLG IS NULL OR t0.DEL_FLG = '') AND (PLANT_SPECIFIC_MAT_STAT_CD IS NULL OR t0.PLANT_SPECIFIC_MAT_STAT_CD = 'NR') AND t0.MRP_TYPE_CD <> 'ND' AND t0.MAT_TYPE_CLUSTER_CD IN ('FINI', 'HALB', 'RAW', 'PACK', 'HIBE', 'TRAD') AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "MM.0264.0142",
+   "name": null,
+   "description": "MRP controller mandatory",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "ref_materialmstr_plant_erp_glbl",
+   "column": "MRP_CTRL_CD",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": true,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT 'MM.0264.0142' AS dq_rule_id, CASE WHEN t0.MRP_CTRL_CD IS NULL OR TRIM(MRP_CTRL_CD) = '' THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_plant_erp_glbl t0 WHERE t0.SRC_SYS_CD = 'PRDCLNT100' AND (DEL_FLG IS NULL OR t0.DEL_FLG = '') AND (PLANT_SPECIFIC_MAT_STAT_CD IS NULL OR t0.PLANT_SPECIFIC_MAT_STAT_CD = 'NR') AND t0.MRP_TYPE_CD <> 'ND' AND t0.MAT_TYPE_CLUSTER_CD IN ('FINI', 'HALB', 'RAW') AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "MM.0263.0122",
+   "name": null,
+   "description": "Field MRP Type cannot be empty",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "ref_materialmstr_plant_erp_glbl",
+   "column": "MRP_TYPE_CD",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": true,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT 'MM.0263.0122' AS dq_rule_id, CASE WHEN t0.MRP_TYPE_CD IS NULL OR TRIM(MRP_TYPE_CD) = '' THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_plant_erp_glbl t0 WHERE t0.SRC_SYS_CD = 'PRDCLNT100' AND (DEL_FLG IS NULL OR t0.DEL_FLG = '') AND (PLANT_SPECIFIC_MAT_STAT_CD IS NULL OR t0.PLANT_SPECIFIC_MAT_STAT_CD = 'NR') AND t0.MRP_TYPE_CD <> 'ND' AND t0.MAT_TYPE_CLUSTER_CD IN ('FINI', 'HALB', 'RAW') AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "MM.0256.0120",
+   "name": null,
+   "description": "Field Plant-sp. Material Status cannot be empty",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "ref_materialmstr_plant_erp_glbl",
+   "column": "PLANT_SPECIFIC_MAT_STAT_CD",
+   "sourceSystem": "PRDCLNT100",
+   "sourceCategory": "ERP",
+   "active": true,
+   "definitionUpdatedAt": "2024-12-12T00:00:00.000+00:00",
+   "sql": "SELECT 'MM.0256.0120' AS dq_rule_id, CASE WHEN t0.PLANT_SPECIFIC_MAT_STAT_CD IS NULL OR TRIM(PLANT_SPECIFIC_MAT_STAT_CD) = '' THEN false ELSE true END AS result FROM us_gmsgq_prd.gms_us_hub.ref_materialmstr_plant_erp_glbl t0 WHERE t0.SRC_SYS_CD = 'PRDCLNT100' AND (DEL_FLG IS NULL OR t0.DEL_FLG = '') AND (PLANT_SPECIFIC_MAT_STAT_CD IS NULL OR t0.PLANT_SPECIFIC_MAT_STAT_CD = 'NR') AND t0.MRP_TYPE_CD <> 'ND' AND t0.MAT_TYPE_CLUSTER_CD IN ('FINI', 'HALB', 'RAW') AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.CDE_25",
+   "name": "SC.TP.CDE_25 E2ESHIPMENT_KEY",
+   "description": "gmsgq_txn_sapbw_e2e_shipment_glbl CDE Rule",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "E2ESHIPMENT_KEY",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-13T14:11:22.315+00:00",
+   "sql": "SELECT 'SC.TP.CDE_25' AS dq_rule_id, case when NOT ( t0.E2ESHIPMENT_KEY IS NULL or trim(t0.E2ESHIPMENT_KEY) = '' ) then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.928",
+   "name": "CONFIRM_SHIP_CHARGE_WT_UOM_CD must be in (KG G LBS)",
+   "description": "CONFIRM_SHIP_CHARGE_WT_UOM_CD must be in (KG G LBS)",
+   "priority": "1 - Critical",
+   "dimension": "Validity",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "CONFIRM_SHIP_CHARGE_WT_UOM_CD",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-08-31T10:53:11.871+00:00",
+   "sql": "SELECT\n  'SC.TP.928' AS dq_rule_id, CASE\n  WHEN\n  upper(TRIM(CONFIRM_SHIP_CHARGE_WT_UOM_CD)) IN ('KG', 'G', 'LBS', 'LB')\n  THEN TRUE\n  ELSE FALSE\n  END AS result\n FROM us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0\n WHERE\n  CONFIRM_SHIP_CHARGE_WT_UOM_CD IS NOT NULL\n  AND TRIM(CONFIRM_SHIP_CHARGE_WT_UOM_CD) <> ''\n  AND TRIM(CONFIRM_SHIP_CHARGE_WT_UOM_CD) <> '-'\n  AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.841",
+   "name": "SC.TP.841 FLIGHT_VESSEL_2_NM",
+   "description": "IF field not null or '' or '-' (it can be null) then:",
+   "priority": "1 - Critical",
+   "dimension": "Validity",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "FLIGHT_VESSEL_2_NM",
+   "sourceSystem": "SUPPLY CHAIN",
+   "sourceCategory": "TRANSPORTATION",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-08T14:59:16.399+00:00",
+   "sql": "SELECT 'SC.TP.841' AS dq_rule_id, case when coalesce(trim(t0.FLIGHT_VESSEL_2_NM), '') in ('', '-') then true when t0.TSP_MODE_DESC like 'Air%' then (t0.FLIGHT_VESSEL_2_NM rlike '^[A-Z0-9]{2}[0-9]{1,4}$') else true end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.810",
+   "name": "SC.TP.810 ORIG_PLANT_ID",
+   "description": "Must be found us_gmsgq_prd.gms_us_hub.gmsgq_sapdsp_t001w",
+   "priority": "1 - Critical",
+   "dimension": "Validity",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ORIG_PLANT_ID",
+   "sourceSystem": "SUPPLY CHAIN",
+   "sourceCategory": "TRANSPORTATION",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-08T15:41:39.572+00:00",
+   "sql": "SELECT 'SC.TP.810' AS dq_rule_id, case when coalesce(trim(t0.ORIG_PLANT_ID), '') <> '' and exists ( select 1 from us_gmsgq_prd.gms_us_lake.gmsgq_sapdsp_t001w r where r.plant = t0.ORIG_PLANT_ID ) then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.899",
+   "name": "SC.TP.899 ESTD_SHIP_COST_EUR_VAL",
+   "description": "Must be > 0",
+   "priority": "1 - Critical",
+   "dimension": "Validity",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ESTD_SHIP_COST_EUR_VAL",
+   "sourceSystem": "SUPPLY CHAIN",
+   "sourceCategory": "TRANSPORTATION",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-08T15:14:09.807+00:00",
+   "sql": "SELECT 'SC.TP.899' AS dq_rule_id, CASE WHEN ESTD_SHIP_COST_EUR_VAL IS NOT NULL AND TRIM(ESTD_SHIP_COST_EUR_VAL) <> '' AND ESTD_SHIP_COST_EUR_VAL > 0 THEN TRUE ELSE FALSE END AS result FROM us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.887",
+   "name": "SC.TP.887 CONFIRM_SHIP_CHARGE_WT_VAL",
+   "description": "Must not be null / 0 / ''. Should > CONFIRM_SHIP_GROSS_WT_VAL",
+   "priority": "1 - Critical",
+   "dimension": "Validity",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "CONFIRM_SHIP_CHARGE_WT_VAL",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-08-17T12:11:15.066+00:00",
+   "sql": "SELECT 'SC.TP.887' AS dq_rule_id, CASE WHEN CONFIRM_SHIP_CHARGE_WT_VAL >= CONFIRM_SHIP_GROSS_WT_VAL and CONFIRM_SHIP_CHARGE_WT_VAL > 0  THEN TRUE ELSE FALSE END AS result FROM us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE CONFIRM_SHIP_CHARGE_WT_VAL IS NOT NULL AND TRIM(CONFIRM_SHIP_CHARGE_WT_VAL) <> '' AND TRIM(CONFIRM_SHIP_CHARGE_WT_VAL) <> '-' AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.CDE_37",
+   "name": "SC.TP.CDE_37 ORIG_ZIP_CD",
+   "description": "gmsgq_txn_sapbw_e2e_shipment_glbl CDE Rule",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ORIG_ZIP_CD",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-13T14:19:06.634+00:00",
+   "sql": "SELECT 'SC.TP.CDE_37' AS dq_rule_id, case when NOT ( t0.ORIG_ZIP_CD IS NULL or trim(t0.ORIG_ZIP_CD) = '' ) then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.820",
+   "name": "SC.TP.820 SRC_VENDOR_DATA_LOAD_DT",
+   "description": "Must be <= today",
+   "priority": "1 - Critical",
+   "dimension": "Validity",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "SRC_VENDOR_DATA_LOAD_DT",
+   "sourceSystem": "SUPPLY CHAIN",
+   "sourceCategory": "TRANSPORTATION",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-08T14:59:16.399+00:00",
+   "sql": "SELECT 'SC.TP.820' AS dq_rule_id, case when t0.SRC_VENDOR_DATA_LOAD_DT is not null and t0.SRC_VENDOR_DATA_LOAD_DT <= current_date() then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.881",
+   "name": "SC.TP.881 CONFIRM_SHIP_GROSS_WT_UOM_CD",
+   "description": "Must be not be null or '' or '-' / Must be in (KG, G, lbs)",
+   "priority": "1 - Critical",
+   "dimension": "Validity",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "CONFIRM_SHIP_GROSS_WT_UOM_CD",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-08-31T10:43:37.610+00:00",
+   "sql": "SELECT     'SC.TP.881' AS dq_rule_id, CASE         WHEN             upper(TRIM(CONFIRM_SHIP_GROSS_WT_UOM_CD)) IN ('KG', 'G', 'LBS', 'LB')         THEN TRUE         ELSE FALSE     END AS result FROM us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE   CONFIRM_SHIP_GROSS_WT_UOM_CD IS NOT NULL             AND TRIM(CONFIRM_SHIP_GROSS_WT_UOM_CD) <> ''             AND TRIM(CONFIRM_SHIP_GROSS_WT_UOM_CD) <> '-'             AND t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.CDE_32",
+   "name": "SC.TP.CDE_32 DLVR_NUM",
+   "description": "gmsgq_txn_sapbw_e2e_shipment_glbl CDE Rule",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "DLVR_NUM",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-13T14:19:06.634+00:00",
+   "sql": "SELECT 'SC.TP.CDE_32' AS dq_rule_id, case when NOT ( t0.DLVR_NUM IS NULL or trim(t0.DLVR_NUM) = '' ) then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.913",
+   "name": "CONFIRM_SHIP_CHARGE_WT_VAL is not having any null values",
+   "description": "CONFIRM_SHIP_CHARGE_WT_VAL is not having any null values",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "CONFIRM_SHIP_CHARGE_WT_VAL",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-08-07T10:11:23.132+00:00",
+   "sql": "SELECT 'SC.TP.913' AS dq_rule_id,  CASE WHEN  CONFIRM_SHIP_CHARGE_WT_VAL IS NOT NULL AND TRIM(CONFIRM_SHIP_CHARGE_WT_VAL) <> ''  AND TRIM(CONFIRM_SHIP_CHARGE_WT_VAL) <> '-'  THEN TRUE ELSE FALSE END AS result FROM us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0  WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.CDE_74",
+   "name": "SC.TP.CDE_74 ACTL_DEPART_ORIG_PORT_2_TM",
+   "description": "gmsgq_txn_sapbw_e2e_shipment_glbl CDE Rule",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ACTL_DEPART_ORIG_PORT_2_TM",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-14T07:29:54.833+00:00",
+   "sql": "SELECT 'SC.TP.CDE_74' AS dq_rule_id, case when t0.ACTL_DEPART_ORIG_PORT_2_TM IS NOT NULL then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.CDE_85",
+   "name": "SC.TP.CDE_85 UNIQUE_SHIP_ID",
+   "description": "gmsgq_txn_sapbw_e2e_shipment_glbl CDE Rule",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "UNIQUE_SHIP_ID",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-14T07:29:54.833+00:00",
+   "sql": "SELECT 'SC.TP.CDE_85' AS dq_rule_id, case when NOT ( t0.UNIQUE_SHIP_ID IS NULL or trim(t0.UNIQUE_SHIP_ID) = '' ) then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.CDE_65",
+   "name": "SC.TP.CDE_65 DEST_PORT_FINAL_CD",
+   "description": "gmsgq_txn_sapbw_e2e_shipment_glbl CDE Rule",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "DEST_PORT_FINAL_CD",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-14T07:29:54.833+00:00",
+   "sql": "SELECT 'SC.TP.CDE_65' AS dq_rule_id, case when NOT ( t0.DEST_PORT_FINAL_CD IS NULL or trim(t0.DEST_PORT_FINAL_CD) = '' ) then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.846",
+   "name": "SC.TP.846 DANGER_GOODS_FLG",
+   "description": "Must be in (Z00, Z01)",
+   "priority": "1 - Critical",
+   "dimension": "Validity",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "DANGER_GOODS_FLG",
+   "sourceSystem": "SUPPLY CHAIN",
+   "sourceCategory": "TRANSPORTATION",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-08T14:59:16.399+00:00",
+   "sql": "SELECT 'SC.TP.846' AS dq_rule_id, CASE WHEN danger_goods_flg IS NOT NULL AND UPPER(TRIM(danger_goods_flg)) IN ('Z00', 'Z01') THEN TRUE ELSE FALSE END AS result FROM us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.906",
+   "name": "SC.TP.906 CO2_EMISSIONS_VAL_KG",
+   "description": "Must be > 0",
+   "priority": "1 - Critical",
+   "dimension": "Validity",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "CO2_EMISSIONS_VAL_KG",
+   "sourceSystem": "SUPPLY CHAIN",
+   "sourceCategory": "TRANSPORTATION",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-08T15:14:09.807+00:00",
+   "sql": "SELECT 'SC.TP.906' AS dq_rule_id, CASE WHEN CO2_EMISSIONS_VAL_KG IS NOT NULL AND CO2_EMISSIONS_VAL_KG > 0 THEN TRUE ELSE FALSE END AS result FROM us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.853",
+   "name": "SC.TP.853 DEST_CTRY_NM",
+   "description": "Must be not be null or '' or '-'. Must be a valid country name (might be removed when moving to EDB to keep only code)",
+   "priority": "1 - Critical",
+   "dimension": "Validity",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "DEST_CTRY_NM",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-10-12T12:24:10.110+00:00",
+   "sql": "SELECT 'SC.TP.853' AS dq_rule_id, CASE WHEN DEST_CTRY_NM IS NOT NULL AND DEST_CTRY_NM NOT IN ('', '-') AND DEST_CTRY_NM IN ( SELECT ISO3Code FROM eda_deprd.eda_de_lake.r360_lake_product_country ) THEN TRUE ELSE FALSE END AS result FROM us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.839",
+   "name": "SC.TP.839 AWB_BL_CMR_NUM",
+   "description": "Must be not be null or '' or '-'",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "AWB_BL_CMR_NUM",
+   "sourceSystem": "SUPPLY CHAIN",
+   "sourceCategory": "TRANSPORTATION",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-08T14:59:16.399+00:00",
+   "sql": "SELECT 'SC.TP.839' AS dq_rule_id, case when coalesce(trim(t0.AWB_BL_CMR_NUM), '') not in ('', '-') then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.808",
+   "name": "SC.TP.808 MAT_ID",
+   "description": "Must be found us_gmsgq_prd.gms_us_hub.gmsgq_sapdsp_mara",
+   "priority": "1 - Critical",
+   "dimension": "Validity",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "MAT_ID",
+   "sourceSystem": "SUPPLY CHAIN",
+   "sourceCategory": "TRANSPORTATION",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-14T10:27:45.295+00:00",
+   "sql": "SELECT 'SC.TP.808' AS dq_rule_id, case when coalesce(trim(t0.MAT_ID), '') <> '' and exists ( select 1 from us_gmsgq_prd.gms_us_hub.ref_materialmstr_erp_glbl r where r.MAT_ID = t0.MAT_ID AND r.ACTIVE_FLAG = 'Y') then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.897",
+   "name": "SC.TP.897 ESTD_SHIP_COST_USD_VAL",
+   "description": "Must be > 0",
+   "priority": "1 - Critical",
+   "dimension": "Validity",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ESTD_SHIP_COST_USD_VAL",
+   "sourceSystem": "SUPPLY CHAIN",
+   "sourceCategory": "TRANSPORTATION",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-08T15:14:09.807+00:00",
+   "sql": "SELECT 'SC.TP.897' AS dq_rule_id, CASE WHEN ESTD_SHIP_COST_USD_VAL IS NOT NULL AND TRIM(ESTD_SHIP_COST_USD_VAL) <> '' AND ESTD_SHIP_COST_USD_VAL > 0 THEN TRUE ELSE FALSE END AS result FROM us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.CDE_88",
+   "name": "SC.TP.CDE_88 co2_emissions_ratio_val_kg",
+   "description": "gmsgq_txn_sapbw_e2e_shipment_glbl CDE Rule",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "co2_emissions_ratio_val_kg",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-14T07:29:54.833+00:00",
+   "sql": "SELECT 'SC.TP.CDE_88' AS dq_rule_id, case when t0.co2_emissions_ratio_val_kg IS NOT NULL then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.896",
+   "name": "SC.TP.896 INV_SHIP_COST_JPY_VAL",
+   "description": "Must be > 0",
+   "priority": "1 - Critical",
+   "dimension": "Validity",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "INV_SHIP_COST_JPY_VAL",
+   "sourceSystem": "SUPPLY CHAIN",
+   "sourceCategory": "TRANSPORTATION",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-08T15:14:09.807+00:00",
+   "sql": "SELECT 'SC.TP.896' AS dq_rule_id, CASE WHEN INV_SHIP_COST_JPY_VAL IS NOT NULL AND TRIM(INV_SHIP_COST_JPY_VAL) <> '' AND INV_SHIP_COST_JPY_VAL > 0 THEN TRUE ELSE FALSE END AS result FROM us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.825",
+   "name": "SC.TP.825 MILK_RUN_FLG",
+   "description": "Binary",
+   "priority": "1 - Critical",
+   "dimension": "Validity",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "MILK_RUN_FLG",
+   "sourceSystem": "SUPPLY CHAIN",
+   "sourceCategory": "TRANSPORTATION",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-08T14:59:16.399+00:00",
+   "sql": "SELECT 'SC.TP.825' AS dq_rule_id, case when t0.MILK_RUN_FLG in (true, false) then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.CDE_34",
+   "name": "SC.TP.CDE_34 DANGER_GOODS_DESC",
+   "description": "gmsgq_txn_sapbw_e2e_shipment_glbl CDE Rule",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "DANGER_GOODS_DESC",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-13T14:19:06.634+00:00",
+   "sql": "SELECT 'SC.TP.CDE_34' AS dq_rule_id, case when NOT ( t0.DANGER_GOODS_DESC IS NULL or trim(t0.DANGER_GOODS_DESC) = '' ) then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.CDE_81",
+   "name": "SC.TP.CDE_81 CONFIRM_SHIP_GROSS_WT_VAL",
+   "description": "gmsgq_txn_sapbw_e2e_shipment_glbl CDE Rule",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "CONFIRM_SHIP_GROSS_WT_VAL",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-14T07:29:54.833+00:00",
+   "sql": "SELECT 'SC.TP.CDE_81' AS dq_rule_id, case when t0.CONFIRM_SHIP_GROSS_WT_VAL IS NOT NULL then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.795",
+   "name": "SC.TP.795 CARRIER_REF_NUM",
+   "description": "Must be not be null or '' or '-'",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "CARRIER_REF_NUM",
+   "sourceSystem": "SUPPLY CHAIN",
+   "sourceCategory": "TRANSPORTATION",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-08T14:28:23.893+00:00",
+   "sql": "SELECT 'SC.TP.795' AS dq_rule_id, case when coalesce(trim(t0.CARRIER_REF_NUM), '') not in ('', '-') then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.CDE_36",
+   "name": "SC.TP.CDE_36 ORIG_STREET_NM",
+   "description": "gmsgq_txn_sapbw_e2e_shipment_glbl CDE Rule",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ORIG_STREET_NM",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-13T14:19:06.634+00:00",
+   "sql": "SELECT 'SC.TP.CDE_36' AS dq_rule_id, case when NOT ( t0.ORIG_STREET_NM IS NULL or trim(t0.ORIG_STREET_NM) = '' ) then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.801",
+   "name": "SC.TP.801 INCOTERMS_CD",
+   "description": "Must be in (CFR,CIF,CIP,CPT,DAF,DAP,DAT,DDP,DDU,DEQ,DES,DPU,EXW,FAS,FBS,FCA,FH,FOB,FOR,UN,XWU)",
+   "priority": "1 - Critical",
+   "dimension": "Validity",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "INCOTERMS_CD",
+   "sourceSystem": "SUPPLY CHAIN",
+   "sourceCategory": "TRANSPORTATION",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-08T14:28:23.893+00:00",
+   "sql": "SELECT 'SC.TP.801' AS dq_rule_id, case when t0.INCOTERMS_CD in ('CFR','CIF','CIP','CPT','DAF','DAP','DAT','DDP','DDU','DEQ','DES','DPU','EXW','FAS','FBS','FCA','FH','FOB','FOR','UN','XWU') then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.927",
+   "name": "CO2_FCTR_VAL should not be null",
+   "description": "CO2_FCTR_VAL should not be null",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "co2_fctr_val",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-08-31T10:58:24.613+00:00",
+   "sql": "SELECT\n  'SC.TP.927' AS dq_rule_id, CASE WHEN\n  t0.co2_fctr_val IS NOT NULL\n  AND TRIM(CAST(t0.co2_fctr_val AS STRING)) <> ''\n  AND TRIM(CAST(t0.co2_fctr_val AS STRING)) <> '-'\n  THEN true ELSE false\n  END AS result\n FROM us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0\n WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.CDE_33",
+   "name": "SC.TP.CDE_33 SHIP_NUM",
+   "description": "gmsgq_txn_sapbw_e2e_shipment_glbl CDE Rule",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "SHIP_NUM",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-13T14:19:06.634+00:00",
+   "sql": "SELECT 'SC.TP.CDE_33' AS dq_rule_id, case when NOT ( t0.SHIP_NUM IS NULL or trim(t0.SHIP_NUM) = '' ) then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.901",
+   "name": "SC.TP.901 DEST_SITE_ID",
+   "description": "Must be found us_gmsgq_prd.gms_us_hub.gmsgq_sapdsp_t001w",
+   "priority": "1 - Critical",
+   "dimension": "Validity",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "DEST_SITE_ID",
+   "sourceSystem": "SUPPLY CHAIN",
+   "sourceCategory": "TRANSPORTATION",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-08T15:14:09.807+00:00",
+   "sql": "SELECT 'SC.TP.901' AS dq_rule_id, CASE WHEN t0.DEST_SITE_ID IS NOT NULL AND TRIM(t0.DEST_SITE_ID) <> '' AND TRIM(t0.DEST_SITE_ID) IN ( SELECT TRIM(p.PLANT) FROM us_gmsgq_prd.gms_us_lake.gmsgq_sapdsp_t001w p WHERE p.PLANT IS NOT NULL AND TRIM(p.PLANT) <> '' ) THEN TRUE ELSE FALSE END AS result FROM us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.CDE_68",
+   "name": "SC.TP.CDE_68 ACTL_ARRIVE_DEST_PORT_2_TM",
+   "description": "gmsgq_txn_sapbw_e2e_shipment_glbl CDE Rule",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ACTL_ARRIVE_DEST_PORT_2_TM",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-14T07:29:54.833+00:00",
+   "sql": "SELECT 'SC.TP.CDE_68' AS dq_rule_id, case when NOT ( t0.ACTL_ARRIVE_DEST_PORT_2_TM IS NULL or trim(t0.ACTL_ARRIVE_DEST_PORT_2_TM) = '' ) then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.CDE_82",
+   "name": "SC.TP.CDE_82 ESTD_SHIP_CHARGE_WT_VAL",
+   "description": "gmsgq_txn_sapbw_e2e_shipment_glbl CDE Rule",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ESTD_SHIP_CHARGE_WT_VAL",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-14T07:29:54.833+00:00",
+   "sql": "SELECT 'SC.TP.CDE_82' AS dq_rule_id, case when t0.ESTD_SHIP_CHARGE_WT_VAL IS NOT NULL then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.809",
+   "name": "SC.TP.809 SLS_UNIT_CD",
+   "description": "Must be not be null or '' or '-' / If available connect it to LOV table",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "SLS_UNIT_CD",
+   "sourceSystem": "SUPPLY CHAIN",
+   "sourceCategory": "TRANSPORTATION",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-08T14:28:23.893+00:00",
+   "sql": "SELECT 'SC.TP.809' AS dq_rule_id, case when coalesce(trim(t0.SLS_UNIT_CD), '') not in ('', '-') then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.CDE_46",
+   "name": "SC.TP.CDE_46 BATCH_ID",
+   "description": "gmsgq_txn_sapbw_e2e_shipment_glbl CDE Rule",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "BATCH_ID",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-13T14:19:06.634+00:00",
+   "sql": "SELECT 'SC.TP.CDE_46' AS dq_rule_id, case when NOT ( t0.BATCH_ID IS NULL or trim(t0.BATCH_ID) = '' ) then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.CDE_28",
+   "name": "SC.TP.CDE_28 FINAL_DEST_NODE_GEO_KEY",
+   "description": "gmsgq_txn_sapbw_e2e_shipment_glbl CDE Rule",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "FINAL_DEST_NODE_GEO_KEY",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-13T14:11:22.315+00:00",
+   "sql": "SELECT 'SC.TP.CDE_28' AS dq_rule_id, case when NOT ( t0.FINAL_DEST_NODE_GEO_KEY IS NULL or trim(t0.FINAL_DEST_NODE_GEO_KEY) = '' ) then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.893",
+   "name": "SC.TP.893 PO_FLASH_NUM",
+   "description": "IF DLVR_FLASH_NUM OR FLASH_SITE_ID not null then must be not be null or '' or '-'",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "PO_FLASH_NUM",
+   "sourceSystem": "SUPPLY CHAIN",
+   "sourceCategory": "TRANSPORTATION",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-08T15:14:09.807+00:00",
+   "sql": "SELECT 'SC.TP.893' AS dq_rule_id, CASE WHEN (DLVR_FLASH_NUM IS NULL AND FLASH_SITE_ID IS NULL) OR ( PO_FLASH_NUM IS NOT NULL AND TRIM(PO_FLASH_NUM) <> '' AND TRIM(PO_FLASH_NUM) <> '-' ) THEN TRUE ELSE FALSE END AS result FROM us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.CDE_80",
+   "name": "SC.TP.CDE_80 ESTD_SHIP_GROSS_WT_VAL",
+   "description": "gmsgq_txn_sapbw_e2e_shipment_glbl CDE Rule",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ESTD_SHIP_GROSS_WT_VAL",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-14T07:29:54.833+00:00",
+   "sql": "SELECT 'SC.TP.CDE_80' AS dq_rule_id, case when t0.ESTD_SHIP_GROSS_WT_VAL IS NOT NULL then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.811",
+   "name": "SC.TP.811 DOC_CRT_DT",
+   "description": "Must be <= today. Must DOC_CRT_DT <= REQ_PICK_UP_DT <= ESTD_DEPART_DT <= ESTD_ARRIVE_DT",
+   "priority": "1 - Critical",
+   "dimension": "Validity",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "DOC_CRT_DT",
+   "sourceSystem": "SUPPLY CHAIN",
+   "sourceCategory": "TRANSPORTATION",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-08T14:28:23.893+00:00",
+   "sql": "SELECT 'SC.TP.811' AS dq_rule_id, case when coalesce(trim(DOC_CRT_DT), '') <> '' and DOC_CRT_DT <= REQ_PICK_UP_DT then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.CDE_60",
+   "name": "SC.TP.CDE_60 DEST_PORT_1_CD",
+   "description": "gmsgq_txn_sapbw_e2e_shipment_glbl CDE Rule",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "DEST_PORT_1_CD",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-13T14:19:06.634+00:00",
+   "sql": "SELECT 'SC.TP.CDE_60' AS dq_rule_id, case when NOT ( t0.DEST_PORT_1_CD IS NULL or trim(t0.DEST_PORT_1_CD) = '' ) then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.836",
+   "name": "SC.TP.836 EST_ARRIVE_TIME_VAL",
+   "description": "Must be 6 digits",
+   "priority": "1 - Critical",
+   "dimension": "Validity",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "EST_ARRIVE_TIME_VAL",
+   "sourceSystem": "SUPPLY CHAIN",
+   "sourceCategory": "TRANSPORTATION",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-08T14:59:16.399+00:00",
+   "sql": "SELECT 'SC.TP.836' AS dq_rule_id, case when t0.EST_ARRIVE_TIME_VAL is not null and cast(t0.EST_ARRIVE_TIME_VAL as string) rlike '^[0-9]{6}$' then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.908",
+   "name": "'SHIP_TEMP_DESC must not have values like 'Missing master data','N/A', 'No Data Available' for all the non null values",
+   "description": "'SHIP_TEMP_DESC must not have values like 'Missing master data','N/A', 'No Data Available' for all the non null values",
+   "priority": "1 - Critical",
+   "dimension": "Validity",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "SHIP_TEMP_DESC",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-08-07T10:10:38.231+00:00",
+   "sql": "select 'SC.TP.908' AS dq_rule_id, case when SHIP_TEMP_DESC not in ('Missing master data','N/A', 'No Data Available') then true else false  end as result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 where t0.Active_flag = 'Y' and t0.SHIP_TEMP_DESC IS NOT NULL  AND TRIM(t0.SHIP_TEMP_DESC) <> '' AND TRIM(t0.SHIP_TEMP_DESC) <> '-'"
+  },
+  {
+   "id": "SC.TP.CDE_27",
+   "name": "SC.TP.CDE_27 ORIG_NODE_GEO_KEY",
+   "description": "gmsgq_txn_sapbw_e2e_shipment_glbl CDE Rule",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ORIG_NODE_GEO_KEY",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-13T14:11:22.315+00:00",
+   "sql": "SELECT 'SC.TP.CDE_27' AS dq_rule_id, case when NOT ( t0.ORIG_NODE_GEO_KEY IS NULL or trim(t0.ORIG_NODE_GEO_KEY) = '' ) then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.802",
+   "name": "SC.TP.802 INCOTERMS_LOC_NM",
+   "description": "Must be not be null or '' or '-'",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "INCOTERMS_LOC_NM",
+   "sourceSystem": "SUPPLY CHAIN",
+   "sourceCategory": "TRANSPORTATION",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-08T14:28:23.893+00:00",
+   "sql": "SELECT 'SC.TP.802' AS dq_rule_id, case when coalesce(trim(t0.INCOTERMS_LOC_NM), '') not in ('', '-') then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.CDE_48",
+   "name": "SC.TP.CDE_48 ORIG_PLANT_ID",
+   "description": "gmsgq_txn_sapbw_e2e_shipment_glbl CDE Rule",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ORIG_PLANT_ID",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-13T14:19:06.634+00:00",
+   "sql": "SELECT 'SC.TP.CDE_48' AS dq_rule_id, case when NOT ( t0.ORIG_PLANT_ID IS NULL or trim(t0.ORIG_PLANT_ID) = '' ) then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.919",
+   "name": "ASIA-PAL USA-PAL EUR-PAL are only allowed values",
+   "description": "Transportation Unit name consisting of ASIA-PALUSA-PALEUR-PAL values are only valid items",
+   "priority": "1 - Critical",
+   "dimension": "Validity",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "TSP_UNIT_NM",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-08-31T10:49:26.462+00:00",
+   "sql": "SELECT   'SC.TP.919' AS dq_rule_id, CASE when      exists (         select 1         from us_gmsgq_prd.gms_us_lake.gmsgq_transport_manual_container_metrics r         where r.TSP_UNIT_NM = t0.TSP_UNIT_NM       )     THEN TRUE     ELSE FALSE   END AS result FROM us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 where TSP_UNIT_NM is not NULL and trim( TSP_UNIT_NM) <> '' and trim( TSP_UNIT_NM) <> '-' and t0.Active_flag = 'Y' and TRIM(t0.TSP_UNIT_NM) <> 'No data available'"
+  },
+  {
+   "id": "SC.TP.780",
+   "name": "SC.TP.780 PO_NUM",
+   "description": "Must be found in 'us_gmsgq_prd.gms_us_hub.txn_purchasingheader_erp_glbl'  - Later us_gmsgq_prd.gms_us_hub.gmsgq_sapdsp_ekko",
+   "priority": "1 - Critical",
+   "dimension": "Validity",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "PO_NUM",
+   "sourceSystem": "SUPPLY CHAIN",
+   "sourceCategory": "TRANSPORTATION",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-14T11:42:02.028+00:00",
+   "sql": "SELECT 'SC.TP.780' AS dq_rule_id, case when coalesce(trim(t0.PO_NUM), '') <> '' and exists ( select 1 from us_gmsgq_prd.gms_us_hub.txn_purchasingheader_erp_glbl r where r.po_num = t0.PO_NUM and r.ACTIVE_FLAG = 'Y') then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.905",
+   "name": "SC.TP.905 CO2_FCTR_VAL",
+   "description": "Must be between 0 and 1",
+   "priority": "1 - Critical",
+   "dimension": "Validity",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "CO2_FCTR_VAL",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-08-31T10:41:36.989+00:00",
+   "sql": "SELECT     'SC.TP.905' AS dq_rule_id, CASE         WHEN             CO2_FCTR_VAL > 0             AND CO2_FCTR_VAL <= 1         THEN TRUE         ELSE false     END AS result FROM us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 where t0.ACTIVE_FLAG = 'Y' AND t0.CO2_FCTR_VAL IS NOT NULL AND TRIM(t0.CO2_FCTR_VAL) <> '' AND TRIM(t0.CO2_FCTR_VAL) <> '-'"
+  },
+  {
+   "id": "SC.TP.CDE_26",
+   "name": "SC.TP.CDE_26 BUSINESS_KEY",
+   "description": "gmsgq_txn_sapbw_e2e_shipment_glbl CDE Rule",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "BUSINESS_KEY",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-13T14:11:22.315+00:00",
+   "sql": "SELECT 'SC.TP.CDE_26' AS dq_rule_id, case when NOT ( t0.BUSINESS_KEY IS NULL or trim(t0.BUSINESS_KEY) = '' ) then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.840",
+   "name": "SC.TP.840 FLIGHT_VESSEL_1_NM",
+   "description": "IF TSP_MODE_DESC LIKE 'Air%:",
+   "priority": "1 - Critical",
+   "dimension": "Validity",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "FLIGHT_VESSEL_1_NM",
+   "sourceSystem": "SUPPLY CHAIN",
+   "sourceCategory": "TRANSPORTATION",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-08T14:59:16.399+00:00",
+   "sql": "SELECT 'SC.TP.840' AS dq_rule_id, case when t0.TSP_MODE_DESC like 'Air%' then (coalesce(trim(t0.FLIGHT_VESSEL_1_NM), '') not in ('', '-') and t0.FLIGHT_VESSEL_1_NM rlike '^[A-Z0-9]{2}[0-9]{1,4}$') when t0.TSP_MODE_DESC = 'Sea' then (coalesce(trim(t0.FLIGHT_VESSEL_1_NM), '') not in ('', '-')) else true end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.813",
+   "name": "SC.TP.813 SHIP_BOOK_BY_PARTNER_NM",
+   "description": "Must be not be null or '' or '-'",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "SHIP_BOOK_BY_PARTNER_NM",
+   "sourceSystem": "SUPPLY CHAIN",
+   "sourceCategory": "TRANSPORTATION",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-08T14:59:16.399+00:00",
+   "sql": "SELECT 'SC.TP.813' AS dq_rule_id, case when coalesce(trim(t0.SHIP_BOOK_BY_PARTNER_NM), '') not in ('', '-') then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.885",
+   "name": "SC.TP.885 ESTD_SHIP_CHARGE_WT_VAL",
+   "description": "Must not be null / 0 / ''. Should > ESTD_SHIP_GROSS_WT_VAL",
+   "priority": "1 - Critical",
+   "dimension": "Accuracy",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ESTD_SHIP_CHARGE_WT_VAL",
+   "sourceSystem": "SUPPLY CHAIN",
+   "sourceCategory": "TRANSPORTATION",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-08T15:14:09.807+00:00",
+   "sql": "SELECT 'SC.TP.885' AS dq_rule_id, CASE WHEN ESTD_SHIP_CHARGE_WT_VAL IS NOT NULL AND TRIM(ESTD_SHIP_CHARGE_WT_VAL) <> '' AND ESTD_SHIP_CHARGE_WT_VAL <> 0 AND ESTD_SHIP_CHARGE_WT_VAL > ESTD_SHIP_GROSS_WT_VAL THEN TRUE ELSE FALSE END AS result FROM us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.798",
+   "name": "SC.TP.798 EST_SHIP_COST_CRNCY_CD",
+   "description": "Must be a valid currency code",
+   "priority": "1 - Critical",
+   "dimension": "Validity",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "EST_SHIP_COST_CRNCY_CD",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-10-12T12:19:49.682+00:00",
+   "sql": "SELECT 'SC.TP.798' AS dq_rule_id, case when coalesce(trim(t0.EST_SHIP_COST_CRNCY_CD), '') <> '' and exists ( select 1 from eda_deprd.eda_de_lake.r360_lake_product_currency r where r.ISOCurrencyCode = t0.EST_SHIP_COST_CRNCY_CD and r.active_flag = 'Y') then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.799",
+   "name": "SC.TP.799 DISTN_UOM_CD",
+   "description": "Must be not be null or '' or '-' / Must be in (KM, mi)",
+   "priority": "1 - Critical",
+   "dimension": "Validity",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "DISTN_UOM_CD",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-08-17T12:09:36.901+00:00",
+   "sql": "SELECT 'SC.TP.799' AS dq_rule_id,  case when  upper(trim(t0.DISTN_UOM_CD)) in ('KM','MI')  then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0  WHERE t0.ACTIVE_FLAG = 'Y' And trim(t0.DISTN_UOM_CD) <> ''  and t0.DISTN_UOM_CD <> '-' AND t0.DISTN_UOM_CD is not NULL"
+  },
+  {
+   "id": "SC.TP.CDE_31",
+   "name": "SC.TP.CDE_31 PO_NUM",
+   "description": "gmsgq_txn_sapbw_e2e_shipment_glbl CDE Rule",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "PO_NUM",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-13T14:19:06.634+00:00",
+   "sql": "SELECT 'SC.TP.CDE_31' AS dq_rule_id, case when NOT ( t0.PO_NUM IS NULL or trim(t0.PO_NUM) = '' ) then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.CDE_55",
+   "name": "SC.TP.CDE_55 ORIG_CITY_NM",
+   "description": "gmsgq_txn_sapbw_e2e_shipment_glbl CDE Rule",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ORIG_CITY_NM",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-13T14:19:06.634+00:00",
+   "sql": "SELECT 'SC.TP.CDE_55' AS dq_rule_id, case when NOT ( t0.ORIG_CITY_NM IS NULL or trim(t0.ORIG_CITY_NM) = '' ) then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.817",
+   "name": "SC.TP.817 TSP_PROVIDER_NM",
+   "description": "Must be not be null or '' or '-'",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "TSP_PROVIDER_NM",
+   "sourceSystem": "SUPPLY CHAIN",
+   "sourceCategory": "TRANSPORTATION",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-08T14:59:16.399+00:00",
+   "sql": "SELECT 'SC.TP.817' AS dq_rule_id, case when coalesce(trim(TSP_PROVIDER_NM), '') <> '' and TSP_PROVIDER_NM <> 'No data available' then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.CDE_49",
+   "name": "SC.TP.CDE_49 GOODS_ISSUE_DT",
+   "description": "gmsgq_txn_sapbw_e2e_shipment_glbl CDE Rule",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "GOODS_ISSUE_DT",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-13T14:19:06.634+00:00",
+   "sql": "SELECT 'SC.TP.CDE_49' AS dq_rule_id, case when t0.GOODS_ISSUE_DT IS NOT NULL then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.917",
+   "name": "CONTAINER_TYPE_DESC is not having any null values",
+   "description": "CONTAINER_TYPE_DESC is not having any null values",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "CONTAINER_TYPE_DESC",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-08-07T10:11:37.077+00:00",
+   "sql": "SELECT  'SC.TP.917' AS dq_rule_id, CASE WHEN    t0.CONTAINER_TYPE_DESC IS NOT NULL  AND TRIM(t0.CONTAINER_TYPE_DESC) <> '' and TRIM(t0.CONTAINER_TYPE_DESC) <> '-' THEN TRUE ELSE FALSE END AS result FROM us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.912",
+   "name": "CONFIRM_SHIP_GROSS_WT_UOM_CD  is not having any null values",
+   "description": "CONFIRM_SHIP_GROSS_WT_UOM_CD  is not having any null values",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "CONFIRM_SHIP_GROSS_WT_UOM_CD",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-08-31T10:40:13.618+00:00",
+   "sql": "SELECT     'SC.TP.912' AS dq_rule_id, CASE         WHEN             CONFIRM_SHIP_GROSS_WT_UOM_CD IS NOT NULL             AND TRIM(CONFIRM_SHIP_GROSS_WT_UOM_CD) <> ''             AND TRIM(CONFIRM_SHIP_GROSS_WT_UOM_CD) <> '-'         THEN TRUE         ELSE FALSE     END AS result FROM us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.CDE_66",
+   "name": "SC.TP.CDE_66 ACTL_DEPART_ORIG_PORT_1_TM",
+   "description": "gmsgq_txn_sapbw_e2e_shipment_glbl CDE Rule",
+   "priority": "1 - Critical",
+   "dimension": "Completeness",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ACTL_DEPART_ORIG_PORT_1_TM",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-05-14T07:29:54.833+00:00",
+   "sql": "SELECT 'SC.TP.CDE_66' AS dq_rule_id, case when NOT ( t0.ACTL_DEPART_ORIG_PORT_1_TM IS NULL or trim(t0.ACTL_DEPART_ORIG_PORT_1_TM) = '' ) then true else false end AS result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 WHERE t0.ACTIVE_FLAG = 'Y'"
+  },
+  {
+   "id": "SC.TP.907",
+   "name": "The CONFIRM_SHIP_GROSS_WT_VAL should be  > 0 for all the Non null values",
+   "description": "The CONFIRM_SHIP_GROSS_WT_VAL should be  > 0 for all the Non null values",
+   "priority": "1 - Critical",
+   "dimension": "Validity",
+   "tableId": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "CONFIRM_SHIP_GROSS_WT_VAL",
+   "sourceSystem": "Supply Chain",
+   "sourceCategory": "Transport Operations",
+   "active": true,
+   "definitionUpdatedAt": "2026-08-07T10:10:29.514+00:00",
+   "sql": "select  'SC.TP.907' AS dq_rule_id, case when CONFIRM_SHIP_GROSS_WT_VAL > 0 then true else false  end as result from us_gmsgq_prd.gms_us_hub.gmsgq_txn_sapbw_e2e_shipment_glbl t0 where  t0.Active_flag = 'Y' and t0.CONFIRM_SHIP_GROSS_WT_VAL IS NOT NULL  AND TRIM(t0.CONFIRM_SHIP_GROSS_WT_VAL ) <> '' AND TRIM(t0.CONFIRM_SHIP_GROSS_WT_VAL ) <> '-'"
+  }
+ ]
+}

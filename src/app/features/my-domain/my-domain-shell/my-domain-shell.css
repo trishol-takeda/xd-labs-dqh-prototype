@@ -1,0 +1,5 @@
+.controls { background: var(--surface-2); border-bottom: 1px dashed var(--line-strong); }
+.controls-inner { max-width: 1240px; margin: 0 auto; padding: 8px 16px; display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center; font-size: var(--typography-label-md-size); }
+.title { display: inline-flex; gap: 6px; align-items: center; }
+.ctl { display: inline-flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.legend { margin-left: auto; }

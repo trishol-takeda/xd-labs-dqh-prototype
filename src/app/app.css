@@ -39,3 +39,9 @@ main:focus { outline: none; }
 .toast.success { background: var(--success-bg); color: var(--success-fg); border-color: var(--success-line); }
 .toast.error { background: var(--danger-bg); color: var(--danger-fg); border-color: var(--danger-line); }
 .toast .btn { color: inherit; }
+.user { display: inline-flex; gap: 10px; align-items: center; font-size: var(--typography-label-md-size); }
+.avatar {
+  width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; flex: none;
+  background: var(--brand); color: var(--brand-ink); font-weight: var(--prim-typography-weight-semibold);
+  font-size: var(--typography-label-md-size); letter-spacing: 0.02em;
+}

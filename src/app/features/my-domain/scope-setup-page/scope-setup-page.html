@@ -1,0 +1,110 @@
+@if (store.domains().length === 0) {
+  <app-state-panel kind="empty" title="No domains available yet" message="Your account is not linked to any domain in the catalogue. Ask the data governance team to add you as trustee, then reload." />
+} @else {
+  <header class="page-head">
+    <div>
+      <h1>Set up My Domain</h1>
+      <p class="muted">Choose the domain and data products you own. You do this once and can change it any time with Edit scope.</p>
+    </div>
+    @if (preselectedCount() > 0) {
+      <span class="pill info">{{ preselectedCount() }} {{ preselectedCount() === 1 ? 'product' : 'products' }} pre-selected from your trustee roles</span>
+    }
+  </header>
+
+  <div class="layout">
+    <div class="main">
+      <section class="card" aria-labelledby="s-domain">
+        <h2 id="s-domain" class="step">1 · Select domain</h2>
+        @if (!hadScope && suggestedName()) {
+          <p class="muted small">{{ suggestedName() }} is suggested because you are named trustee for products there. Changing the domain clears your product selection.</p>
+        } @else {
+          <p class="muted small">Changing the domain clears your product selection.</p>
+        }
+        <div class="domains" role="radiogroup" aria-labelledby="s-domain">
+          @for (d of store.domains(); track d.id) {
+            <label class="domain" [class.on]="d.id === domainId()">
+              <span class="row">
+                <input type="radio" name="domain" [value]="d.id" [checked]="d.id === domainId()" (change)="chooseDomain(d.id)" />
+                <strong>{{ d.name }}</strong>
+              </span>
+              <span class="small muted">{{ domainSummary(d) }}</span>
+            </label>
+          }
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="s-products">
+        <div class="card-head">
+          <div>
+            <h2 id="s-products" class="step">2 · Data products</h2>
+            <p class="muted small">Tick at least one. Products you are named trustee for are already ticked.</p>
+          </div>
+          @if (canEdit()) {
+            <div class="search">
+              <app-icon name="search" [size]="16" />
+              <label class="sr-only" for="ps-search">Search data products</label>
+              <input id="ps-search" type="search" placeholder="Search data products" [value]="search()" (input)="search.set($any($event.target).value)" />
+            </div>
+          }
+        </div>
+
+        @if (domain()?.access === 'none') {
+          <app-state-panel kind="no-access" title="No access to {{ domain()?.name }}" [message]="noAccessText" [compact]="true" />
+        } @else if (domainProducts().length === 0) {
+          <app-state-panel kind="empty" [title]="'No data products in ' + domain()?.name + ' yet'" message="Products appear here once they are published to the catalogue. Choose another domain to continue." [compact]="true" />
+        } @else {
+          <div class="row between bar">
+            <label class="check"><input type="checkbox" [checked]="allSelected()" (change)="toggleAll($any($event.target).checked)" />Select all {{ domainProducts().length }} products</label>
+            <span class="pill" aria-live="polite">{{ selectedProducts().length }} of {{ domainProducts().length }} selected</span>
+          </div>
+
+          @if (groups().length === 0) {
+            <app-state-panel kind="no-results" title="No data products match" message="Try a different search." [compact]="true" />
+          } @else {
+            <div class="groups">
+              @for (g of groups(); track g.subdomain.id) {
+                <fieldset class="group">
+                  <legend class="group-head"><span>{{ g.subdomain.name }}</span><span class="pill">{{ g.selected }} of {{ g.total }}</span></legend>
+                  @for (p of g.products; track p.id) {
+                    <div class="prod">
+                      <label class="check">
+                        <input type="checkbox" [checked]="selected().has(p.id)" (change)="toggle(p.id, $any($event.target).checked)" />
+                        {{ p.name }}
+                      </label>
+                      @if (p.userIsTrustee) {
+                        <span class="pill info">Trustee</span>
+                      }
+                    </div>
+                  }
+                </fieldset>
+              }
+            </div>
+          }
+        }
+      </section>
+    </div>
+
+    <aside class="card side" aria-labelledby="s-sel">
+      <h2 id="s-sel" class="step">Your selection</h2>
+      <dl class="rows">
+        <div class="row between"><dt class="muted">Domain</dt><dd><span class="pill">{{ domain()?.name }}</span></dd></div>
+        <div class="row between"><dt class="muted">Data products</dt><dd><strong>{{ selectedProducts().length }} of {{ domainProducts().length }} data products</strong></dd></div>
+      </dl>
+      <hr />
+      <p class="muted small">Selected data products</p>
+      @if (selectedProducts().length) {
+        <ul class="plain chips">
+          @for (p of selectedProducts(); track p.id) {
+            <li class="pill">{{ p.name }}</li>
+          }
+        </ul>
+      } @else {
+        <p class="muted small">None yet.</p>
+      }
+      <p class="muted small">You can change your domain and products later with Edit scope on My Domain.</p>
+      <hr />
+      <button type="button" class="btn primary block" [disabled]="!canEdit() || selectedProducts().length === 0" (click)="save()">Save and open My Domain</button>
+      <button type="button" class="btn danger-outline block" (click)="cancel()">Cancel</button>
+    </aside>
+  </div>
+}

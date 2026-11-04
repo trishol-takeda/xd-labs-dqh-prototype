@@ -1,0 +1,231 @@
+{
+ "suggestedDomainId": "supply-chain",
+ "currentUser": {
+  "name": "Priya Sharma",
+  "note": "Synthetic demo user. Trustee roles are demo data."
+ },
+ "domains": [
+  {
+   "id": "quality",
+   "name": "Quality",
+   "access": "granted",
+   "subdomains": [
+    {
+     "id": "controlled-documents",
+     "name": "Controlled Documents"
+    },
+    {
+     "id": "qa-operations",
+     "name": "QA Operations"
+    },
+    {
+     "id": "qc-operations",
+     "name": "QC Operations"
+    }
+   ]
+  },
+  {
+   "id": "manufacturing",
+   "name": "Manufacturing",
+   "access": "granted",
+   "subdomains": []
+  },
+  {
+   "id": "supply-chain",
+   "name": "Supply Chain",
+   "access": "granted",
+   "subdomains": [
+    {
+     "id": "master-data-management",
+     "name": "Master Data Management"
+    },
+    {
+     "id": "transport-operations",
+     "name": "Transport Operations"
+    }
+   ]
+  },
+  {
+   "id": "engineering",
+   "name": "Engineering",
+   "access": "none",
+   "subdomains": []
+  }
+ ],
+ "products": [
+  {
+   "id": "controlled-documents",
+   "name": "Controlled Documents",
+   "domainId": "quality",
+   "subdomainId": "controlled-documents",
+   "description": null,
+   "lifecycleStatus": "Published",
+   "trustee": "Priya Sharma",
+   "owner": null,
+   "steward": null,
+   "classification": null,
+   "userIsTrustee": true,
+   "tableIds": [],
+   "origin": "design"
+  },
+  {
+   "id": "batch-release",
+   "name": "Batch Release",
+   "domainId": "quality",
+   "subdomainId": "qa-operations",
+   "description": null,
+   "lifecycleStatus": "Published",
+   "trustee": "Priya Sharma",
+   "owner": null,
+   "steward": null,
+   "classification": null,
+   "userIsTrustee": true,
+   "tableIds": [],
+   "origin": "design"
+  },
+  {
+   "id": "deviation-records",
+   "name": "Deviation Records",
+   "domainId": "quality",
+   "subdomainId": "qa-operations",
+   "description": null,
+   "lifecycleStatus": "In development",
+   "trustee": "Marcus Lindqvist",
+   "owner": null,
+   "steward": null,
+   "classification": null,
+   "userIsTrustee": false,
+   "tableIds": [],
+   "origin": "design"
+  },
+  {
+   "id": "capa-tracker",
+   "name": "CAPA Tracker",
+   "domainId": "quality",
+   "subdomainId": "qa-operations",
+   "description": null,
+   "lifecycleStatus": "Published",
+   "trustee": "Priya Raman",
+   "owner": null,
+   "steward": null,
+   "classification": null,
+   "userIsTrustee": false,
+   "tableIds": [],
+   "origin": "design"
+  },
+  {
+   "id": "qc-test-results",
+   "name": "QC Test Results",
+   "domainId": "quality",
+   "subdomainId": "qc-operations",
+   "description": null,
+   "lifecycleStatus": "Published",
+   "trustee": "Priya Sharma",
+   "owner": null,
+   "steward": null,
+   "classification": null,
+   "userIsTrustee": true,
+   "tableIds": [],
+   "origin": "design"
+  },
+  {
+   "id": "batch-genealogy",
+   "name": "Batch Genealogy",
+   "domainId": "quality",
+   "subdomainId": "qc-operations",
+   "description": null,
+   "lifecycleStatus": "Published",
+   "trustee": "Priya Sharma",
+   "owner": null,
+   "steward": null,
+   "classification": null,
+   "userIsTrustee": true,
+   "tableIds": [],
+   "origin": "design"
+  },
+  {
+   "id": "stability-studies",
+   "name": "Stability Studies",
+   "domainId": "quality",
+   "subdomainId": "qc-operations",
+   "description": null,
+   "lifecycleStatus": "In development",
+   "trustee": "Hanna Becker",
+   "owner": null,
+   "steward": null,
+   "classification": null,
+   "userIsTrustee": false,
+   "tableIds": [],
+   "origin": "design"
+  },
+  {
+   "id": "lab-instruments",
+   "name": "Lab Instruments",
+   "domainId": "quality",
+   "subdomainId": "qc-operations",
+   "description": null,
+   "lifecycleStatus": "Deprecated",
+   "trustee": "Tomasz Nowak",
+   "owner": null,
+   "steward": null,
+   "classification": null,
+   "userIsTrustee": false,
+   "tableIds": [],
+   "origin": "design"
+  },
+  {
+   "id": "material-master",
+   "name": "Material Master",
+   "domainId": "supply-chain",
+   "subdomainId": "master-data-management",
+   "description": "Governed material master from the ERP: one record per material, plus its plant-level extension.",
+   "lifecycleStatus": "Published",
+   "trustee": "Priya Sharma",
+   "owner": "Jonas Weber",
+   "steward": "Lena Fischer",
+   "classification": "Internal",
+   "userIsTrustee": true,
+   "tableIds": [
+    "ref_materialmstr_erp_glbl",
+    "ref_materialmstr_plant_erp_glbl"
+   ],
+   "origin": "excel-mapping"
+  },
+  {
+   "id": "transportation",
+   "name": "Transportation",
+   "domainId": "supply-chain",
+   "subdomainId": "transport-operations",
+   "description": "End-to-end shipment records from SAP BW: routing, carrier, cost, weights and CO2 emissions.",
+   "lifecycleStatus": "Published",
+   "trustee": "Priya Sharma",
+   "owner": "Carla Mendes",
+   "steward": "Ravi Patel",
+   "classification": "Internal",
+   "userIsTrustee": true,
+   "tableIds": [
+    "gmsgq_txn_sapbw_e2e_shipment_glbl"
+   ],
+   "origin": "excel-mapping"
+  }
+ ],
+ "mappingValidation": [
+  {
+   "product": "Material Master",
+   "tables": [
+    "ref_materialmstr_erp_glbl",
+    "ref_materialmstr_plant_erp_glbl"
+   ],
+   "status": "provisional",
+   "evidence": "Table names contain \"materialmstr\"; source: PRDCLNT100 / ERP. The workbook does not name the sub-domain \"Master Data Management\"."
+  },
+  {
+   "product": "Transportation",
+   "tables": [
+    "gmsgq_txn_sapbw_e2e_shipment_glbl"
+   ],
+   "status": "provisional",
+   "evidence": "Source: Supply Chain / Transport Operations; SUPPLY CHAIN / TRANSPORTATION. \"Transport Operations\" matches the workbook's source category; the data product name is not in the workbook."
+  }
+ ]
+}

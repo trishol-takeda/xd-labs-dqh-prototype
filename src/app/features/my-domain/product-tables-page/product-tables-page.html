@@ -1,0 +1,76 @@
+<section class="card" aria-labelledby="t-h">
+  <div class="card-head">
+    <div>
+      <h2 id="t-h">Tables</h2>
+      <p class="muted small">Table names, columns and rule counts come from the rule repository. Rows, refresh and score are synthetic.</p>
+    </div>
+  </div>
+
+  @if (all().length === 0) {
+    <app-state-panel kind="empty" title="No tables in the rule repository" message="This data product has no rules yet, so no tables are known." [compact]="true" />
+  } @else {
+    <div class="toolbar">
+      <label class="field grow">Search tables or columns
+        <input type="search" placeholder="Table or column name" [value]="search()" (input)="search.set($any($event.target).value)" />
+      </label>
+      <label class="field">Show
+        <select [value]="filter()" (change)="filter.set($any($event.target).value)">
+          <option value="" [selected]="filter() === ''">All tables</option>
+          <option value="failing" [selected]="filter() === 'failing'">With failing rules</option>
+          <option value="stale" [selected]="filter() === 'stale'">Stale tables</option>
+        </select>
+      </label>
+      <label class="field">Sort by
+        <select [value]="sort()" (change)="sort.set($any($event.target).value)">
+          <option value="name" [selected]="sort() === 'name'">Name</option>
+          <option value="rules" [selected]="sort() === 'rules'">Rules (most first)</option>
+          <option value="failing" [selected]="sort() === 'failing'">Failing rules (most first)</option>
+          <option value="rows" [selected]="sort() === 'rows'">Rows (most first)</option>
+          <option value="score" [selected]="sort() === 'score'">Score (lowest first)</option>
+        </select>
+      </label>
+      @if (filtersActive()) {
+        <button type="button" class="btn small ghost" (click)="clear()"><app-icon name="x" [size]="13" />Clear filters</button>
+      }
+    </div>
+
+    @if (rows().length === 0) {
+      <app-state-panel kind="no-results" title="No tables match" message="Change the search or filter." [compact]="true">
+        <button type="button" class="btn small" (click)="clear()">Clear filters</button>
+      </app-state-panel>
+    } @else {
+      <p class="small muted" role="status" aria-live="polite">Showing {{ rows().length }} of {{ all().length }} tables</p>
+      <div class="table-wrap readable" tabindex="0" role="region" aria-label="Tables, scrolls sideways">
+        <table>
+          <caption class="sr-only">Tables of this data product</caption>
+          <thead>
+            <tr>
+              <th scope="col">Table</th>
+              <th scope="col">Source</th>
+              <th scope="col" class="num">Columns with rules</th>
+              <th scope="col" class="num">Rules (active)</th>
+              <th scope="col" class="num">Failing rules <app-origin-tag kind="synthetic" [short]="true" /></th>
+              <th scope="col" class="num">Rows <app-origin-tag kind="synthetic" [short]="true" /></th>
+              <th scope="col">Last refresh <app-origin-tag kind="synthetic" [short]="true" /></th>
+              <th scope="col" class="num">Score <app-origin-tag kind="synthetic" [short]="true" /></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (t of rows(); track t.table.id) {
+              <tr>
+                <td class="wrap"><a class="mono-font" [routerLink]="['/my-domain', 'products', productId(), 'tables', t.table.id]">{{ t.table.name }}</a></td>
+                <td>{{ t.table.sourceSystems.join(', ') }}</td>
+                <td class="num">{{ t.table.columns.length }}</td>
+                <td class="num">{{ t.table.ruleCount }} ({{ t.table.activeRuleCount }})</td>
+                <td class="num">{{ t.failingRules }}</td>
+                <td class="num">{{ t.demo ? full(t.demo.rowCount) : '—' }}</td>
+                <td>{{ refreshed(t) }} @if (t.stale) { <app-badge label="Stale" tone="warning" icon="clock" /> }</td>
+                <td class="num" [class]="'num ' + tone(t.demo?.score)">{{ scoreText(t) }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  }
+</section>

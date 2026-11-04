@@ -1,0 +1,12 @@
+<nav class="pager" aria-label="Pagination">
+  <span aria-live="polite">Rows: {{ total().toLocaleString('en-GB') }}<span class="muted"> · showing {{ from() }}–{{ to() }}</span></span>
+  <span class="row">
+    <button type="button" class="btn small" [disabled]="page() <= 1" (click)="pageChange.emit(page() - 1)" aria-label="Previous page">
+      <app-icon name="chevron" [size]="14" class="flip" />Previous
+    </button>
+    <span>Page {{ page() }} of {{ pages() }}</span>
+    <button type="button" class="btn small" [disabled]="page() >= pages()" (click)="pageChange.emit(page() + 1)" aria-label="Next page">
+      Next<app-icon name="chevron" [size]="14" />
+    </button>
+  </span>
+</nav>

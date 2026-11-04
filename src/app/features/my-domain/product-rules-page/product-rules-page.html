@@ -1,0 +1,14 @@
+<section class="card" aria-labelledby="r-h">
+  <div class="card-head">
+    <div>
+      <h2 id="r-h">Rules</h2>
+      <p class="muted small">Rule definitions come from the rule repository. Score, checks, fail and last run are synthetic demo results. Active only means the rule is switched on.</p>
+    </div>
+    <app-origin-tag kind="synthetic" />
+  </div>
+  @if (rows().length === 0) {
+    <app-state-panel kind="empty" title="No rules yet" message="The rule repository has no rules for this data product." [compact]="true" />
+  } @else {
+    <app-rules-table [rows]="rows()" [defaultColumns]="columns" />
+  }
+</section>

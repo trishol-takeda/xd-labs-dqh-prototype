@@ -1,0 +1,32 @@
+:host { display: contents; }
+.layout { display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr) 320px; align-items: start; }
+@media (max-width: 960px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+.main { display: grid; gap: 20px; }
+.step { font-size: var(--typography-body-md-size); margin-bottom: 2px; }
+.domains { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); margin-top: 14px; }
+.domain {
+  display: grid; gap: 6px; padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--border-radius-lg);
+  background: var(--surface); cursor: pointer;
+}
+.domain:hover { background: var(--surface-2); }
+.domain.on { border-color: var(--color-border-error-default); background: var(--brand-soft); }
+.domain:has(input:focus-visible) { outline: 2px solid var(--color-border-neutral-focus); outline-offset: 2px; }
+.domain input { width: 18px; min-height: 18px; height: 18px; accent-color: var(--brand); }
+.search { position: relative; flex: 0 1 320px; min-width: 200px; }
+.search app-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+.search input { padding-left: 34px; }
+.bar { padding: 4px 8px 14px; }
+.groups { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
+.group { border: 1px solid var(--line); border-radius: var(--border-radius-lg); padding: 0 12px 12px; min-width: 0; align-content: start; }
+.group-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; width: 100%; padding: 12px 0; font-weight: var(--prim-typography-weight-semibold); font-size: var(--typography-body-md-size); border-bottom: 1px solid var(--line); margin-bottom: 8px; float: none; }
+.prod { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 8px 4px; min-height: 40px; }
+.check input { accent-color: var(--brand); }
+.side { display: grid; gap: 12px; position: sticky; top: 16px; }
+@media (max-width: 960px) { .side { position: static; } }
+.rows { display: grid; gap: 12px; }
+.rows dd { margin: 0; }
+hr { border: 0; border-top: 1px solid var(--line); margin: 0; width: 100%; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.block { width: 100%; justify-content: center; }
+.danger-outline { border-color: var(--color-border-error-default); color: var(--danger-fg); }
+.danger-outline:hover { background: var(--danger-bg); }

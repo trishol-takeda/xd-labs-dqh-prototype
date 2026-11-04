@@ -1,0 +1,39 @@
+@if (product(); as p) {
+  <app-breadcrumbs [items]="crumbs()" />
+
+  <header class="page-head">
+    <div>
+      <h1>{{ p.name }}</h1>
+      <p class="muted">{{ p.description ?? 'No description provided.' }}</p>
+    </div>
+    <span class="row">
+      <span class="small muted">Lifecycle</span>
+      <app-badge [label]="p.lifecycleStatus" [tone]="lifecycleTone[p.lifecycleStatus] ?? 'neutral'" />
+    </span>
+  </header>
+
+  <nav class="tabbar" aria-label="Data product sections">
+    <ul class="plain tabs-row">
+      @for (t of tabs; track t.path) {
+        <li>
+          <a [routerLink]="tabLink(t.path)" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: t.path === '' }" ariaCurrentWhenActive="page">
+            <app-icon [name]="t.icon" [size]="15" />{{ t.label }}
+          </a>
+        </li>
+      }
+    </ul>
+  </nav>
+
+  @if (!hasRules()) {
+    <div class="callout warning" role="status">
+      <app-icon name="info" [size]="16" />
+      <div><strong>Partial data.</strong> This product has no tables or rules in the rule repository yet, so there is nothing to score. Product details below come from the catalogue.</div>
+    </div>
+  }
+
+  <router-outlet />
+} @else {
+  <app-state-panel kind="not-found" title="Data product not found" message="This data product is not in the catalogue. It may have been removed, or the link is wrong.">
+    <a class="btn primary" routerLink="/my-domain/products">Browse data products</a>
+  </app-state-panel>
+}

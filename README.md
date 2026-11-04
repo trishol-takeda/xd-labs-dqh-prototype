@@ -20,7 +20,7 @@ Failing records are grouped into a **cause** (product, table, column, rule type,
 
 | Route | Screen |
 |---|---|
-| `/#/my-domain` | **My Domain** tab: placeholder for a second prototype |
+| `/#/my-domain` | **My Domain** tab (DAD-4278), behind the `my-domain` feature flag: set up scope, home, products, tables, dimensions, rules, failure analysis, issue. See [docs/MY_DOMAIN.md](docs/MY_DOMAIN.md) |
 | `/#/remediation` | **Data Remediation** tab, Remediation Hub: product strip, causes grouped by state, cause detail. Selection is in the URL: `?product=Deviations&cause=<id>` |
 | `/#/remediation/flow` | Data Remediation, How it works: lifecycle, the three actions, routing table, known gaps, open questions |
 

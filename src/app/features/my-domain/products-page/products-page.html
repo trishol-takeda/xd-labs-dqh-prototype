@@ -1,0 +1,92 @@
+<app-breadcrumbs [items]="crumbs()" />
+
+<header class="page-head">
+  <div>
+    <h1>Data products</h1>
+    <p class="muted">Products under the domain you pick. Open one to see its quality overview, tables, dimensions and rules.</p>
+  </div>
+  <a class="btn small" routerLink="/my-domain/setup"><app-icon name="pencil" [size]="14" />Edit Scope</a>
+</header>
+
+<section class="card" aria-label="Data products">
+  <div class="toolbar">
+    <label class="field">Domain
+      <select [value]="domainId()" (change)="chooseDomain($any($event.target).value)">
+        @for (d of store.domains(); track d.id) {
+          <option [value]="d.id" [selected]="d.id === domainId()">{{ d.name }}</option>
+        }
+      </select>
+    </label>
+    <label class="field grow">Search
+      <input type="search" placeholder="Product, sub-domain or trustee" [value]="search()" (input)="search.set($any($event.target).value)" />
+    </label>
+    <label class="field">Sub-domain
+      <select [value]="subdomain()" (change)="subdomain.set($any($event.target).value)">
+        <option value="">All</option>
+        @for (s of subdomains(); track s.id) {
+          <option [value]="s.id" [selected]="s.id === subdomain()">{{ s.name }}</option>
+        }
+      </select>
+    </label>
+    <label class="field">Lifecycle
+      <select [value]="lifecycle()" (change)="lifecycle.set($any($event.target).value)">
+        <option value="">All</option>
+        @for (l of lifecycles(); track l) {
+          <option [value]="l" [selected]="l === lifecycle()">{{ l }}</option>
+        }
+      </select>
+    </label>
+    <label class="field">Sort by
+      <select [value]="sort()" (change)="sort.set($any($event.target).value)">
+        <option value="name" [selected]="sort() === 'name'">Name</option>
+        <option value="subdomain" [selected]="sort() === 'subdomain'">Sub-domain</option>
+        <option value="score" [selected]="sort() === 'score'">Quality score (high to low)</option>
+      </select>
+    </label>
+    <button type="button" class="chip" [attr.aria-pressed]="trusteeOnly()" (click)="trusteeOnly.set(!trusteeOnly())">I am trustee</button>
+    @if (filtersActive()) {
+      <button type="button" class="btn small ghost" (click)="clear()"><app-icon name="x" [size]="13" />Clear filters</button>
+    }
+  </div>
+
+  @if (domain()?.access === 'none') {
+    <app-state-panel kind="no-access" [title]="'No access to ' + domain()?.name" [message]="noAccessText" [compact]="true" />
+  } @else if (all().length === 0) {
+    <app-state-panel kind="empty" [title]="'No data products in ' + domain()?.name + ' yet'" message="Products appear once they are published to the catalogue." [compact]="true" />
+  } @else if (rows().length === 0) {
+    <app-state-panel kind="no-results" title="No data products match" message="Change the search or filters." [compact]="true">
+      <button type="button" class="btn small" (click)="clear()">Clear filters</button>
+    </app-state-panel>
+  } @else {
+    <p class="small muted" role="status" aria-live="polite">Showing {{ rows().length }} of {{ all().length }} data products</p>
+    <div class="table-wrap readable" tabindex="0" role="region" aria-label="Data products table, scrolls sideways">
+      <table>
+        <caption class="sr-only">Data products in {{ domain()?.name }}</caption>
+        <thead>
+          <tr>
+            <th scope="col">Data product</th>
+            <th scope="col">Sub-domain</th>
+            <th scope="col">Trustee</th>
+            <th scope="col">Lifecycle status</th>
+            <th scope="col" class="num">Quality score <app-origin-tag kind="synthetic" [short]="true" /></th>
+            <th scope="col" class="num">Rules (failing)</th>
+            <th scope="col">In my scope</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (r of rows(); track r.product.id) {
+            <tr>
+              <td><a [routerLink]="['/my-domain', 'products', r.product.id]"><strong>{{ r.product.name }}</strong></a></td>
+              <td>{{ r.subdomain }}</td>
+              <td>{{ r.product.trustee ?? 'Not assigned' }}</td>
+              <td><app-badge [label]="r.product.lifecycleStatus" [tone]="lifecycleTone[r.product.lifecycleStatus] ?? 'neutral'" /></td>
+              <td class="num" [class]="'num ' + tone(r.score)">{{ r.score === null ? 'Not available' : r.score.toFixed(1) + '%' }}</td>
+              <td class="num">{{ r.rules ? r.rules + ' (' + r.failing + ')' : 'No rules yet' }}</td>
+              <td>{{ r.inScope ? 'Yes' : 'No' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

@@ -1,15 +1,15 @@
 import { Routes } from '@angular/router';
 
 /**
- * Two top-level tabs. My Domain is a placeholder for a second prototype.
+ * Two top-level tabs.
+ * My Domain is lazy loaded and sits behind the `my-domain` feature flag (see features/my-domain/my-domain.routes.ts).
  * Data Remediation holds the hub and the how-it-works page; the product and cause selection live in query parameters.
  */
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'remediation' },
   {
     path: 'my-domain',
-    title: 'My Domain',
-    loadComponent: () => import('./features/my-domain/my-domain-page/my-domain-page').then((m) => m.MyDomainPage),
+    loadChildren: () => import('./features/my-domain/my-domain.routes').then((m) => m.MY_DOMAIN_ROUTES),
   },
   {
     path: 'remediation',

@@ -1,0 +1,6 @@
+:host { display: contents; }
+.dim { color: inherit; text-decoration: none; gap: 6px; height: 100%; }
+.dim:hover { background: var(--surface-2); border-color: var(--line-strong); }
+.dim .big { font-size: 2rem; line-height: 2.5rem; font-weight: var(--prim-typography-weight-semibold); margin: 0; }
+.dim .small:last-child { color: var(--link); margin-top: 4px; }
+.dim p { margin: 0; overflow-wrap: anywhere; }

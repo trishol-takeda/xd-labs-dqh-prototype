@@ -5,10 +5,16 @@
     <a class="brand" routerLink="/" aria-label="DQ Remediation, home">
       <span class="logo"><app-icon name="spark" [size]="18" /></span>
       <span>
-        <strong>DQ Remediation</strong>
-        <small>BICN-190272 · XD Labs workshop prototype</small>
+        <strong>Data Quality Remediation Hub</strong>
+        <small>Review, understand and fix data quality issues</small>
       </span>
     </a>
+    @if (userName()) {
+      <div class="user" [attr.title]="userName()">
+        <span class="avatar" aria-hidden="true">{{ initials() }}</span>
+        <span class="user-name">{{ userName() }}</span>
+      </div>
+    }
   </div>
   <p class="banner">
     <app-icon name="beaker" [size]="14" />
@@ -18,7 +24,7 @@
 
 <nav class="tabs" aria-label="Primary">
   <ul class="plain tabs-inner">
-    @for (tab of tabs; track tab.route) {
+    @for (tab of tabs(); track tab.route) {
       <li>
         <a [routerLink]="tab.route" routerLinkActive="active" ariaCurrentWhenActive="page">
           <app-icon [name]="tab.icon" [size]="16" />{{ tab.label }}

@@ -1,0 +1,5 @@
+:host { display: contents; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin-bottom: 14px; }
+.toolbar .field { min-width: 150px; }
+.toolbar .grow { flex: 1 1 240px; }
+td.wrap { max-width: 360px; }

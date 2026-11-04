@@ -1,0 +1,178 @@
+<app-breadcrumbs [items]="crumbs()" />
+
+@if (row(); as r) {
+  <header class="page-head">
+    <div>
+      <p class="mono-font muted">{{ r.rule.id }}</p>
+      <h1 class="wrap">{{ r.displayName }}</h1>
+      @if (r.nameIsFallback && r.rule.description) {
+        <p class="muted small">The rule repository has no name for this rule, so its description is shown.</p>
+      }
+    </div>
+    <span class="row">
+      <app-badge [label]="statusInfo[r.result.status].label" [tone]="statusInfo[r.result.status].tone" [icon]="statusInfo[r.result.status].icon" />
+      <app-badge [label]="r.rule.active ? 'Active' : 'Inactive'" [tone]="r.rule.active ? 'info' : 'neutral'" [icon]="r.rule.active ? 'play' : 'minus'" />
+    </span>
+  </header>
+
+  <div class="grid-2">
+    <section class="card" aria-labelledby="rd-def">
+      <div class="card-head">
+        <h2 id="rd-def">Rule definition</h2>
+        <app-origin-tag kind="repository" />
+      </div>
+      <dl class="kv-grid">
+        <div class="kv"><dt>Rule ID</dt><dd class="mono-font">{{ r.rule.id }}</dd></div>
+        <div class="kv"><dt>Dimension</dt><dd>{{ r.rule.dimension ?? '—' }}</dd></div>
+        <div class="kv"><dt>Priority</dt><dd>{{ r.rule.priority ?? '—' }}</dd></div>
+        <div class="kv"><dt>Active</dt><dd>{{ r.rule.active ? 'Yes, switched on' : 'No, switched off' }}</dd></div>
+        <div class="kv">
+          <dt>Table</dt>
+          <dd><a class="mono-font wrap" [routerLink]="['/my-domain', 'products', r.productId, 'tables', r.rule.tableId]">{{ r.rule.tableId }}</a></dd>
+        </div>
+        <div class="kv">
+          <dt>Column</dt>
+          <dd>
+            @if (r.rule.column) {
+              <a class="mono-font wrap" [routerLink]="['/my-domain', 'products', r.productId, 'tables', r.rule.tableId]" [queryParams]="{ col: r.rule.column, fail: '0' }" fragment="rules">{{ r.rule.column }}</a>
+            } @else { — }
+          </dd>
+        </div>
+        <div class="kv"><dt>Source system</dt><dd>{{ r.rule.sourceSystem ?? '—' }}</dd></div>
+        <div class="kv"><dt>Source category</dt><dd>{{ r.rule.sourceCategory ?? '—' }}</dd></div>
+        <div class="kv"><dt>Definition last updated</dt><dd>{{ updatedAt() }}</dd></div>
+        <div class="kv"><dt>Data product</dt><dd><a [routerLink]="['/my-domain', 'products', r.productId]">{{ r.productName }}</a></dd></div>
+      </dl>
+      <dl class="desc">
+        <div class="kv">
+          <dt>Description</dt>
+          <dd class="wrap">{{ r.rule.description ?? 'No description in the rule repository.' }}</dd>
+        </div>
+      </dl>
+      <p class="hint"><app-icon name="info" [size]="14" />Active means the rule is switched on. It does not mean it passed. Priority is a repository setting, not a quality severity. The update date is when the definition changed, not when it ran.</p>
+    </section>
+
+    <section class="card" aria-labelledby="rd-run">
+      <div class="card-head">
+        <h2 id="rd-run">Latest execution</h2>
+        <app-origin-tag kind="synthetic" />
+      </div>
+      @if (r.result.status === 'not-run') {
+        <app-state-panel kind="empty" title="Not run" message="This rule is switched off, so it was not executed. There are no results to show." [compact]="true" />
+      } @else {
+        <dl class="kv-grid">
+          <div class="kv"><dt>Result</dt><dd>{{ statusInfo[r.result.status].label }}</dd></div>
+          <div class="kv"><dt>Score</dt><dd>{{ r.result.score?.toFixed(1) }}%</dd></div>
+          <div class="kv"><dt>Checks</dt><dd>{{ full(r.result.checks) }}</dd></div>
+          <div class="kv"><dt>Failed records</dt><dd>{{ full(r.result.failed) }} ({{ percent() }})</dd></div>
+          <div class="kv"><dt>Threshold</dt><dd>{{ threshold() }}%</dd></div>
+          <div class="kv"><dt>Executed</dt><dd>{{ executedAt() }}</dd></div>
+        </dl>
+        @if (r.result.status === 'passed') {
+          <div class="callout success"><app-icon name="check" [size]="16" /><div>No failing records on the latest demo run.</div></div>
+        }
+        <p class="hint"><app-icon name="info" [size]="14" />Synthetic demo execution data, not from a real run.</p>
+      }
+    </section>
+  </div>
+
+  <section class="card" id="sql" aria-labelledby="rd-sql">
+    <div class="card-head">
+      <h2 id="rd-sql">SQL definition</h2>
+      <span class="row">
+        <app-origin-tag kind="repository" />
+        @if (r.rule.sql) {
+          <button type="button" class="btn small" (click)="copySql()"><app-icon name="copy" [size]="14" />Copy SQL</button>
+          <span class="small" role="status" aria-live="polite">
+            @if (copied() === 'done') { Copied } @else if (copied() === 'failed') { Copy blocked by the browser. Select the text instead. }
+          </span>
+        }
+      </span>
+    </div>
+    @if (r.rule.sql) {
+      <pre class="sql" tabindex="0" aria-label="SQL for {{ r.rule.id }}"><code>{{ r.rule.sql }}</code></pre>
+    } @else {
+      <app-state-panel kind="empty" title="No SQL in the rule repository" message="The workbook has no SQL for this rule." [compact]="true" />
+    }
+  </section>
+
+  @if (r.result.status === 'failed' && failure(); as f) {
+    <section class="card" aria-labelledby="rd-fail">
+      <div class="card-head">
+        <h2 id="rd-fail">Failure analysis</h2>
+        <app-origin-tag kind="synthetic" />
+      </div>
+
+      <div class="callout danger" role="status">
+        <app-icon name="alert" [size]="16" />
+        <div>
+          <strong>{{ full(r.result.failed) }} records failed ({{ percent() }})</strong> on {{ executedAt() }}. The score of {{ r.result.score?.toFixed(1) }}% is below the {{ f.threshold }}% threshold.
+        </div>
+      </div>
+
+      <div class="grid-2 analysis">
+        <div>
+          <h3>Failure trend</h3>
+          <p class="muted small">Failing records per weekly run, last 8 runs</p>
+          <app-sparkline [runs]="f.trend" />
+        </div>
+        <div>
+          <h3>{{ causeInfo[f.rootCause.status].heading }}</h3>
+          <p class="row">
+            <app-badge [label]="causeInfo[f.rootCause.status].label" [tone]="causeInfo[f.rootCause.status].tone" [icon]="causeInfo[f.rootCause.status].icon" />
+          </p>
+          <p class="wrap">{{ f.rootCause.statement ?? unknownText }}</p>
+          @if (f.rootCause.status === 'likely') {
+            <p class="muted small">A likely cause is a hypothesis from the failure pattern. It has not been confirmed by the data steward or the source team.</p>
+          }
+        </div>
+      </div>
+
+      <h3>Sample failing records</h3>
+      <div class="table-wrap readable" tabindex="0" role="region" aria-label="Sample failing records, scrolls sideways">
+        <table>
+          <caption class="sr-only">Sample of failing records</caption>
+          <thead>
+            <tr>
+              <th scope="col">{{ f.keyName }}</th>
+              <th scope="col">Column</th>
+              <th scope="col">Value found</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (s of f.samples; track s.recordKey) {
+              <tr>
+                <td class="mono-font">{{ s.recordKey }}</td>
+                <td class="mono-font">{{ s.column ?? '—' }}</td>
+                <td class="mono-font">{{ s.value }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid-2 follow">
+        <div class="stack">
+          <h3>Related issue</h3>
+          @if (issue(); as i) {
+            <a class="issue-link" [routerLink]="['/my-domain', 'issues', i.id]">
+              <app-icon name="link" [size]="15" /><strong>{{ i.id }}</strong> <span class="wrap">{{ i.title }}</span>
+            </a>
+            <p class="small muted">Status: {{ i.status }}</p>
+          } @else {
+            <p class="muted">No issue has been raised for this failure yet.</p>
+          }
+        </div>
+        <div class="stack">
+          <h3>Fix it</h3>
+          <button type="button" class="btn" disabled aria-describedby="rd-future"><app-icon name="play" [size]="14" />Start remediation</button>
+          <p id="rd-future" class="small muted"><app-badge label="Future capability" tone="neutral" icon="clock" /> Data Remediation ({{ ticket }}) is not part of this prototype.</p>
+        </div>
+      </div>
+    </section>
+  }
+} @else {
+  <app-state-panel kind="not-found" title="Rule not found" message="This rule is not in the rule repository, or the link is wrong.">
+    <a class="btn primary" [routerLink]="['/my-domain', 'products', productId(), 'rules']">Back to rules</a>
+  </app-state-panel>
+}

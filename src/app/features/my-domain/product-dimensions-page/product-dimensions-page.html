@@ -1,0 +1,28 @@
+<section aria-labelledby="d-h">
+  <div class="card-head">
+    <div>
+      <h2 id="d-h">Dimensions</h2>
+      <p class="muted small">Rule counts and tables come from the rule repository. Scores are synthetic: {{ method() }}</p>
+    </div>
+  </div>
+
+  @if (dimensions().length === 0) {
+    <div class="card"><app-state-panel kind="empty" title="No dimensions yet" message="This data product has no rules in the repository, so there is nothing to group." [compact]="true" /></div>
+  } @else {
+    <ul class="plain tile-grid">
+      @for (d of dimensions(); track d.name) {
+        <li>
+          <a class="tile dim" [routerLink]="['/my-domain', 'products', productId(), 'dimensions', d.name]">
+            <h3>{{ d.name }}</h3>
+            <p class="big">{{ d.ruleCount }} <span class="small muted">{{ d.ruleCount === 1 ? 'rule' : 'rules' }}</span></p>
+            <p class="small">{{ d.activeCount }} active · {{ d.ruleCount - d.activeCount }} inactive</p>
+            <p class="small"><span [class.tone-danger]="d.failingCount">{{ d.failingCount }} failing</span> <app-origin-tag kind="synthetic" [short]="true" /></p>
+            <p class="small">Score: <strong [class]="tone(d.score)">{{ d.score === null ? 'Not available' : d.score.toFixed(1) + '%' }}</strong> <app-origin-tag kind="synthetic" [short]="true" /></p>
+            <p class="small muted">Tables: {{ d.tableIds.join(', ') }}</p>
+            <span class="small">View {{ d.name.toLowerCase() }} rules →</span>
+          </a>
+        </li>
+      }
+    </ul>
+  }
+</section>
