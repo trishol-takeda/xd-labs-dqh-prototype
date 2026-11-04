@@ -1,0 +1,9 @@
+.subnav { background: var(--surface); border-bottom: 1px solid var(--line); }
+.subnav-inner { max-width: 1240px; margin: 0 auto; padding: 8px 16px; display: flex; flex-wrap: wrap; gap: 4px; }
+.subnav a {
+  display: inline-flex; gap: 7px; align-items: center; min-height: 36px; padding: 6px 14px;
+  border-radius: var(--border-radius-full); color: var(--color-text-secondary); text-decoration: none;
+  font-weight: var(--prim-typography-weight-medium); font-size: var(--typography-label-md-size);
+}
+.subnav a:hover { background: var(--color-background-surface-raised); color: var(--ink); }
+.subnav a.active { background: var(--color-background-brand-brand); color: var(--brand-ink); }

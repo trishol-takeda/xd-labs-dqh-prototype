@@ -1,0 +1,36 @@
+@keyframes skeleton-shimmer {
+  0% { background-position: var(--skeleton-motion-background-start-position); opacity: var(--skeleton-opacity-default); }
+  50% { opacity: var(--skeleton-opacity-pulse); }
+  100% { background-position: var(--skeleton-motion-background-end-position); opacity: var(--skeleton-opacity-default); }
+}
+
+[data-slot='skeleton'] {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  background-color: var(--skeleton-surface-default);
+  background-image: var(--skeleton-motion-background-image);
+  background-position: var(--skeleton-motion-background-start-position);
+  background-size: var(--skeleton-motion-background-size);
+  opacity: var(--skeleton-opacity-default);
+}
+
+.shape-rectangle { border-radius: var(--skeleton-border-radius-rectangle); }
+.shape-text { border-radius: var(--skeleton-border-radius-text); }
+.shape-circle { aspect-ratio: 1; border-radius: var(--skeleton-border-radius-circle); }
+.size-xs { height: var(--skeleton-size-xs-height); }
+.size-sm { height: var(--skeleton-size-sm-height); }
+.size-md { height: var(--skeleton-size-md-height); }
+.size-lg { height: var(--skeleton-size-lg-height); }
+
+[data-slot='skeleton'][data-animated='true'] {
+  animation-name: skeleton-shimmer;
+  animation-duration: var(--skeleton-motion-duration);
+  animation-timing-function: var(--skeleton-motion-easing);
+  animation-iteration-count: var(--skeleton-motion-iteration-count);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-slot='skeleton'][data-animated='true'] { animation: none; background-image: none; }
+}

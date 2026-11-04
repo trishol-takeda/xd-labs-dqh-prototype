@@ -1,0 +1,142 @@
+/*
+ * takOS design tokens used by this prototype.
+ * Source: takOS libs/ui/foundations/src/generated/tokens.css (light theme).
+ * Names and values are copied as they are in takOS so this file can be replaced by the real
+ * foundations stylesheet later. Only the tokens the prototype uses are included.
+ */
+
+/* Open Sans is resolved from the machine, as in takOS (browser-ui.css); system fonts follow. */
+@font-face { font-family: 'Open Sans'; font-style: normal; font-weight: 300; font-display: swap; src: local('Open Sans Light'), local('OpenSans-Light'); }
+@font-face { font-family: 'Open Sans'; font-style: normal; font-weight: 400; font-display: swap; src: local('Open Sans Regular'), local('OpenSans-Regular'), local('Open Sans'); }
+@font-face { font-family: 'Open Sans'; font-style: normal; font-weight: 500 600; font-display: swap; src: local('Open Sans Medium'), local('OpenSans-Medium'), local('Open Sans SemiBold'), local('OpenSans-SemiBold'); }
+@font-face { font-family: 'Open Sans'; font-style: normal; font-weight: 700; font-display: swap; src: local('Open Sans Bold'), local('OpenSans-Bold'); }
+
+:root {
+  color-scheme: light;
+
+  /* Typography */
+  --prim-typography-family-primary: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --prim-typography-family-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace, system-ui, sans-serif;
+  --typography-heading-lg-size: 1.5rem;
+  --typography-heading-lg-line-height: 2rem;
+  --typography-heading-md-size: 1.25rem;
+  --typography-heading-md-line-height: 1.75rem;
+  --typography-body-md-size: 1rem;
+  --typography-body-md-line-height: 1.5rem;
+  --typography-body-sm-size: 0.875rem;
+  --typography-body-sm-line-height: 1.25rem;
+  --typography-label-md-size: 0.875rem;
+  --typography-label-md-line-height: 1.25rem;
+  --typography-label-sm-size: 0.75rem;
+  --typography-label-sm-line-height: 1rem;
+  --prim-typography-weight-regular: 400;
+  --prim-typography-weight-medium: 500;
+  --prim-typography-weight-semibold: 600;
+
+  /* Radius */
+  --border-radius-xs: 2px;
+  --border-radius-sm: 4px;
+  --border-radius-md: 6px;
+  --border-radius-lg: 8px;
+  --border-radius-xl: 12px;
+  --border-radius-full: 9999px;
+
+  /* Elevation */
+  --shadow-elevation-1: 0 1px 2px 0 rgba(0, 0, 0, 0.06), 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  --shadow-elevation-2: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.08);
+  --shadow-elevation-5: 0 25px 50px -12px rgba(0, 0, 0, 0.18);
+
+  /* Skeleton (takOS kata-core skeleton) */
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --skeleton-duration: 1500ms;
+  --skeleton-opacity-default: 1;
+  --skeleton-opacity-pulse: 0.88;
+  --skeleton-motion-duration: var(--skeleton-duration);
+  --skeleton-motion-easing: var(--ease-in-out);
+  --skeleton-motion-iteration-count: infinite;
+  --skeleton-motion-background-size: 200% 100%;
+  --skeleton-motion-background-start-position: 100% 0;
+  --skeleton-motion-background-end-position: -100% 0;
+  --skeleton-surface-default: var(--color-background-surface-interactive-hover);
+  --skeleton-surface-highlight: var(--color-background-surface-default);
+  --skeleton-motion-background-image: linear-gradient(90deg, var(--skeleton-surface-default) 0%, var(--skeleton-surface-highlight) 50%, var(--skeleton-surface-default) 100%);
+  --skeleton-size-xs-height: 0.5rem;
+  --skeleton-size-sm-height: 0.75rem;
+  --skeleton-size-md-height: 1rem;
+  --skeleton-size-lg-height: 1.5rem;
+  --skeleton-border-radius-rectangle: var(--border-radius-md);
+  --skeleton-border-radius-text: var(--border-radius-sm);
+  --skeleton-border-radius-circle: var(--border-radius-full);
+
+  /* Primitive colors */
+  --color-neutral-0: #ffffff;
+  --color-neutral-100: #e7e7e7;
+  --color-neutral-300: #a1a4ac;
+  --color-neutral-500: #716c6c;
+  --color-neutral-600: #5c5c5c;
+  --color-neutral-700: #454343;
+  --color-neutral-800: #333333;
+  --color-neutral-900: #242424;
+  --color-grey-cool-100: #fbfbfb;
+  --color-grey-cool-200: #f4f5f7;
+  --color-grey-cool-300: #edf2f4;
+  --color-grey-cool-400: #e2e5eb;
+  --color-red-100: #ffeded;
+  --color-red-300: #f78c85;
+  --color-red-500: #e1242a;
+  --color-red-600: #bd120a;
+  --color-red-700: #860600;
+
+  /* Text */
+  --color-text-primary: #242424;
+  --color-text-secondary: #454343;
+  --color-text-tertiary: #5c5c5c;
+  --color-text-inverse: #ffffff;
+  --color-text-brand: #bd120a;
+  --color-text-link: #0036a5;
+  --color-text-link-hover: #00287c;
+  --color-text-link-visited: #464490;
+  --color-text-success: #0f4d22;
+  --color-text-warning: #413507;
+  --color-text-error: #bd120a;
+  --color-text-info: #0036a5;
+  --color-text-on-brand: #ffffff;
+  --color-text-placeholder: #716c6c;
+
+  /* Surfaces */
+  --color-background-surface-canvas: #ffffff;
+  --color-background-surface-default: #fbfbfb;
+  --color-background-surface-raised: #f4f5f7;
+  --color-background-surface-sunken: #edf2f4;
+  --color-background-surface-inverse: #242424;
+  --color-background-surface-interactive-hover: #e7e7e7;
+
+  /* Brand */
+  --color-background-brand-brand-minimal: #ffeded;
+  --color-background-brand-brand: #e1242a;
+  --color-background-brand-brand-medium: #bd120a;
+  --color-background-brand-brand-strong: #860600;
+
+  /* Status surfaces */
+  --color-background-utility-success-subtle: #dcf8d2;
+  --color-background-utility-success: #15870d;
+  --color-background-utility-warning-subtle: #fff6d7;
+  --color-background-utility-info-minimal: #eef5ff;
+  --color-background-utility-info-subtle: #c2d6ff;
+  --color-background-utility-info-purple-subtle: #d0ccff;
+  --color-background-utility-error-subtle: #ffeded;
+
+  /* Borders */
+  --color-border-neutral-subtle: #e7e7e7;
+  --color-border-neutral-default: #e2e5eb;
+  --color-border-neutral-strong: #716c6c;
+  --color-border-neutral-focus: #454343;
+  --color-border-brand: #860600;
+  --color-border-error-default: #e1242a;
+  --color-border-error-strong: #bd120a;
+  --color-border-success-default: #30ab30;
+  --color-border-success-strong: #15870d;
+  --color-border-warning-default: #ffc062;
+  --color-border-info-default: #a8cbff;
+  --color-border-info-purple-default: #c39bff;
+}

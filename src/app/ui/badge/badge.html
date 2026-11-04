@@ -1,0 +1,5 @@
+<span [class]="'badge ' + tone()">
+  @if (icon()) {
+    <app-icon [name]="icon()" [size]="13" />
+  }{{ label() }}
+</span>
