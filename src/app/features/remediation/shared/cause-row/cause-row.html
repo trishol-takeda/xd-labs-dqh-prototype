@@ -1,0 +1,21 @@
+<a class="rh-row" [routerLink]="['/remediation', 'c', cause().id]">
+  <div>
+    <p class="rh-name">{{ cause().rootCauseLabel }}</p>
+    @if (variant() === 'queue') {
+      <p class="rh-meta">
+        <span class="rh-who">{{ productName() }} · {{ cause().tablePlainName }}</span> · {{ cause().sourceSystem }} · {{ checks() }} · {{ records() }} records
+      </p>
+    } @else {
+      <p class="rh-meta">{{ checks() }} · {{ records() }} records · {{ cause().fixerLabel }} · {{ cause().fixerRole }}</p>
+    }
+  </div>
+  <div class="rh-right">
+    @if (variant() === 'queue') {
+      <app-chip kind="status" [value]="cause().visibleStatus">{{ statusLabel() }}</app-chip>
+    }
+    <app-chip kind="tier" [value]="cause().tier">{{ cause().tierLabel }}</app-chip>
+    @if (badge()) {
+      <app-chip kind="badge">{{ badge() }}</app-chip>
+    }
+  </div>
+</a>

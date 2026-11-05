@@ -30,15 +30,6 @@
   font-weight: var(--prim-typography-weight-medium); padding: 6px 16px; text-align: center;
 }
 main:focus { outline: none; }
-.toast-region { position: fixed; right: 16px; bottom: 16px; left: 16px; display: grid; justify-items: end; z-index: 50; pointer-events: none; }
-.toast {
-  pointer-events: auto; display: flex; gap: 10px; align-items: center; max-width: 520px;
-  padding: 10px 10px 10px 14px; border-radius: var(--border-radius-lg); font-weight: var(--prim-typography-weight-medium);
-  font-size: var(--typography-label-md-size); box-shadow: var(--shadow-elevation-5); border: 1px solid;
-}
-.toast.success { background: var(--success-bg); color: var(--success-fg); border-color: var(--success-line); }
-.toast.error { background: var(--danger-bg); color: var(--danger-fg); border-color: var(--danger-line); }
-.toast .btn { color: inherit; }
 .user { display: inline-flex; gap: 10px; align-items: center; font-size: var(--typography-label-md-size); }
 .avatar {
   width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; flex: none;

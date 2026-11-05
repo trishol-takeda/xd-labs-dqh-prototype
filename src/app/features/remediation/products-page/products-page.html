@@ -1,0 +1,21 @@
+<app-crumbs [crumbs]="crumbs" />
+<h2 class="rh-title">Data products</h2>
+
+@if (store.screenState() === 'empty') {
+  <app-state-panel kind="empty" title="No data products with checks yet" />
+} @else {
+  <p class="rh-sub"><span class="rh-count">{{ store.openCauseCount() }}</span> open causes across {{ cards().length }} products</p>
+  <div class="rh-grid">
+    @for (card of cards(); track card.product.id) {
+      <a class="rh-card" [routerLink]="['/remediation', 'p', card.product.id]">
+        <div class="rh-card-head">
+          <p class="rh-name">{{ card.product.name }}</p>
+          <app-chip kind="tier" [value]="card.product.tier">{{ card.product.tierLabel }}</app-chip>
+        </div>
+        <p class="rh-meta">{{ card.product.domain }}</p>
+        <div class="rh-score">{{ card.product.qualityScore ?? '—' }}<small>% Quality score</small></div>
+        <app-open-count [count]="card.open" />
+      </a>
+    }
+  </div>
+}

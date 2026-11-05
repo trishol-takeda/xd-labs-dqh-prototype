@@ -1,0 +1,18 @@
+<app-crumbs [crumbs]="crumbs()" />
+<h2 class="rh-title">{{ title() }}</h2>
+<p class="rh-sub">{{ subtitle() }}</p>
+
+@if (groups().length === 0) {
+  <app-state-panel kind="empty" title="Nothing waiting" />
+} @else {
+  @for (group of groups(); track group.name) {
+    <section class="rh-section">
+      <h3>{{ group.name }} <span class="rh-n">{{ group.causes.length }}</span></h3>
+      <div class="rh-rows">
+        @for (c of group.causes; track c.id) {
+          <app-cause-row variant="queue" [cause]="c" [productName]="c.products[0]" />
+        }
+      </div>
+    </section>
+  }
+}

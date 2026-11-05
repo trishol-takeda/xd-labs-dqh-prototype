@@ -1,0 +1,20 @@
+<div class="rh-loading" role="status" aria-live="polite" aria-busy="true">
+  <span class="sr-only">Loading…</span>
+  <div class="rh-loading-head" aria-hidden="true">
+    <app-skeleton size="lg" width="14rem" />
+    <app-skeleton size="md" width="9rem" />
+  </div>
+  <div class="rh-grid" aria-hidden="true">
+    @for (card of cards; track card) {
+      <div class="rh-card rh-card-skeleton">
+        <div class="rh-card-head">
+          <app-skeleton size="md" width="55%" />
+          <app-skeleton size="md" width="5.5rem" />
+        </div>
+        <app-skeleton size="sm" width="35%" />
+        <app-skeleton size="lg" width="45%" />
+        <app-skeleton size="sm" width="30%" />
+      </div>
+    }
+  </div>
+</div>

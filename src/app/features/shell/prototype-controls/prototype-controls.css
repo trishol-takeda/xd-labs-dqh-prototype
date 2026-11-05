@@ -1,9 +1,0 @@
-.controls { background: var(--surface); border-bottom: 1px solid var(--line); }
-.controls-inner { max-width: 1240px; margin: 0 auto; padding: 8px 16px; display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center; }
-.title { display: inline-flex; gap: 6px; align-items: center; color: var(--muted); font-size: var(--typography-label-sm-size); text-transform: uppercase; letter-spacing: 0.04em; }
-.ctl { display: flex; gap: 8px; align-items: center; font-size: var(--typography-label-sm-size); color: var(--ink-2); font-weight: var(--prim-typography-weight-medium); }
-.ctl select { min-height: 32px; width: auto; padding: 2px 8px; }
-.ctl.check { gap: 6px; }
-.ctl.check input { width: 16px; height: 16px; min-height: 16px; }
-code { font-family: var(--mono); background: var(--bg); padding: 0 4px; border-radius: var(--border-radius-sm); }
-.role-note { max-width: 1240px; margin: 0 auto; padding: 0 16px 8px; color: var(--muted); }

@@ -1,0 +1,305 @@
+{
+ "meta": {
+  "generatedOn": "2026-11-05",
+  "tiers": {
+   "critical": "GxP critical",
+   "relevant": "GxP relevant",
+   "business": "Business"
+  },
+  "runs": [
+   "2026-08-17",
+   "2026-08-24",
+   "2026-08-31",
+   "2026-09-07",
+   "2026-09-14",
+   "2026-09-21",
+   "2026-09-28",
+   "2026-10-05",
+   "2026-10-12",
+   "2026-10-19",
+   "2026-10-26"
+  ],
+  "rootCauses": {
+   "source_not_captured": {
+    "label": "Not entered in the source system",
+    "fixer_role": "Source-system owner",
+    "explain": "The value is required but was never entered where the record was created. It has to be added in {source}."
+   },
+   "source_value_invalid": {
+    "label": "Entered incorrectly in the source system",
+    "fixer_role": "Source-system owner",
+    "explain": "A value exists but is not one the business accepts. It has to be corrected in {source}."
+   },
+   "process_sequencing": {
+    "label": "Steps recorded out of order",
+    "fixer_role": "Business process owner",
+    "explain": "Dates or linked fields contradict each other, which points to the process being recorded out of sequence in {source}."
+   },
+   "missing_master_record": {
+    "label": "Master data record missing",
+    "fixer_role": "Master data owner",
+    "explain": "The record points to a master-data entry that does not exist. The master record has to be created or the reference corrected."
+   },
+   "pipeline_defect": {
+    "label": "Lost or not generated during loading",
+    "fixer_role": "Data engineering",
+    "explain": "These are technical fields the platform fills in during loading. Nothing needs to change in {source}; the load has to be fixed."
+   },
+   "duplicate_records": {
+    "label": "Duplicate records",
+    "fixer_role": "Data engineering",
+    "explain": "The same record appears more than once. Data engineering checks the load first; if the duplicates exist in {source}, it goes back to the source owner."
+   }
+  },
+  "fixerLanes": {
+   "source": {
+    "label": "Fix at source",
+    "role": "Source-system owner"
+   },
+   "engineering": {
+    "label": "Fix the load",
+    "role": "Data engineering"
+   },
+   "master_data": {
+    "label": "Fix master data",
+    "role": "Master data owner"
+   },
+   "rules": {
+    "label": "Fix the rule",
+    "role": "Rules team"
+   }
+  },
+  "visibleStatuses": {
+   "needs_you": "Needs you",
+   "waiting": "Waiting on fixer",
+   "fixed": "Fixed"
+  },
+  "note": "Mock data generated from DQH_rule_categorisation.xlsx. Failing counts are simulated; the failure ledger does not exist yet."
+ },
+ "products": [
+  {
+   "id": "batch-genealogy",
+   "name": "Batch Genealogy",
+   "domain": "Manufacturing",
+   "trusteeRole": "Manufacturing data trustee",
+   "tier": "critical",
+   "tierLabel": "GxP critical",
+   "tables": [
+    "txn_genealogy_mes_glbl"
+   ],
+   "qualityScore": 88.2,
+   "openCauses": 1
+  },
+  {
+   "id": "qc-results",
+   "name": "QC Results",
+   "domain": "Quality",
+   "trusteeRole": "Quality data trustee",
+   "tier": "critical",
+   "tierLabel": "GxP critical",
+   "tables": [
+    "txn_lot_result_approved_lims_glbl",
+    "txn_result_approved_lims_glbl",
+    "txn_test_approved_lims_glbl"
+   ],
+   "qualityScore": 89.9,
+   "openCauses": 5
+  },
+  {
+   "id": "change-control",
+   "name": "Change Control",
+   "domain": "Quality",
+   "trusteeRole": "Quality data trustee",
+   "tier": "critical",
+   "tierLabel": "GxP critical",
+   "tables": [
+    "ref_pr_element_detail_trkw_glbl",
+    "txn_change_control_trkw_glbl",
+    "txn_grid_affected_material_and_lot_trkw_glbl"
+   ],
+   "qualityScore": 92.2,
+   "openCauses": 3
+  },
+  {
+   "id": "controlled-documents",
+   "name": "Controlled Documents",
+   "domain": "Quality",
+   "trusteeRole": "Quality data trustee",
+   "tier": "relevant",
+   "tierLabel": "GxP relevant",
+   "tables": [
+    "gmsgq_veeva_station_device",
+    "gmsgq_veeva_station_document",
+    "gmsgq_veeva_user"
+   ],
+   "qualityScore": 93.0,
+   "openCauses": 2
+  },
+  {
+   "id": "supply-chain-responsiveness",
+   "name": "Supply Chain Responsiveness",
+   "domain": "Supply Chain",
+   "trusteeRole": "Supply Chain data trustee",
+   "tier": "business",
+   "tierLabel": "Business",
+   "tables": [
+    "ref_gmsgq_scr_leadtime_track_frwd_glbl"
+   ],
+   "qualityScore": 93.6,
+   "openCauses": 1
+  },
+  {
+   "id": "deviations",
+   "name": "Deviations",
+   "domain": "Quality",
+   "trusteeRole": "Quality data trustee",
+   "tier": "critical",
+   "tierLabel": "GxP critical",
+   "tables": [
+    "ref_pr_element_detail_trkw_glbl",
+    "txn_grid_affected_material_and_lot_trkw_glbl",
+    "txn_deviation_event_trkw_glbl",
+    "txn_grid_deviation_li_root_cause_trkw_glbl"
+   ],
+   "qualityScore": 94.4,
+   "openCauses": 6
+  },
+  {
+   "id": "equipment-master",
+   "name": "Equipment Master",
+   "domain": "Engineering",
+   "trusteeRole": "Engineering data trustee",
+   "tier": "relevant",
+   "tierLabel": "GxP relevant",
+   "tables": [
+    "ref_equipment_eng_glbl"
+   ],
+   "qualityScore": 94.7,
+   "openCauses": 1
+  },
+  {
+   "id": "manufacturing-execution",
+   "name": "Manufacturing Execution",
+   "domain": "Manufacturing",
+   "trusteeRole": "Manufacturing data trustee",
+   "tier": "critical",
+   "tierLabel": "GxP critical",
+   "tables": [
+    "mfg_exec"
+   ],
+   "qualityScore": 95.2,
+   "openCauses": 2
+  },
+  {
+   "id": "warehousing",
+   "name": "Warehousing",
+   "domain": "Supply Chain",
+   "trusteeRole": "Supply Chain data trustee",
+   "tier": "business",
+   "tierLabel": "Business",
+   "tables": [
+    "gmsgq_wh_partner_data"
+   ],
+   "qualityScore": 95.8,
+   "openCauses": 2
+  },
+  {
+   "id": "product-specifications",
+   "name": "Product Specifications",
+   "domain": "Quality",
+   "trusteeRole": "Quality data trustee",
+   "tier": "relevant",
+   "tierLabel": "GxP relevant",
+   "tables": [
+    "ref_product_lims_glbl",
+    "ref_product_spec_lims_glbl"
+   ],
+   "qualityScore": 96.6,
+   "openCauses": 3
+  },
+  {
+   "id": "transportation",
+   "name": "Transportation",
+   "domain": "Supply Chain",
+   "trusteeRole": "Supply Chain data trustee",
+   "tier": "business",
+   "tierLabel": "Business",
+   "tables": [
+    "gmsgq_dim_sapbw_node_distn_glbl",
+    "gmsgq_dim_sapbw_node_geo_glbl",
+    "gmsgq_transport_emission_factors",
+    "gmsgq_txn_sapbw_e2e_shipment_glbl"
+   ],
+   "qualityScore": 96.7,
+   "openCauses": 8
+  },
+  {
+   "id": "in-process-controls",
+   "name": "In-Process Controls",
+   "domain": "Manufacturing",
+   "trusteeRole": "Manufacturing data trustee",
+   "tier": "relevant",
+   "tierLabel": "GxP relevant",
+   "tables": [
+    "ref_mfg_proc_ipc"
+   ],
+   "qualityScore": 96.8,
+   "openCauses": 1
+  },
+  {
+   "id": "lot-genealogy",
+   "name": "Lot Genealogy",
+   "domain": "Supply Chain",
+   "trusteeRole": "Supply Chain data trustee",
+   "tier": "relevant",
+   "tierLabel": "GxP relevant",
+   "tables": [
+    "ref_track_back_erp_glbl",
+    "ref_track_forward_erp_glbl"
+   ],
+   "qualityScore": 97.0,
+   "openCauses": 2
+  },
+  {
+   "id": "material-master",
+   "name": "Material Master",
+   "domain": "Supply Chain",
+   "trusteeRole": "Supply Chain data trustee",
+   "tier": "relevant",
+   "tierLabel": "GxP relevant",
+   "tables": [
+    "gmsgq_jde_proddta_f4102_adt",
+    "ref_materialmstr_erp_glbl",
+    "ref_materialmstr_plant_erp_glbl"
+   ],
+   "qualityScore": 97.5,
+   "openCauses": 3
+  },
+  {
+   "id": "critical-process-parameters",
+   "name": "Critical Process Parameters",
+   "domain": "Manufacturing",
+   "trusteeRole": "Manufacturing data trustee",
+   "tier": "relevant",
+   "tierLabel": "GxP relevant",
+   "tables": [
+    "ref_mfg_proc_critical_proc_param"
+   ],
+   "qualityScore": 98.2,
+   "openCauses": 1
+  },
+  {
+   "id": "process-flow",
+   "name": "Process Flow",
+   "domain": "Manufacturing",
+   "trusteeRole": "Manufacturing data trustee",
+   "tier": "relevant",
+   "tierLabel": "GxP relevant",
+   "tables": [
+    "ref_mfg_proc_flow"
+   ],
+   "qualityScore": 100.0,
+   "openCauses": 0
+  }
+ ]
+}

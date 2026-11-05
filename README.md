@@ -14,15 +14,19 @@ Hash routing, so deep links work on any static host.
 
 ## The model in one paragraph
 
-Failing records are grouped into a **cause** (product, table, column, rule type, root-cause class, source system). The cause is the unit of work: 114 failing rules become 112 causes. The class comes from rule type × column class, and the channel and owner role come from the class. States are New, Confirmed, In progress, Closed and Reopened. The trustee has three actions: Send for correction, This rule is wrong, Accept remaining failures. Closing and reopening happen only when the rule engine runs, and there is no "mark as fixed". Every action is written to an append-only history.
+Trustee → Data product → Table → Field → Check → Failing records → **Cause** → Fixer. A cause is one table × one root cause and is already computed in the data; the UI reads it and never groups or derives. The cause is the unit of work. Visible statuses are Needs you, Waiting on fixer and Fixed. The trustee can send a cause for correction, dispute the rule or accept the remaining failures; the fixer marks it done or can't fix it; the Rules team changes the rule or lets it stand. Only the (simulated) rule engine closes or reopens a cause, and there is no "mark as fixed". Every action appends to an audit history.
 
 ## Screens
 
 | Route | Screen |
 |---|---|
 | `/#/my-domain` | **My Domain** tab (DAD-4278), behind the `my-domain` feature flag: set up scope, home, products, tables, dimensions, rules, failure analysis, issue. See [docs/MY_DOMAIN.md](docs/MY_DOMAIN.md) |
-| `/#/remediation` | **Data Remediation** tab, Remediation Hub: product strip, causes grouped by state, cause detail. Selection is in the URL: `?product=Deviations&cause=<id>` |
-| `/#/remediation/flow` | Data Remediation, How it works: lifecycle, the three actions, routing table, known gaps, open questions |
+| `/#/remediation` | **Data Remediation** tab, Remediation Hub (screen 1: data products) |
+| `/#/remediation/p/:productId` | Product: its tables |
+| `/#/remediation/t/:tableId` | Table: all checks, and causes in Needs you / Waiting on fixer / Fixed |
+| `/#/remediation/c/:causeId` | Cause: actions for the current role, failing checks, 10 sample records, trend, history |
+| `/#/remediation/c/:causeId/records` | The first 50 failing records |
+| `/#/remediation/queue` | The role's queue: Needs me (trustee), My fixes (fixer), Disputes (Rules team) |
 
 `/#/` opens Data Remediation. Deep links for screen states: `/#/remediation?demo=loading`, `?demo=error`, `?demo=empty`.
 
@@ -32,24 +36,22 @@ Preview mode (`REMEDIATION_PREVIEW_MODE`) is on: the failure ledger does not exi
 
 | File | Source |
 |---|---|
-| `public/data/signatures.json`, `findings.json`, `products.json` | DQH mock data, unchanged |
-| `public/data/rule-catalogue.json` | Generated from `DQH_rule_categorisation.xlsx`: plain name, what a rule checks, what a failure means, rule shape, and the rule count per product (KEEP rules). Also holds a **placeholder** list of six tables without a stable key |
-| `public/DQH_rule_categorisation.xlsx` | The workbook it came from |
+| `public/data/remediation/{products,tables,rules,causes}.json` | Remediation Hub data from the product owner's build pack (`tmp/remediation-hub-build-pack`). Read-only: loaded once, mutated in memory, never hand-edited |
 
 ## Code map
 
 | Path | Contents |
 |---|---|
-| `src/app/core/models/remediation.model.ts` | Data shapes and derived views |
-| `src/app/core/constants/remediation.constants.ts` | States, classification, routing, copy, open questions |
-| `src/app/core/state/derive.ts` | Pure functions: grouping, cause views, score, engine run, seed |
-| `src/app/core/state/remediation-store.service.ts` | Loads data; the three actions, confirmation and the preview-mode engine |
-| `src/app/features/hub/*` | Product strip, cause list, cause detail, actions, sample records, engine preview, audit trail |
-| `src/app/features/flow/*` | How it works |
-| `src/takos-tokens.css` | takOS design tokens |
+| `src/app/features/remediation/core/remediation.model.ts` | Data shapes and view models |
+| `src/app/features/remediation/core/remediation.constants.ts` | Copy, status labels, roles, mock factors |
+| `src/app/features/remediation/core/remediation.transitions.ts` | The lifecycle as pure functions (send, dispute, accept, fixer, rules team, simulated run, scores) |
+| `src/app/features/remediation/core/remediation.seed.ts` | The workshop start state (disputed, rule-changed, fixer-done, can't-fix) |
+| `src/app/features/remediation/core/remediation-store.service.ts` | One signal store: loads data, holds role and screen state, calls the transitions |
+| `src/app/features/remediation/remediation-shell/` | Prototype bar, app bar, toast, and the shared stylesheet (carried over from the PO's HTML prototype; `rh-` prefixed) |
+| `src/app/features/remediation/*-page/` | The five screens |
+| `src/app/features/remediation/shared/` | Chip, breadcrumbs, check list, cause row, action dialog, sparkline, summary line |
+| `src/takos-tokens.css` | takOS design tokens (the Remediation Hub does not use them yet) |
 
 ## Open questions
 
-Nine questions are listed on the How it works page, each with the assumption the prototype makes. The ones that change the screens most: the state of a parked or risk-accepted cause (Q1), what moves a cause to In progress (Q2), whether Confirm is a fourth action (Q3), and e-signature for risk acceptance under 21 CFR Part 11 (Q4).
-
-Earlier versions are backed up in `../dq-remediation-prototype-v1-backup` and `../dq-remediation-prototype-v2-backup` (the issue, root cause and verification workflow).
+The workshop decides: technical-column causes straight to data engineering; dispute scope per table vs per product; three vs five visible statuses; fixer view in the Hub vs an external ticket; residual acceptance policy.

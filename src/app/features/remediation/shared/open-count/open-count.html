@@ -1,0 +1,5 @@
+@if (count() > 0) {
+  <span class="rh-open">{{ count() }} open {{ plural(count(), 'cause') }}</span>
+} @else {
+  <span class="rh-open rh-none">No open causes</span>
+}

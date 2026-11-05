@@ -1,0 +1,30 @@
+<ul class="rh-checks">
+  @for (item of items(); track item.id) {
+    <li>
+      <button class="rh-hd" type="button" [attr.aria-expanded]="isOpen(item.id)" (click)="toggle(item.id)">
+        <span>{{ item.plainName }}<span class="rh-f">{{ item.field }}</span></span>
+        @if (item.failingNow > 0) {
+          <span class="rh-fail">{{ compact(item.failingNow) }} {{ unit() }}</span>
+        } @else {
+          <span class="rh-pass">Passing</span>
+        }
+      </button>
+      @if (isOpen(item.id)) {
+        <dl class="rh-ex">
+          <dt>Field</dt>
+          <dd>{{ item.field }}</dd>
+          <dt>What it checks</dt>
+          <dd>{{ item.whatItChecks }}</dd>
+          <dt>What a failure means</dt>
+          <dd>{{ item.whatFailureMeans }}</dd>
+          @if (item.cause; as cause) {
+            <dt>Cause</dt>
+            <dd><a [routerLink]="['/remediation', 'c', cause.id]">{{ cause.label }}</a></dd>
+          }
+          <dt>Trend</dt>
+          <dd><app-spark variant="mini" [values]="item.history" /></dd>
+        </dl>
+      }
+    </li>
+  }
+</ul>

@@ -1,0 +1,456 @@
+{
+ "tables": [
+  {
+   "id": "ref_equipment_eng_glbl",
+   "plainName": "Equipment master records",
+   "sourceSystem": "Equipment MDM",
+   "recordKeyField": "ASSET_NUMBER",
+   "products": [
+    "Equipment Master"
+   ],
+   "domain": "Engineering",
+   "approxRecords": 6614,
+   "registryNote": "",
+   "qualityScore": 94.7,
+   "openCauses": 1,
+   "rules": 4
+  },
+  {
+   "id": "txn_genealogy_mes_glbl",
+   "plainName": "Batch genealogy links",
+   "sourceSystem": "MES",
+   "recordKeyField": "BATCH_ID",
+   "products": [
+    "Batch Genealogy"
+   ],
+   "domain": "Manufacturing",
+   "approxRecords": 203380,
+   "registryNote": "",
+   "qualityScore": 88.2,
+   "openCauses": 1,
+   "rules": 10
+  },
+  {
+   "id": "ref_mfg_proc_critical_proc_param",
+   "plainName": "Critical process parameters",
+   "sourceSystem": "Process models (CMC)",
+   "recordKeyField": null,
+   "products": [
+    "Critical Process Parameters"
+   ],
+   "domain": "Manufacturing",
+   "approxRecords": 1894,
+   "registryNote": "No source-native key identified",
+   "qualityScore": 98.2,
+   "openCauses": 1,
+   "rules": 5
+  },
+  {
+   "id": "ref_mfg_proc_ipc",
+   "plainName": "In-process control definitions",
+   "sourceSystem": "Process models (CMC)",
+   "recordKeyField": null,
+   "products": [
+    "In-Process Controls"
+   ],
+   "domain": "Manufacturing",
+   "approxRecords": 1785,
+   "registryNote": "No source-native key identified",
+   "qualityScore": 96.8,
+   "openCauses": 1,
+   "rules": 3
+  },
+  {
+   "id": "mfg_exec",
+   "plainName": "Manufacturing orders",
+   "sourceSystem": "MES",
+   "recordKeyField": "MFG_ORD_ID",
+   "products": [
+    "Manufacturing Execution"
+   ],
+   "domain": "Manufacturing",
+   "approxRecords": 264904,
+   "registryNote": "",
+   "qualityScore": 95.2,
+   "openCauses": 2,
+   "rules": 16
+  },
+  {
+   "id": "ref_mfg_proc_flow",
+   "plainName": "Process flow steps",
+   "sourceSystem": "Process models (CMC)",
+   "recordKeyField": null,
+   "products": [
+    "Process Flow"
+   ],
+   "domain": "Manufacturing",
+   "approxRecords": 1010,
+   "registryNote": "No source-native key identified",
+   "qualityScore": 100.0,
+   "openCauses": 0,
+   "rules": 5
+  },
+  {
+   "id": "ref_pr_element_detail_trkw_glbl",
+   "plainName": "Process record element details",
+   "sourceSystem": "TrackWise",
+   "recordKeyField": "CODE",
+   "products": [
+    "Change Control",
+    "Deviations"
+   ],
+   "domain": "Quality",
+   "approxRecords": 8692,
+   "registryNote": "Shared by Change Control and Deviations",
+   "qualityScore": 100.0,
+   "openCauses": 0,
+   "rules": 2
+  },
+  {
+   "id": "txn_change_control_trkw_glbl",
+   "plainName": "Change control records",
+   "sourceSystem": "TrackWise",
+   "recordKeyField": "CHANGE",
+   "products": [
+    "Change Control"
+   ],
+   "domain": "Quality",
+   "approxRecords": 325031,
+   "registryNote": "",
+   "qualityScore": 89.7,
+   "openCauses": 2,
+   "rules": 11
+  },
+  {
+   "id": "txn_grid_affected_material_and_lot_trkw_glbl",
+   "plainName": "Affected materials and lots",
+   "sourceSystem": "TrackWise",
+   "recordKeyField": "MATERIAL_ID",
+   "products": [
+    "Change Control",
+    "Deviations"
+   ],
+   "domain": "Quality",
+   "approxRecords": 260453,
+   "registryNote": "Shared by Change Control and Deviations",
+   "qualityScore": 86.8,
+   "openCauses": 1,
+   "rules": 3
+  },
+  {
+   "id": "gmsgq_veeva_station_device",
+   "plainName": "Controlled-document station devices",
+   "sourceSystem": "Veeva",
+   "recordKeyField": "device_id__v",
+   "products": [
+    "Controlled Documents"
+   ],
+   "domain": "Quality",
+   "approxRecords": 9780,
+   "registryNote": "",
+   "qualityScore": 95.1,
+   "openCauses": 1,
+   "rules": 2
+  },
+  {
+   "id": "gmsgq_veeva_station_document",
+   "plainName": "Controlled documents at stations",
+   "sourceSystem": "Veeva",
+   "recordKeyField": "device_id__v",
+   "products": [
+    "Controlled Documents"
+   ],
+   "domain": "Quality",
+   "approxRecords": 2266,
+   "registryNote": "",
+   "qualityScore": 83.9,
+   "openCauses": 1,
+   "rules": 1
+  },
+  {
+   "id": "gmsgq_veeva_user",
+   "plainName": "Controlled-document users",
+   "sourceSystem": "Veeva",
+   "recordKeyField": null,
+   "products": [
+    "Controlled Documents"
+   ],
+   "domain": "Quality",
+   "approxRecords": 2295,
+   "registryNote": "No source-native key identified",
+   "qualityScore": 100.0,
+   "openCauses": 0,
+   "rules": 2
+  },
+  {
+   "id": "txn_deviation_event_trkw_glbl",
+   "plainName": "Deviation events",
+   "sourceSystem": "TrackWise",
+   "recordKeyField": "Deviation_Event_Type",
+   "products": [
+    "Deviations"
+   ],
+   "domain": "Quality",
+   "approxRecords": 59730,
+   "registryNote": "Key field to confirm",
+   "qualityScore": 94.2,
+   "openCauses": 4,
+   "rules": 17
+  },
+  {
+   "id": "txn_grid_deviation_li_root_cause_trkw_glbl",
+   "plainName": "Deviation root-cause lines",
+   "sourceSystem": "TrackWise",
+   "recordKeyField": null,
+   "products": [
+    "Deviations"
+   ],
+   "domain": "Quality",
+   "approxRecords": 44887,
+   "registryNote": "No source-native key identified",
+   "qualityScore": 96.6,
+   "openCauses": 1,
+   "rules": 2
+  },
+  {
+   "id": "ref_product_lims_glbl",
+   "plainName": "Products (LIMS)",
+   "sourceSystem": "LIMS",
+   "recordKeyField": "PROD_UNIT_ID",
+   "products": [
+    "Product Specifications"
+   ],
+   "domain": "Quality",
+   "approxRecords": 5034,
+   "registryNote": "",
+   "qualityScore": 98.3,
+   "openCauses": 1,
+   "rules": 8
+  },
+  {
+   "id": "ref_product_spec_lims_glbl",
+   "plainName": "Product specifications",
+   "sourceSystem": "LIMS",
+   "recordKeyField": "SPEC_VERSION",
+   "products": [
+    "Product Specifications"
+   ],
+   "domain": "Quality",
+   "approxRecords": 11654,
+   "registryNote": "",
+   "qualityScore": 94.9,
+   "openCauses": 2,
+   "rules": 4
+  },
+  {
+   "id": "txn_lot_result_approved_lims_glbl",
+   "plainName": "Approved lot results",
+   "sourceSystem": "LIMS",
+   "recordKeyField": "LOT_ID",
+   "products": [
+    "QC Results"
+   ],
+   "domain": "Quality",
+   "approxRecords": 230836,
+   "registryNote": "",
+   "qualityScore": 88.0,
+   "openCauses": 1,
+   "rules": 5
+  },
+  {
+   "id": "txn_result_approved_lims_glbl",
+   "plainName": "Approved test results",
+   "sourceSystem": "LIMS",
+   "recordKeyField": "RESULT_ID",
+   "products": [
+    "QC Results"
+   ],
+   "domain": "Quality",
+   "approxRecords": 66945,
+   "registryNote": "",
+   "qualityScore": 88.5,
+   "openCauses": 2,
+   "rules": 12
+  },
+  {
+   "id": "txn_test_approved_lims_glbl",
+   "plainName": "Approved tests",
+   "sourceSystem": "LIMS",
+   "recordKeyField": "SAMPLE_ID",
+   "products": [
+    "QC Results"
+   ],
+   "domain": "Quality",
+   "approxRecords": 226708,
+   "registryNote": "",
+   "qualityScore": 93.1,
+   "openCauses": 2,
+   "rules": 8
+  },
+  {
+   "id": "ref_track_back_erp_glbl",
+   "plainName": "Lot genealogy \u2013 trace back",
+   "sourceSystem": "SAP ERP",
+   "recordKeyField": "root_batch_id",
+   "products": [
+    "Lot Genealogy"
+   ],
+   "domain": "Supply Chain",
+   "approxRecords": 7770,
+   "registryNote": "",
+   "qualityScore": 97.4,
+   "openCauses": 1,
+   "rules": 13
+  },
+  {
+   "id": "ref_track_forward_erp_glbl",
+   "plainName": "Lot genealogy \u2013 trace forward",
+   "sourceSystem": "SAP ERP",
+   "recordKeyField": "root_batch_id",
+   "products": [
+    "Lot Genealogy"
+   ],
+   "domain": "Supply Chain",
+   "approxRecords": 4528,
+   "registryNote": "",
+   "qualityScore": 96.5,
+   "openCauses": 1,
+   "rules": 13
+  },
+  {
+   "id": "gmsgq_jde_proddta_f4102_adt",
+   "plainName": "Item branch records (JDE)",
+   "sourceSystem": "JDE",
+   "recordKeyField": "IBECO",
+   "products": [
+    "Material Master"
+   ],
+   "domain": "Supply Chain",
+   "approxRecords": 11470,
+   "registryNote": "",
+   "qualityScore": 97.5,
+   "openCauses": 1,
+   "rules": 3
+  },
+  {
+   "id": "ref_materialmstr_erp_glbl",
+   "plainName": "Material master",
+   "sourceSystem": "SAP ERP",
+   "recordKeyField": "MAT_ID",
+   "products": [
+    "Material Master"
+   ],
+   "domain": "Supply Chain",
+   "approxRecords": 6318,
+   "registryNote": "",
+   "qualityScore": 97.5,
+   "openCauses": 1,
+   "rules": 7
+  },
+  {
+   "id": "ref_materialmstr_plant_erp_glbl",
+   "plainName": "Material master by plant",
+   "sourceSystem": "SAP ERP",
+   "recordKeyField": "MAT_ID",
+   "products": [
+    "Material Master"
+   ],
+   "domain": "Supply Chain",
+   "approxRecords": 6550,
+   "registryNote": "",
+   "qualityScore": 97.6,
+   "openCauses": 1,
+   "rules": 5
+  },
+  {
+   "id": "ref_gmsgq_scr_leadtime_track_frwd_glbl",
+   "plainName": "Lead-time tracking",
+   "sourceSystem": "SAP ERP",
+   "recordKeyField": null,
+   "products": [
+    "Supply Chain Responsiveness"
+   ],
+   "domain": "Supply Chain",
+   "approxRecords": 1627,
+   "registryNote": "No source-native key identified",
+   "qualityScore": 93.6,
+   "openCauses": 1,
+   "rules": 4
+  },
+  {
+   "id": "gmsgq_dim_sapbw_node_distn_glbl",
+   "plainName": "Distribution network nodes",
+   "sourceSystem": "SAP BW",
+   "recordKeyField": "NODE_ID",
+   "products": [
+    "Transportation"
+   ],
+   "domain": "Supply Chain",
+   "approxRecords": 6064,
+   "registryNote": "",
+   "qualityScore": 97.4,
+   "openCauses": 2,
+   "rules": 8
+  },
+  {
+   "id": "gmsgq_dim_sapbw_node_geo_glbl",
+   "plainName": "Network node locations",
+   "sourceSystem": "SAP BW",
+   "recordKeyField": "NODE_ID",
+   "products": [
+    "Transportation"
+   ],
+   "domain": "Supply Chain",
+   "approxRecords": 8476,
+   "registryNote": "",
+   "qualityScore": 95.8,
+   "openCauses": 2,
+   "rules": 11
+  },
+  {
+   "id": "gmsgq_transport_emission_factors",
+   "plainName": "Transport emission factors",
+   "sourceSystem": "Reference data (manual)",
+   "recordKeyField": "METRIC_TYPE_CD",
+   "products": [
+    "Transportation"
+   ],
+   "domain": "Supply Chain",
+   "approxRecords": 2232,
+   "registryNote": "Key field to confirm",
+   "qualityScore": 96.5,
+   "openCauses": 1,
+   "rules": 2
+  },
+  {
+   "id": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "plainName": "End-to-end shipments",
+   "sourceSystem": "SAP BW",
+   "recordKeyField": "SHIP_NUM",
+   "products": [
+    "Transportation"
+   ],
+   "domain": "Supply Chain",
+   "approxRecords": 49721,
+   "registryNote": "",
+   "qualityScore": 97.2,
+   "openCauses": 3,
+   "rules": 101
+  },
+  {
+   "id": "gmsgq_wh_partner_data",
+   "plainName": "Warehouse partner data",
+   "sourceSystem": "Warehouse partner feed",
+   "recordKeyField": "PARTNER_ID",
+   "products": [
+    "Warehousing"
+   ],
+   "domain": "Supply Chain",
+   "approxRecords": 8534,
+   "registryNote": "",
+   "qualityScore": 95.8,
+   "openCauses": 2,
+   "rules": 8
+  }
+ ]
+}

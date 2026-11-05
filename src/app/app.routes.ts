@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 /**
  * Two top-level tabs.
  * My Domain is lazy loaded and sits behind the `my-domain` feature flag (see features/my-domain/my-domain.routes.ts).
- * Data Remediation holds the hub and the how-it-works page; the product and cause selection live in query parameters.
+ * Data Remediation is the Remediation Hub: data products → product → table → cause (→ records), plus the role's queue.
  */
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'remediation' },
@@ -19,12 +19,32 @@ export const routes: Routes = [
         path: '',
         pathMatch: 'full',
         title: 'Remediation Hub',
-        loadComponent: () => import('./features/hub/hub-page/hub-page').then((m) => m.HubPage),
+        loadComponent: () => import('./features/remediation/products-page/products-page').then((m) => m.ProductsPage),
       },
       {
-        path: 'flow',
-        title: 'How remediation works',
-        loadComponent: () => import('./features/flow/flow-page/flow-page').then((m) => m.FlowPage),
+        path: 'p/:productId',
+        title: 'Product · Remediation Hub',
+        loadComponent: () => import('./features/remediation/product-page/product-page').then((m) => m.ProductPage),
+      },
+      {
+        path: 't/:tableId',
+        title: 'Table · Remediation Hub',
+        loadComponent: () => import('./features/remediation/table-page/table-page').then((m) => m.TablePage),
+      },
+      {
+        path: 'c/:causeId',
+        title: 'Cause · Remediation Hub',
+        loadComponent: () => import('./features/remediation/cause-page/cause-page').then((m) => m.CausePage),
+      },
+      {
+        path: 'c/:causeId/records',
+        title: 'Records · Remediation Hub',
+        loadComponent: () => import('./features/remediation/records-page/records-page').then((m) => m.RecordsPage),
+      },
+      {
+        path: 'queue',
+        title: 'Queue · Remediation Hub',
+        loadComponent: () => import('./features/remediation/queue-page/queue-page').then((m) => m.QueuePage),
       },
     ],
   },

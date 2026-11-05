@@ -1,0 +1,36 @@
+@if (cause(); as c) {
+  @if (table(); as t) {
+    <app-crumbs [crumbs]="crumbs()" />
+    <h2 class="rh-title">Records</h2>
+    @if (rows().length) {
+      <p class="rh-sub">{{ c.rootCauseLabel }} · {{ t.plainName }} · {{ full(c.failingNow) }} failing · showing {{ pageSize }}</p>
+      <div class="rh-rec-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Key in {{ c.sourceSystem }}</th>
+              <th scope="col">Checks failed</th>
+              <th scope="col" class="num">Count</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of rows(); track $index) {
+              <tr>
+                <td>{{ row.key }}</td>
+                <td>{{ row.checks.join(', ') }}</td>
+                <td class="num">{{ row.n }} of {{ c.rules.length }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <p class="rh-dim rh-after">Export and filtering would sit here in the build.</p>
+    } @else {
+      <p class="rh-sub">{{ c.rootCauseLabel }} · {{ t.plainName }}</p>
+      <p class="rh-dim">
+        Records can’t be listed for this table yet. The data governance team has to name a source-native record key for {{ t.plainName }} before records can be traced back to
+        {{ c.sourceSystem }}.
+      </p>
+    }
+  }
+}
