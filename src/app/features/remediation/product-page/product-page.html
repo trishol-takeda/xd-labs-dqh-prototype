@@ -1,0 +1,38 @@
+@if (product(); as p) {
+  <app-crumbs [crumbs]="crumbs()" />
+  <h2 class="rh-title">{{ p.name }}</h2>
+  <p class="rh-sub">
+    {{ rows().length }} {{ plural(rows().length, 'table') }} ·
+    <span [class]="open() ? 'rh-count' : 'rh-zero'">{{ open() }} open {{ plural(open(), 'cause') }}</span> · {{ p.trusteeRole }}
+  </p>
+  <app-summary-line [summary]="summary()" />
+
+  @if (store.screenState() === 'empty') {
+    <app-state-panel kind="empty" title="No open causes" message="The last run found no failing records in this table." />
+  } @else {
+    <div class="rh-rows">
+      @for (row of rows(); track row.table.id) {
+        <a class="rh-row" [routerLink]="['/remediation', 't', row.table.id]">
+          <div>
+            <p class="rh-name rh-tip" [attr.data-tip]="'Technical name: ' + row.table.id">{{ row.table.plainName }}</p>
+            <p class="rh-meta">
+              {{ row.table.sourceSystem }} · {{ row.table.rules }} checks ·
+              @if (row.failing) {
+                <span class="rh-fail-text">{{ row.failing }} failing</span>
+              } @else {
+                <span class="rh-pass-text">all passing</span>
+              }
+            </p>
+          </div>
+          <div class="rh-right">
+            <b>{{ row.table.qualityScore === null ? '—' : row.table.qualityScore + '%' }}</b>
+            <app-open-count [count]="row.open" />
+          </div>
+          @if (!row.table.recordKeyField) {
+            <div class="rh-warn">Records can’t be listed yet</div>
+          }
+        </a>
+      }
+    </div>
+  }
+}

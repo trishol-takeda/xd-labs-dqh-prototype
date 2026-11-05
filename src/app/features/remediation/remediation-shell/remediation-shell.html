@@ -1,15 +1,69 @@
-<nav class="subnav" aria-label="Data Remediation sections">
-  <ul class="plain subnav-inner">
-    @for (item of sections; track item.route) {
-      <li>
-        <a [routerLink]="item.route" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page">
-          <app-icon [name]="item.icon" [size]="15" />{{ item.label }}
-        </a>
-      </li>
+<section class="rh-proto" aria-label="Prototype controls">
+  <div class="rh-wrap">
+    <strong>Prototype</strong>
+    <div class="rh-grp" role="group" aria-label="Screen state">
+      <span>Screen state</span>
+      @for (s of screenStates; track s.key) {
+        <button type="button" [attr.aria-pressed]="store.screenState() === s.key" (click)="store.screenState.set(s.key)">{{ s.label }}</button>
+      }
+    </div>
+    @if (store.activeCauseId()) {
+      <div class="rh-grp" role="group" aria-label="Simulate next check">
+        <span>Simulate next check</span>
+        @for (s of simulations; track s.key) {
+          <button type="button" (click)="store.simulate(s.key)">{{ s.label }}</button>
+        }
+      </div>
     }
-  </ul>
-</nav>
+    <div class="rh-grp" role="group" aria-label="View as">
+      <span>View as</span>
+      @for (r of roles; track r.key) {
+        <button type="button" [attr.aria-pressed]="store.role() === r.key" (click)="store.setRole(r.key)">{{ r.label }}</button>
+      }
+    </div>
+    <button type="button" (click)="reset()">Reset</button>
+    <span class="rh-note">Mock data · failing counts are simulated</span>
+  </div>
+</section>
 
-<app-prototype-controls />
+<header class="rh-bar">
+  <div class="rh-wrap">
+    <h1><span class="rh-mark"></span>{{ appName }}</h1>
+    <nav class="rh-nav" aria-label="Remediation Hub">
+      <a routerLink="/remediation" [class.on]="!onQueue()" [attr.aria-current]="!onQueue() ? 'page' : null">Data products</a>
+      <a routerLink="/remediation/queue" [class.on]="onQueue()" [attr.aria-current]="onQueue() ? 'page' : null">
+        {{ queueLabel() }}@if (store.queueCount()) {<span class="rh-n">{{ store.queueCount() }}</span>}
+      </a>
+    </nav>
+  </div>
+</header>
 
-<router-outlet />
+<div class="rh-wrap">
+  @switch (store.loadStatus()) {
+    @case ('ready') {
+      @switch (store.screenState()) {
+        @case ('loading') {
+          <app-loading-skeleton />
+        }
+        @case ('error') {
+          <app-state-panel kind="error" title="Couldn’t load" message="Try again.">
+            <button type="button" class="btn primary" (click)="retry()"><app-icon name="refresh" [size]="14" />Try again</button>
+          </app-state-panel>
+        }
+      }
+      <div [hidden]="store.screenState() === 'loading' || store.screenState() === 'error'">
+        <router-outlet />
+      </div>
+    }
+    @case ('error') {
+      <app-state-panel kind="error" title="Couldn’t load" message="Try again.">
+        <button type="button" class="btn primary" (click)="retry()"><app-icon name="refresh" [size]="14" />Try again</button>
+      </app-state-panel>
+    }
+    @default {
+      <app-loading-skeleton />
+    }
+  }
+</div>
+
+<div class="rh-toast" [class.on]="store.toast()" role="status" aria-live="polite">{{ store.toast() }}</div>

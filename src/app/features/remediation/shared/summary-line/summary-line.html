@@ -1,0 +1,7 @@
+<div class="rh-sumline">
+  <span><b>{{ summary().checks }}</b> checks</span>
+  <span class="rh-p"><b>{{ summary().passing }}</b> passing</span>
+  <span class="rh-f"><b>{{ summary().failing }}</b> failing</span>
+  <span>grouped into <b>{{ summary().open }}</b> open {{ plural(summary().open, 'cause') }}</span>
+  <ng-content />
+</div>

@@ -37,14 +37,3 @@
 <main id="main" tabindex="-1">
   <router-outlet />
 </main>
-
-<div class="toast-region" role="status" aria-live="polite" aria-atomic="true">
-  @if (store.toast(); as toast) {
-    <div [class]="'toast ' + toast.kind">
-      <app-icon [name]="toast.kind === 'error' ? 'alert' : 'check'" [size]="16" /><span>{{ toast.text }}</span>
-      <button type="button" class="btn small ghost" (click)="store.dismissToast()" aria-label="Dismiss message">
-        <app-icon name="x" [size]="14" />
-      </button>
-    </div>
-  }
-</div>

@@ -1,2 +1,0 @@
-.preview { padding: 14px 16px; border: 1px dashed var(--warning-line); border-radius: var(--radius); background: var(--warning-bg); color: var(--warning-fg); gap: 8px; }
-.preview h3 { display: flex; gap: 6px; align-items: center; }

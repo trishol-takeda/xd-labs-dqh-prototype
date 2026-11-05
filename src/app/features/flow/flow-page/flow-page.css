@@ -1,5 +1,0 @@
-.life { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr)); }
-.life li { display: grid; gap: 4px; align-content: start; justify-items: start; padding: 12px; border: 1px solid var(--line); border-radius: var(--border-radius-md); background: var(--surface-2); }
-.grid-3 { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
-.principles { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
-.plain-th { font-weight: var(--prim-typography-weight-semibold); text-transform: none; letter-spacing: 0; font-size: inherit; color: var(--ink); background: transparent; }

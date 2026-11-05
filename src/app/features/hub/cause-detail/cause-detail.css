@@ -1,9 +1,0 @@
-.detail { min-width: 0; }
-.plain-text { font-weight: var(--prim-typography-weight-regular); }
-.probable { display: grid; gap: 6px; padding: 12px 14px; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--border-radius-md); }
-.numbers { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); }
-.big { font-size: 1.25rem; line-height: 1.75rem; }
-.big small { font-size: 0.8rem; font-weight: var(--prim-typography-weight-regular); color: var(--muted); }
-.detail-empty { min-height: 240px; align-content: center; }
-.back { margin-left: auto; }
-@media (min-width: 901px) { .back { display: none; } }
