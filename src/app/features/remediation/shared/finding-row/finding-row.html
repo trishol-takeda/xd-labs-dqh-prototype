@@ -1,0 +1,18 @@
+<a class="rh-row" [routerLink]="['/remediation', 'f', finding().id]">
+  <div>
+    <p class="rh-name">{{ finding().symptomLabel }} · {{ finding().site }}</p>
+    <p class="rh-fl"><b>Fields:</b> {{ fields() }}</p>
+    <p class="rh-meta">
+      {{ segments() }}
+      @if (next()) {
+        · next: <b>{{ next() }}</b>
+      }
+    </p>
+  </div>
+  <div class="rh-right">
+    <app-chip kind="tier" [value]="finding().tier">{{ finding().tierLabel }}</app-chip>
+    @for (b of badges(); track b.label) {
+      <app-chip [kind]="b.kind">{{ b.label }}</app-chip>
+    }
+  </div>
+</a>

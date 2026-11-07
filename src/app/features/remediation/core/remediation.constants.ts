@@ -1,89 +1,95 @@
-import { Role, Tier, VisibleStatus } from './remediation.model';
+import { BacklogChoice, DecisionKey, NewFailuresChoice, Role, ScreenState, VisibleStatus } from './remediation.model';
 
 export const REMEDIATION_DATA_FILES = {
-  products: 'data/remediation/products.json',
-  tables: 'data/remediation/tables.json',
+  vocab: 'data/remediation/vocab.json',
+  registry: 'data/remediation/registry.json',
+  findings: 'data/remediation/findings.json',
   rules: 'data/remediation/rules.json',
-  causes: 'data/remediation/causes.json',
 } as const;
 
 export const APP_NAME = 'Remediation Hub';
 
-export const ROLE_LABEL: Record<Role, string> = { trustee: 'Data trustee', fixer: 'Fixer', rules: 'Rules team' };
 export const ROLE_OPTIONS: readonly { key: Role; label: string }[] = [
   { key: 'trustee', label: 'Trustee' },
-  { key: 'fixer', label: 'Fixer' },
+  { key: 'qa', label: 'Quality approver' },
   { key: 'rules', label: 'Rules team' },
+  { key: 'leader', label: 'Leadership' },
 ];
-export const ROLE_QUEUE_LABEL: Record<Role, string> = { trustee: 'Needs me', fixer: 'My fixes', rules: 'Disputes' };
-export const ROLE_QUEUE_SUBTITLE: Record<Role, string> = {
-  trustee: 'Open causes across your products, most critical first.',
-  fixer: 'Causes sent to a fixer. Mark them done when the correction is made; the next check confirms it.',
-  rules: 'Rules a trustee has disputed. Change the rule or confirm it stands.',
+export const ROLE_LABEL: Record<Role, string> = { trustee: 'Data trustee', qa: 'Quality approver', rules: 'Rules team', leader: 'Leadership' };
+export const QUEUE_LABEL: Record<Role, string> = { trustee: 'Needs me', qa: 'Scope & impact', rules: 'Check changes', leader: 'Needs me' };
+export const QUEUE_SUBTITLE: Record<Role, string> = {
+  trustee: 'Open findings on your products, most impact first. The next decision is named on each.',
+  qa: 'Scopes awaiting your concurrence and impact assessments on GxP critical data.',
+  rules: 'Findings where the planned action is to fix or re-scope a check.',
+  leader: 'Open findings on your products, most impact first. The next decision is named on each.',
 };
+export const TRUSTEE_DOMAINS = ['Manufacturing', 'Quality', 'Supply Chain', 'Engineering'] as const;
+export const DEFAULT_DOMAIN = 'Manufacturing';
+export const QA_ROLE = 'Quality approver';
+export const RULES_ROLE = 'Rules team';
+export const TRUSTEE_FALLBACK = 'Data trustee';
+export const ENGINE = 'Rule engine';
 
-export const STATUS_ORDER: readonly VisibleStatus[] = ['needs_you', 'waiting', 'fixed'];
-export const STATUS_LABEL: Record<VisibleStatus, string> = { needs_you: 'Needs you', waiting: 'Waiting on fixer', fixed: 'Fixed' };
+export const STATUS_ORDER: readonly VisibleStatus[] = ['needs_you', 'in_progress', 'fixed'];
+export const STATUS_LABEL: Record<VisibleStatus, string> = { needs_you: 'Needs you', in_progress: 'In progress', fixed: 'Fixed' };
 export const STATUS_MEANING: Record<VisibleStatus, string> = {
-  needs_you: 'Review the cause and send it on, dispute the rule, or accept the remaining failures.',
-  waiting: 'Sent for correction. Closes on its own once the checks find no failures.',
-  fixed: 'The last run found no failing records.',
+  needs_you: 'Take the next decision: scope, impact, investigate or plan actions.',
+  in_progress: 'Actions are with their owners. Closes when new failures stop and the backlog is cleared or accepted.',
+  fixed: 'Closed by the checks: no new failures and nothing left in scope. Reopens on its own if the failures return.',
 };
 
-export const TIER_ORDER: Record<Tier, number> = { critical: 1, relevant: 2, business: 3 };
+export const NEXT_LABEL: Record<DecisionKey, string> = { scope: 'Set scope', impact: 'Assess impact', investigate: 'Record root cause', actions: 'Plan actions' };
+export const DECISION_LABEL: Record<DecisionKey, string> = { scope: 'Scope', impact: 'Impact', investigate: 'Root cause', actions: 'Actions' };
+export const DECISION_ORDER: readonly DecisionKey[] = ['scope', 'impact', 'investigate', 'actions'];
 
-export const SCREEN_STATES = [
+export const SCREEN_STATES: readonly { key: ScreenState; label: string }[] = [
   { key: 'normal', label: 'Normal' },
   { key: 'loading', label: 'Loading' },
   { key: 'empty', label: 'Empty' },
   { key: 'error', label: 'Error' },
+];
+
+export const NEW_FAILURE_OPTIONS: readonly { key: NewFailuresChoice; label: string }[] = [
+  { key: 'none', label: 'none' },
+  { key: 'some', label: 'some' },
+  { key: 'same', label: 'same' },
+];
+export const BACKLOG_OPTIONS: readonly { key: BacklogChoice; label: string }[] = [
+  { key: 'same', label: 'same' },
+  { key: 'reduced', label: 'reduced' },
+  { key: 'cleared', label: 'cleared' },
+];
+
+export const IMPACT_OPTIONS = [
+  { key: 'none', label: 'None' },
+  { key: 'possible', label: 'Possible' },
+  { key: 'confirmed', label: 'Confirmed' },
 ] as const;
 
-export const SIMULATIONS = [
-  { key: 'all', label: 'All fixed' },
-  { key: 'some', label: 'Some fixed' },
-  { key: 'none', label: 'Nothing changed' },
-] as const;
+/** Symptoms where a GxP critical finding is assumed to have possible impact until assessed. */
+export const IMPACT_DEFAULT_POSSIBLE_SYMPTOMS: readonly string[] = ['missing', 'orphaned'];
 
-/** How a record fails each kind of check, shown when a sample key is expanded. */
-export const SAMPLE_VALUE: Record<string, string> = {
-  'Presence (not null / not blank)': 'is empty',
-  'Presence (no placeholder value)': 'is “-”, a placeholder',
-  'Allowed values': 'is “N/A”, not an approved value',
-  'Numeric bound': 'is -1, outside the allowed range',
-  'Format pattern': 'is “12:3”, not the expected format',
-  'Reference lookup': 'points to a master record that does not exist',
-  'Date logic': 'is later than the pick-up date',
-  'Conditional dependency': 'is filled but its related field is empty',
-  Uniqueness: 'appears more than once',
-};
+/* ---------- mock factors and sizes ---------- */
 
-export const TYPE_PHRASE: Record<string, string> = {
-  'Presence (not null / not blank)': 'must be filled in',
-  'Presence (no placeholder value)': 'must be a real value, not a placeholder',
-  'Allowed values': 'must use an approved value',
-  'Numeric bound': 'must be within range',
-  'Format pattern': 'must be in the right format',
-  'Reference lookup': 'must exist in master data',
-  'Date logic': 'dates must be in order',
-  'Conditional dependency': 'related fields must agree',
-  Uniqueness: 'must not be duplicated',
-};
-
-/** Share of a cause's failures that remain after the Rules team changes a rule (mock). */
-export const RULE_CHANGE_REMAINING = 0.3;
-/** Share of failures that remain after a "Some fixed" run (mock). */
-export const SOME_FIXED_REMAINING = 0.4;
-/** A cause counts as partly fixed once failures drop below this share of the peak. */
-export const PARTLY_FIXED_BELOW = 0.7;
-/** Share of the peak assumed to fail again when a closed cause gets a non-zero run. */
-export const REOPEN_SHARE_OF_PEAK = 0.9;
-/** Days between simulated runs. */
+/** Share of the previous new failures that remain after a "some" check. */
+export const SOME_NEW_REMAINING = 0.4;
+/** Share of the in-scope backlog that remains after a "reduced" check. */
+export const BACKLOG_REDUCED_REMAINING = 0.4;
+/** Share of open records that remain after the Rules team publishes a changed check. */
+export const CHECK_CHANGE_REMAINING = 0.3;
+/** Weekly new failures are assumed to be this share of the new-since-detection count when no history exists. */
+export const NEW_FAILURE_FALLBACK_DIVISOR = 4;
 export const RUN_INTERVAL_DAYS = 7;
-/** Months until an accepted residual must be reviewed. */
-export const ACCEPT_REVIEW_MONTHS = { critical: 6, other: 12 } as const;
+export const MS_PER_DAY = 864e5;
+/** Default "review by" for an acceptance. */
+export const DEFAULT_REVIEW_BY = '2027-11-01';
+/** Runs back that "four weeks ago" refers to (the trend has one point per week). */
+export const TREND_COMPARE_WEEKS = 4;
 
-export const RECORDS_SAMPLE_SIZE = 10;
+export const TOP_FINDINGS = 5;
+export const LARGEST_FINDINGS = 8;
+export const FIELD_SUMMARY_COUNT = 4;
 export const RECORDS_PAGE_SIZE = 50;
 export const TOAST_MS = 2200;
-export const MS_PER_DAY = 864e5;
+
+export const JOURNEY_LABELS = ['Detected', 'Scope', 'Impact', 'Root cause', 'Actions', 'Verifying', 'Closed'] as const;

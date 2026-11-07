@@ -1,0 +1,17 @@
+<div class="rh-grid">
+  @for (card of cards(); track card.product.id) {
+    <a class="rh-card" [routerLink]="['/remediation', 'p', card.product.id]">
+      <div class="rh-card-head">
+        <p class="rh-name">{{ card.product.name }}</p>
+        <app-chip kind="tier" [value]="card.product.tier">{{ card.product.tierLabel }}</app-chip>
+      </div>
+      <p class="rh-meta">{{ card.product.domain }}</p>
+      <div class="rh-score">{{ card.product.qualityScore ?? '—' }}<small>% Quality score</small></div>
+      <p class="rh-meta">In-scope score {{ card.inScopeScore }}%</p>
+      <app-open-count [count]="card.open" />
+      @if (card.pastTarget) {
+        <span class="rh-warn-text">{{ card.pastTarget }} past target</span>
+      }
+    </a>
+  }
+</div>

@@ -1,0 +1,11 @@
+<div class="rh-segs">
+  @for (tile of tiles(); track tile.key) {
+    <div [class]="tile.classes">
+      <div class="rh-v">{{ full(tile.value) }}</div>
+      <div class="rh-l">{{ tile.label }}</div>
+      @if (tile.mark) {
+        <div class="rh-s">{{ tile.mark === 'in' ? 'In scope' : 'Parked' }}</div>
+      }
+    </div>
+  }
+</div>

@@ -1,20 +1,17 @@
 import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { CheckItem } from '../../core/remediation.model';
 import { compact } from '../../core/remediation.util';
-import { Spark } from '../spark/spark';
+import { Chip } from '../chip/chip';
 
-/** Checks as expandable rows: field, what it checks, what a failure means, trend, and (on the table screen) the cause it belongs to. */
+/** Field-first check rows: field, requirement, "n problem" or Passing; expandable to what it checks and what a failure means. */
 @Component({
   selector: 'app-check-list',
-  imports: [RouterLink, Spark],
+  imports: [Chip],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './check-list.html',
 })
 export class CheckList {
   readonly items = input.required<readonly CheckItem[]>();
-  /** Word after the failing count: "failing" on the table screen, "records" on the cause screen. */
-  readonly unit = input<'failing' | 'records'>('records');
 
   protected readonly compact = compact;
   private readonly expanded = signal<ReadonlySet<string>>(new Set());

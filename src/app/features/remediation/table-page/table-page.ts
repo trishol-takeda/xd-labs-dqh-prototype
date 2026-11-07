@@ -1,20 +1,20 @@
-import { StatePanel } from '../../../ui/state-panel/state-panel';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { StatePanel } from '../../../ui/state-panel/state-panel';
 import { RemediationStore } from '../core/remediation-store.service';
 import { STATUS_LABEL, STATUS_MEANING, STATUS_ORDER } from '../core/remediation.constants';
-import { CheckItem, Crumb, VisibleStatus } from '../core/remediation.model';
-import { causesOfTable, compareCauses, humanCol, openCount, plural, rulesOfTable, summarise } from '../core/remediation.util';
-import { CauseRow } from '../shared/cause-row/cause-row';
+import { Crumb, VisibleStatus } from '../core/remediation.model';
+import { byImpact, checkItems, ofTable, openOf, plural, rulesOfTable, summarise } from '../core/remediation.util';
 import { CheckList } from '../shared/check-list/check-list';
 import { Chip } from '../shared/chip/chip';
 import { Crumbs } from '../shared/crumbs/crumbs';
+import { FindingRow } from '../shared/finding-row/finding-row';
 import { SummaryLine } from '../shared/summary-line/summary-line';
 
-/** Screen 3: one table, every check on it, and its causes in three sections: Needs you, Waiting on fixer, Fixed. */
+/** One table: every check on it, and its findings in three sections (Needs you, In progress, Fixed), highest impact first. */
 @Component({
   selector: 'app-table-page',
-  imports: [StatePanel, CauseRow, CheckList, Chip, Crumbs, SummaryLine],
+  imports: [StatePanel, CheckList, Chip, Crumbs, FindingRow, SummaryLine],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './table-page.html',
 })
@@ -23,20 +23,26 @@ export class TablePage {
   private readonly router = inject(Router);
 
   readonly tableId = input.required<string>();
+  /** Set when a single-table product skips its own screen: the page then carries the product's name and crumb. */
+  readonly fromProductId = input<string | undefined>(undefined);
+
   protected readonly plural = plural;
   protected readonly statusLabel = STATUS_LABEL;
   protected readonly statusMeaning = STATUS_MEANING;
-
   protected readonly showAllChecks = signal(false);
   /** Sections the user flipped; an empty section starts collapsed, a full one expanded. */
   private readonly flipped = signal<ReadonlySet<VisibleStatus>>(new Set());
 
   protected readonly table = computed(() => this.store.table(this.tableId()));
-  protected readonly product = computed(() => this.store.productByName(this.table()?.products[0]));
+  protected readonly fromProduct = computed(() => this.store.product(this.fromProductId() ?? ''));
+  protected readonly ownerProduct = computed(() => this.store.productByName(this.table()?.products[0]));
+  protected readonly title = computed(() => this.fromProduct()?.name ?? this.table()?.plainName ?? '');
   protected readonly alsoUsedBy = computed(() => this.table()?.products.slice(1).join(', ') ?? '');
 
   protected readonly crumbs = computed<readonly Crumb[]>(() => {
-    const p = this.product();
+    const from = this.fromProduct();
+    if (from) return [{ label: 'Data products', link: ['/remediation'] }, { label: from.name }];
+    const p = this.ownerProduct();
     return [
       { label: 'Data products', link: ['/remediation'] },
       { label: p?.name ?? '', link: p ? ['/remediation', 'p', p.id] : undefined },
@@ -44,43 +50,24 @@ export class TablePage {
     ];
   });
 
-  private readonly causes = computed(() => {
+  private readonly findings = computed(() => {
     const d = this.store.data();
-    return d ? causesOfTable(d, this.tableId()).sort(compareCauses) : [];
+    return d ? ofTable(d, this.tableId()).sort(byImpact) : [];
   });
-  protected readonly open = computed(() => openCount(this.causes()));
-  protected readonly isEmpty = computed(() => this.store.screenState() === 'empty' || this.causes().length === 0);
+  protected readonly open = computed(() => openOf(this.findings()).length);
+  protected readonly isEmpty = computed(() => this.store.screenState() === 'empty' || this.findings().length === 0);
 
-  protected readonly summary = computed(() => {
+  private readonly rules = computed(() => {
     const d = this.store.data();
-    return summarise(d ? rulesOfTable(d, this.tableId()) : [], this.open());
+    return d ? rulesOfTable(d, this.tableId()) : [];
   });
-
-  protected readonly checks = computed<CheckItem[]>(() => {
-    const d = this.store.data();
-    if (!d) return [];
-    return rulesOfTable(d, this.tableId())
-      .sort((a, b) => b.failingNow - a.failingNow || a.plainName.localeCompare(b.plainName))
-      .map((r) => {
-        const cause = d.causes.find((k) => k.table === r.table && k.rootCause === r.rootCause && k.rules.some((x) => x.id === r.id));
-        return {
-          id: r.id,
-          plainName: r.plainName,
-          field: humanCol(r.column),
-          failingNow: r.failingNow,
-          whatItChecks: r.whatItChecks,
-          whatFailureMeans: r.whatFailureMeans,
-          history: r.history,
-          cause: cause ? { id: cause.id, label: cause.rootCauseLabel } : undefined,
-        };
-      });
-  });
+  protected readonly summary = computed(() => summarise(this.rules(), this.open()));
+  protected readonly checks = computed(() => checkItems(this.rules()));
 
   protected readonly sections = computed(() =>
     STATUS_ORDER.map((status) => {
-      const list = this.causes().filter((c) => c.visibleStatus === status);
-      const collapsed = (list.length === 0) !== this.flipped().has(status);
-      return { status, list, collapsed };
+      const list = this.findings().filter((f) => f.visibleStatus === status);
+      return { status, list, collapsed: (list.length === 0) !== this.flipped().has(status) };
     }),
   );
 

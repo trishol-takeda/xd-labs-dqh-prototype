@@ -1,0 +1,3644 @@
+{
+ "tables": [
+  {
+   "id": "ref_equipment_eng_glbl",
+   "plainName": "Equipment master records",
+   "sourceSystem": "Equipment MDM",
+   "recordKeyField": "ASSET_NUMBER",
+   "products": [
+    "Equipment Master"
+   ],
+   "domain": "Engineering",
+   "approxRecords": 6614,
+   "registryNote": "",
+   "kind": "reference",
+   "lifecycleField": "STATUS",
+   "closedValues": [
+    "Retired"
+   ],
+   "creationField": "CREATED_DT",
+   "siteField": "SITE",
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "txn_genealogy_mes_glbl",
+   "plainName": "Batch genealogy links",
+   "sourceSystem": "MES",
+   "recordKeyField": "BATCH_ID",
+   "products": [
+    "Batch Genealogy"
+   ],
+   "domain": "Manufacturing",
+   "approxRecords": 203380,
+   "registryNote": "",
+   "kind": "transactional",
+   "lifecycleField": "BATCH_STATUS",
+   "closedValues": [
+    "Closed",
+    "Released"
+   ],
+   "creationField": "MFG_START_DATE",
+   "siteField": "SITE_NM",
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "ref_mfg_proc_critical_proc_param",
+   "plainName": "Critical process parameters",
+   "sourceSystem": "Process models (CMC)",
+   "recordKeyField": "CPP_ID",
+   "products": [
+    "Critical Process Parameters"
+   ],
+   "domain": "Manufacturing",
+   "approxRecords": 1894,
+   "registryNote": "Key provided by data governance (Nov 2026)",
+   "kind": "reference",
+   "lifecycleField": null,
+   "closedValues": [],
+   "creationField": null,
+   "siteField": null,
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "ref_mfg_proc_ipc",
+   "plainName": "In-process control definitions",
+   "sourceSystem": "Process models (CMC)",
+   "recordKeyField": "IPC_ID",
+   "products": [
+    "In-Process Controls"
+   ],
+   "domain": "Manufacturing",
+   "approxRecords": 1785,
+   "registryNote": "Key provided by data governance (Nov 2026)",
+   "kind": "reference",
+   "lifecycleField": null,
+   "closedValues": [],
+   "creationField": null,
+   "siteField": null,
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "mfg_exec",
+   "plainName": "Manufacturing orders",
+   "sourceSystem": "MES",
+   "recordKeyField": "MFG_ORD_ID",
+   "products": [
+    "Manufacturing Execution"
+   ],
+   "domain": "Manufacturing",
+   "approxRecords": 264904,
+   "registryNote": "",
+   "kind": "transactional",
+   "lifecycleField": "ORDER_STATUS",
+   "closedValues": [
+    "Closed",
+    "Technically complete"
+   ],
+   "creationField": "ORDER_CREATED_DT",
+   "siteField": "PLANT_ID",
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "ref_mfg_proc_flow",
+   "plainName": "Process flow steps",
+   "sourceSystem": "Process models (CMC)",
+   "recordKeyField": "STEP_ID",
+   "products": [
+    "Process Flow"
+   ],
+   "domain": "Manufacturing",
+   "approxRecords": 1010,
+   "registryNote": "Key provided by data governance (Nov 2026)",
+   "kind": "reference",
+   "lifecycleField": null,
+   "closedValues": [],
+   "creationField": null,
+   "siteField": null,
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "ref_pr_element_detail_trkw_glbl",
+   "plainName": "Process record element details",
+   "sourceSystem": "TrackWise",
+   "recordKeyField": "CODE",
+   "products": [
+    "Change Control",
+    "Deviations"
+   ],
+   "domain": "Quality",
+   "approxRecords": 8692,
+   "registryNote": "Shared by Change Control and Deviations",
+   "kind": "reference",
+   "lifecycleField": "ACTIVE_FLAG",
+   "closedValues": [
+    "N"
+   ],
+   "creationField": "CREATED_DATE",
+   "siteField": null,
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "txn_change_control_trkw_glbl",
+   "plainName": "Change control records",
+   "sourceSystem": "TrackWise",
+   "recordKeyField": "CHANGE",
+   "products": [
+    "Change Control"
+   ],
+   "domain": "Quality",
+   "approxRecords": 325031,
+   "registryNote": "",
+   "kind": "transactional",
+   "lifecycleField": "STATUS",
+   "closedValues": [
+    "Closed",
+    "Cancelled"
+   ],
+   "creationField": "CREATED_DATE",
+   "siteField": "SITE",
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "txn_grid_affected_material_and_lot_trkw_glbl",
+   "plainName": "Affected materials and lots",
+   "sourceSystem": "TrackWise",
+   "recordKeyField": "MATERIAL_ID",
+   "products": [
+    "Change Control",
+    "Deviations"
+   ],
+   "domain": "Quality",
+   "approxRecords": 260453,
+   "registryNote": "Shared by Change Control and Deviations",
+   "kind": "transactional",
+   "lifecycleField": "PARENT_STATUS",
+   "closedValues": [
+    "Closed"
+   ],
+   "creationField": "CREATED_DATE",
+   "siteField": "SITE",
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "gmsgq_veeva_station_device",
+   "plainName": "Controlled-document station devices",
+   "sourceSystem": "Veeva",
+   "recordKeyField": "device_id__v",
+   "products": [
+    "Controlled Documents"
+   ],
+   "domain": "Quality",
+   "approxRecords": 9780,
+   "registryNote": "",
+   "kind": "reference",
+   "lifecycleField": "status__v",
+   "closedValues": [
+    "inactive__v"
+   ],
+   "creationField": "created_date__v",
+   "siteField": "site__c",
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "gmsgq_veeva_station_document",
+   "plainName": "Controlled documents at stations",
+   "sourceSystem": "Veeva",
+   "recordKeyField": "device_id__v",
+   "products": [
+    "Controlled Documents"
+   ],
+   "domain": "Quality",
+   "approxRecords": 2266,
+   "registryNote": "",
+   "kind": "reference",
+   "lifecycleField": "status__v",
+   "closedValues": [
+    "inactive__v"
+   ],
+   "creationField": "created_date__v",
+   "siteField": "site__c",
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "gmsgq_veeva_user",
+   "plainName": "Controlled-document users",
+   "sourceSystem": "Veeva",
+   "recordKeyField": "user_id__v",
+   "products": [
+    "Controlled Documents"
+   ],
+   "domain": "Quality",
+   "approxRecords": 2295,
+   "registryNote": "Key provided by data governance (Nov 2026)",
+   "kind": "reference",
+   "lifecycleField": "status__v",
+   "closedValues": [
+    "inactive__v"
+   ],
+   "creationField": "created_date__v",
+   "siteField": "site__c",
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "txn_deviation_event_trkw_glbl",
+   "plainName": "Deviation events",
+   "sourceSystem": "TrackWise",
+   "recordKeyField": "Deviation_Event_Type",
+   "products": [
+    "Deviations"
+   ],
+   "domain": "Quality",
+   "approxRecords": 59730,
+   "registryNote": "Key field to confirm",
+   "kind": "transactional",
+   "lifecycleField": "STATUS",
+   "closedValues": [
+    "Closed"
+   ],
+   "creationField": "CREATED_DATE",
+   "siteField": "SITE",
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "txn_grid_deviation_li_root_cause_trkw_glbl",
+   "plainName": "Deviation root-cause lines",
+   "sourceSystem": "TrackWise",
+   "recordKeyField": "ROOT_CAUSE_LINE_ID",
+   "products": [
+    "Deviations"
+   ],
+   "domain": "Quality",
+   "approxRecords": 44887,
+   "registryNote": "Key provided by data governance (Nov 2026)",
+   "kind": "transactional",
+   "lifecycleField": "PARENT_STATUS",
+   "closedValues": [
+    "Closed"
+   ],
+   "creationField": "CREATED_DATE",
+   "siteField": "SITE",
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "ref_product_lims_glbl",
+   "plainName": "Products (LIMS)",
+   "sourceSystem": "LIMS",
+   "recordKeyField": "PROD_UNIT_ID",
+   "products": [
+    "Product Specifications"
+   ],
+   "domain": "Quality",
+   "approxRecords": 5034,
+   "registryNote": "",
+   "kind": "reference",
+   "lifecycleField": "ACTIVE_FLAG",
+   "closedValues": [
+    "N"
+   ],
+   "creationField": "CREATED_TS",
+   "siteField": "SITE_CD",
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "ref_product_spec_lims_glbl",
+   "plainName": "Product specifications",
+   "sourceSystem": "LIMS",
+   "recordKeyField": "SPEC_VERSION",
+   "products": [
+    "Product Specifications"
+   ],
+   "domain": "Quality",
+   "approxRecords": 11654,
+   "registryNote": "",
+   "kind": "reference",
+   "lifecycleField": "ACTIVE_FLAG",
+   "closedValues": [
+    "N"
+   ],
+   "creationField": "CREATED_TS",
+   "siteField": "SITE_CD",
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "txn_lot_result_approved_lims_glbl",
+   "plainName": "Approved lot results",
+   "sourceSystem": "LIMS",
+   "recordKeyField": "LOT_ID",
+   "products": [
+    "QC Results"
+   ],
+   "domain": "Quality",
+   "approxRecords": 230836,
+   "registryNote": "",
+   "kind": "transactional",
+   "lifecycleField": "LOT_STATUS",
+   "closedValues": [
+    "Approved",
+    "Rejected"
+   ],
+   "creationField": "CREATED_TS",
+   "siteField": "SITE_CD",
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "txn_result_approved_lims_glbl",
+   "plainName": "Approved test results",
+   "sourceSystem": "LIMS",
+   "recordKeyField": "RESULT_ID",
+   "products": [
+    "QC Results"
+   ],
+   "domain": "Quality",
+   "approxRecords": 66945,
+   "registryNote": "",
+   "kind": "transactional",
+   "lifecycleField": "RESULT_STATUS",
+   "closedValues": [
+    "Approved"
+   ],
+   "creationField": "CREATED_TS",
+   "siteField": "SITE_CD",
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "txn_test_approved_lims_glbl",
+   "plainName": "Approved tests",
+   "sourceSystem": "LIMS",
+   "recordKeyField": "SAMPLE_ID",
+   "products": [
+    "QC Results"
+   ],
+   "domain": "Quality",
+   "approxRecords": 226708,
+   "registryNote": "",
+   "kind": "transactional",
+   "lifecycleField": "TEST_STATUS",
+   "closedValues": [
+    "Approved"
+   ],
+   "creationField": "CREATED_TS",
+   "siteField": "SITE_CD",
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "ref_track_back_erp_glbl",
+   "plainName": "Lot genealogy \u2013 trace back",
+   "sourceSystem": "SAP ERP",
+   "recordKeyField": "root_batch_id",
+   "products": [
+    "Lot Genealogy"
+   ],
+   "domain": "Supply Chain",
+   "approxRecords": 7770,
+   "registryNote": "",
+   "kind": "reference",
+   "lifecycleField": "ACTIVE_FLAG",
+   "closedValues": [
+    "N"
+   ],
+   "creationField": "LOAD_DT",
+   "siteField": "PLANT_ID",
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "ref_track_forward_erp_glbl",
+   "plainName": "Lot genealogy \u2013 trace forward",
+   "sourceSystem": "SAP ERP",
+   "recordKeyField": "root_batch_id",
+   "products": [
+    "Lot Genealogy"
+   ],
+   "domain": "Supply Chain",
+   "approxRecords": 4528,
+   "registryNote": "",
+   "kind": "reference",
+   "lifecycleField": "ACTIVE_FLAG",
+   "closedValues": [
+    "N"
+   ],
+   "creationField": "LOAD_DT",
+   "siteField": "PLANT_ID",
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "gmsgq_jde_proddta_f4102_adt",
+   "plainName": "Item branch records (JDE)",
+   "sourceSystem": "JDE",
+   "recordKeyField": "IBECO",
+   "products": [
+    "Material Master"
+   ],
+   "domain": "Supply Chain",
+   "approxRecords": 11470,
+   "registryNote": "",
+   "kind": "reference",
+   "lifecycleField": "IBSTKT",
+   "closedValues": [
+    "O"
+   ],
+   "creationField": "IBUPMJ",
+   "siteField": "IBMCU",
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "ref_materialmstr_erp_glbl",
+   "plainName": "Material master",
+   "sourceSystem": "SAP ERP",
+   "recordKeyField": "MAT_ID",
+   "products": [
+    "Material Master"
+   ],
+   "domain": "Supply Chain",
+   "approxRecords": 6318,
+   "registryNote": "",
+   "kind": "reference",
+   "lifecycleField": "ACTIVE_FLAG",
+   "closedValues": [
+    "N"
+   ],
+   "creationField": "CREATED_DT",
+   "siteField": "PLANT_ID",
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "ref_materialmstr_plant_erp_glbl",
+   "plainName": "Material master by plant",
+   "sourceSystem": "SAP ERP",
+   "recordKeyField": "MAT_ID",
+   "products": [
+    "Material Master"
+   ],
+   "domain": "Supply Chain",
+   "approxRecords": 6550,
+   "registryNote": "",
+   "kind": "reference",
+   "lifecycleField": "ACTIVE_FLAG",
+   "closedValues": [
+    "N"
+   ],
+   "creationField": "CREATED_DT",
+   "siteField": "PLANT_ID",
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "ref_gmsgq_scr_leadtime_track_frwd_glbl",
+   "plainName": "Lead-time tracking",
+   "sourceSystem": "SAP ERP",
+   "recordKeyField": "TRACK_ID",
+   "products": [
+    "Supply Chain Responsiveness"
+   ],
+   "domain": "Supply Chain",
+   "approxRecords": 1627,
+   "registryNote": "Key provided by data governance (Nov 2026)",
+   "kind": "reference",
+   "lifecycleField": null,
+   "closedValues": [],
+   "creationField": null,
+   "siteField": null,
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "gmsgq_dim_sapbw_node_distn_glbl",
+   "plainName": "Distribution network nodes",
+   "sourceSystem": "SAP BW",
+   "recordKeyField": "NODE_ID",
+   "products": [
+    "Transportation"
+   ],
+   "domain": "Supply Chain",
+   "approxRecords": 6064,
+   "registryNote": "",
+   "kind": "reference",
+   "lifecycleField": "ACTIVE_FLAG",
+   "closedValues": [
+    "N"
+   ],
+   "creationField": "LOAD_DT",
+   "siteField": null,
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "gmsgq_dim_sapbw_node_geo_glbl",
+   "plainName": "Network node locations",
+   "sourceSystem": "SAP BW",
+   "recordKeyField": "NODE_ID",
+   "products": [
+    "Transportation"
+   ],
+   "domain": "Supply Chain",
+   "approxRecords": 8476,
+   "registryNote": "",
+   "kind": "reference",
+   "lifecycleField": "ACTIVE_FLAG",
+   "closedValues": [
+    "N"
+   ],
+   "creationField": "LOAD_DT",
+   "siteField": null,
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "gmsgq_transport_emission_factors",
+   "plainName": "Transport emission factors",
+   "sourceSystem": "Reference data (manual)",
+   "recordKeyField": "METRIC_TYPE_CD",
+   "products": [
+    "Transportation"
+   ],
+   "domain": "Supply Chain",
+   "approxRecords": 2232,
+   "registryNote": "Key field to confirm",
+   "kind": "reference",
+   "lifecycleField": null,
+   "closedValues": [],
+   "creationField": null,
+   "siteField": null,
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "plainName": "End-to-end shipments",
+   "sourceSystem": "SAP BW",
+   "recordKeyField": "SHIP_NUM",
+   "products": [
+    "Transportation"
+   ],
+   "domain": "Supply Chain",
+   "approxRecords": 49721,
+   "registryNote": "",
+   "kind": "transactional",
+   "lifecycleField": "SHIP_STATUS",
+   "closedValues": [
+    "Delivered"
+   ],
+   "creationField": "SHIP_CREATED_DT",
+   "siteField": "ORIG_PLANT_ID",
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  },
+  {
+   "id": "gmsgq_wh_partner_data",
+   "plainName": "Warehouse partner data",
+   "sourceSystem": "Warehouse partner feed",
+   "recordKeyField": "PARTNER_ID",
+   "products": [
+    "Warehousing"
+   ],
+   "domain": "Supply Chain",
+   "approxRecords": 8534,
+   "registryNote": "",
+   "kind": "reference",
+   "lifecycleField": null,
+   "closedValues": [],
+   "creationField": null,
+   "siteField": null,
+   "registryReview": "confirmed by table owner (Nov 2026)"
+  }
+ ],
+ "fields": [
+  {
+   "table": "gmsgq_dim_sapbw_node_distn_glbl",
+   "column": "ACTIVE_FLAG",
+   "displayName": "Active flag",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "gmsgq_dim_sapbw_node_distn_glbl",
+   "column": "BUSINESS_KEY",
+   "displayName": "Business key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "gmsgq_dim_sapbw_node_distn_glbl",
+   "column": "DRV_TSP_MODE_NM",
+   "displayName": "Derived transport mode name",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "gmsgq_dim_sapbw_node_distn_glbl",
+   "column": "FINAL_DEST_NODE_GEO_KEY",
+   "displayName": "Final destination node geographic key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "gmsgq_dim_sapbw_node_distn_glbl",
+   "column": "MD5_KEY",
+   "displayName": "MD5 key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "gmsgq_dim_sapbw_node_distn_glbl",
+   "column": "ORIG_NODE_GEO_KEY",
+   "displayName": "Origin node geographic key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "gmsgq_dim_sapbw_node_distn_glbl",
+   "column": "SRC_SYS_CD",
+   "displayName": "Source system code",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "gmsgq_dim_sapbw_node_distn_glbl",
+   "column": "TSP_MODE_DESC",
+   "displayName": "Transport mode description",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_dim_sapbw_node_geo_glbl",
+   "column": "ACTIVE_FLAG",
+   "displayName": "Active flag",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "gmsgq_dim_sapbw_node_geo_glbl",
+   "column": "BUSINESS_KEY",
+   "displayName": "Business key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "gmsgq_dim_sapbw_node_geo_glbl",
+   "column": "CITY_NM",
+   "displayName": "City name",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_dim_sapbw_node_geo_glbl",
+   "column": "CTRY_CD",
+   "displayName": "Country code",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_dim_sapbw_node_geo_glbl",
+   "column": "LATD_VAL",
+   "displayName": "Latitude value",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_dim_sapbw_node_geo_glbl",
+   "column": "LOND_VAL",
+   "displayName": "Longitude value",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_dim_sapbw_node_geo_glbl",
+   "column": "MD5_KEY",
+   "displayName": "MD5 key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "gmsgq_dim_sapbw_node_geo_glbl",
+   "column": "NODE_ID",
+   "displayName": "Node ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_dim_sapbw_node_geo_glbl",
+   "column": "NODE_TYPE",
+   "displayName": "Node type",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_dim_sapbw_node_geo_glbl",
+   "column": "SRC_SYS_CD",
+   "displayName": "Source system code",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "gmsgq_dim_sapbw_node_geo_glbl",
+   "column": "ZIP_CD",
+   "displayName": "Postcode code",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_jde_proddta_f4102_adt",
+   "column": "IBECO",
+   "displayName": "Ibeco",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_jde_proddta_f4102_adt",
+   "column": "IMDSC1",
+   "displayName": "Imdsc1",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_jde_proddta_f4102_adt",
+   "column": "Q1CONV",
+   "displayName": "Q1conv",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_transport_emission_factors",
+   "column": "co2_fctr_uom_desc",
+   "displayName": "CO2 factor unit of measure description",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_transport_emission_factors",
+   "column": "co2_fctr_val",
+   "displayName": "CO2 factor value",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "TSP_PROVIDER_NM",
+   "displayName": "Transport provider name",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ACTL_ARRIVE_DEST_PORT_1_TM",
+   "displayName": "Actual arrive destination port 1 time",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ACTL_ARRIVE_DEST_PORT_2_TM",
+   "displayName": "Actual arrive destination port 2 time",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ACTL_DEPART_ORIG_PORT_1_TM",
+   "displayName": "Actual depart origin port 1 time",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ACTL_DEPART_ORIG_PORT_2_TM",
+   "displayName": "Actual depart origin port 2 time",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "AWB_BL_CMR_NUM",
+   "displayName": "Awb bl cmr number",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "BATCH_ID",
+   "displayName": "Batch ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "BUSINESS_KEY",
+   "displayName": "Business key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "CONFIRM_SHIP_CHARGE_WT_UOM_CD",
+   "displayName": "Confirm ship charge weight unit of measure code",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "CONFIRM_SHIP_CHARGE_WT_VAL",
+   "displayName": "Confirm ship charge weight value",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "CONFIRM_SHIP_GROSS_WT_VAL",
+   "displayName": "Confirm ship gross weight value",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "DANGER_GOODS_DESC",
+   "displayName": "Danger goods description",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "DEST_PORT_1_CD",
+   "displayName": "Destination port 1 code",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "DEST_PORT_2_CD",
+   "displayName": "Destination port 2 code",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "DEST_PORT_FINAL_CD",
+   "displayName": "Destination port final code",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "DLVR_NUM",
+   "displayName": "Delivery number",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "E2ESHIPMENT_KEY",
+   "displayName": "E2eshipment key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ESTD_SHIP_CHARGE_WT_UOM_CD",
+   "displayName": "Estimated ship charge weight unit of measure code",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ESTD_SHIP_CHARGE_WT_VAL",
+   "displayName": "Estimated ship charge weight value",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ESTD_SHIP_GROSS_WT_VAL",
+   "displayName": "Estimated ship gross weight value",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "EST_SHIP_GROSS_WEIGHT_UOM_CD",
+   "displayName": "Estimated ship gross weight unit of measure code",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "FINAL_DEST_NODE_GEO_KEY",
+   "displayName": "Final destination node geographic key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "GOODS_ISSUE_DT",
+   "displayName": "Goods issue date",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "LOGGER_NUM",
+   "displayName": "Logger number",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "MAT_DESC",
+   "displayName": "Material description",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "MAT_ID",
+   "displayName": "Material ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "MD5_KEY",
+   "displayName": "MD5 key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ORIG_CITY_NM",
+   "displayName": "Origin city name",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ORIG_CTRY_CD",
+   "displayName": "Origin country code",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ORIG_CTRY_NM",
+   "displayName": "Origin country name",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ORIG_NODE_GEO_KEY",
+   "displayName": "Origin node geographic key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ORIG_PLANT_ID",
+   "displayName": "Origin plant ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ORIG_PORT_1_CD",
+   "displayName": "Origin port 1 code",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ORIG_PORT_2_CD",
+   "displayName": "Origin port 2 code",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ORIG_PORT_FINAL_CD",
+   "displayName": "Origin port final code",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ORIG_STREET_NM",
+   "displayName": "Origin street name",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ORIG_ZIP_CD",
+   "displayName": "Origin postcode code",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "PO_NUM",
+   "displayName": "Purchase order number",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "SHIP_NUM",
+   "displayName": "Ship number",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "SHIP_TEMP_DESC",
+   "displayName": "Ship temperature description",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "SRC_SYS_CD",
+   "displayName": "Source system code",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "UNIQUE_SHIP_ID",
+   "displayName": "Unique ship ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "co2_emissions_ratio_val_kg",
+   "displayName": "CO2 emissions ratio value kg",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "co2_emissions_val_kg",
+   "displayName": "CO2 emissions value kg",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "MAT_TYPE_CD",
+   "displayName": "Material type code",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "CARRIER_REF_NUM",
+   "displayName": "Carrier reference number",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "CONFIRM_SHIP_GROSS_WT_UOM_CD",
+   "displayName": "Confirm ship gross weight unit of measure code",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "DANGER_GOODS_FLG",
+   "displayName": "Danger goods flag",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "DISTN_UOM_CD",
+   "displayName": "Distn unit of measure code",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "INCOTERMS_CD",
+   "displayName": "Incoterms code",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "INCOTERMS_LOC_NM",
+   "displayName": "Incoterms location name",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "MILK_RUN_FLG",
+   "displayName": "Milk run flag",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "SHIP_ARCHETYPE_DESC",
+   "displayName": "Ship archetype description",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "SHIP_BOOK_BY_PARTNER_NM",
+   "displayName": "Ship book by partner name",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "SHIP_TEMP_CD",
+   "displayName": "Ship temperature code",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "SLS_UNIT_CD",
+   "displayName": "Sls unit code",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "TSP_MODE_DESC",
+   "displayName": "Transport mode description",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "CO2_EMISSIONS_VAL_KG",
+   "displayName": "CO2 emissions value kg",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "CO2_FCTR_VAL",
+   "displayName": "CO2 factor value",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "CONTAINER_QTY",
+   "displayName": "Container quantity",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ESTD_SHIP_COST_EUR_VAL",
+   "displayName": "Estimated ship cost EUR value",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ESTD_SHIP_COST_JPY_VAL",
+   "displayName": "Estimated ship cost JPY value",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ESTD_SHIP_COST_LCL_CRNCY_VAL",
+   "displayName": "Estimated ship cost local currency value",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "ESTD_SHIP_COST_USD_VAL",
+   "displayName": "Estimated ship cost USD value",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "INV_SHIP_COST_EUR_VAL",
+   "displayName": "Inventory ship cost EUR value",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "INV_SHIP_COST_JPY_VAL",
+   "displayName": "Inventory ship cost JPY value",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "INV_SHIP_COST_LCL_CRNCY_VAL",
+   "displayName": "Inventory ship cost local currency value",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "INV_SHIP_COST_USD_VAL",
+   "displayName": "Inventory ship cost USD value",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "SHIP_MAT_QTY",
+   "displayName": "Ship material quantity",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "SHIP_PROD_RATIO_VAL",
+   "displayName": "Ship product ratio value",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "EST_ARRIVE_TIME_VAL",
+   "displayName": "Estimated arrive time value",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "EST_DEPART_TIME_VAL",
+   "displayName": "Estimated depart time value",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "GOODS_ISSUE_TS",
+   "displayName": "Goods issue timestamp",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "IOD_TS",
+   "displayName": "Iod timestamp",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "COST_ALLOC_CC_CD",
+   "displayName": "Cost alloc cc code",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "DEST_CTRY_CD",
+   "displayName": "Destination country code",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "DEST_CTRY_NM",
+   "displayName": "Destination country name",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "DEST_SITE_ID",
+   "displayName": "Destination site ID",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "EST_SHIP_COST_CRNCY_CD",
+   "displayName": "Estimated ship cost currency code",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "INV_SHIP_COST_CRNCY_CD",
+   "displayName": "Inventory ship cost currency code",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "DOC_CRT_DT",
+   "displayName": "Doc crt date",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "LAST_SHIP_STAT_DT",
+   "displayName": "Last ship status date",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "REQ_PICK_UP_DT",
+   "displayName": "Req pick up date",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "SRC_DATA_LOAD_DT",
+   "displayName": "Source data load date",
+   "criticality": "standard",
+   "columnClass": "technical"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "SRC_VENDOR_DATA_LOAD_DT",
+   "displayName": "Source vendor data load date",
+   "criticality": "standard",
+   "columnClass": "technical"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "DLVR_FLASH_NUM",
+   "displayName": "Delivery flash number",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "FLASH_SITE_ID",
+   "displayName": "Flash site ID",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "FLIGHT_VESSEL_1_NM",
+   "displayName": "Flight vessel 1 name",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "FLIGHT_VESSEL_2_NM",
+   "displayName": "Flight vessel 2 name",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_txn_sapbw_e2e_shipment_glbl",
+   "column": "PO_FLASH_NUM",
+   "displayName": "Purchase order flash number",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_veeva_station_device",
+   "column": "approved_date__v",
+   "displayName": "Approved date",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_veeva_station_device",
+   "column": "device_id__v",
+   "displayName": "Device ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_veeva_station_document",
+   "column": "effective_date__v",
+   "displayName": "Effective date",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_veeva_user",
+   "column": "region__c",
+   "displayName": "Region",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_veeva_user",
+   "column": "region__c.label",
+   "displayName": "Region",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_wh_partner_data",
+   "column": "BUSINESS_KEY",
+   "displayName": "Business key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "gmsgq_wh_partner_data",
+   "column": "MD5_KEY",
+   "displayName": "MD5 key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "gmsgq_wh_partner_data",
+   "column": "METRIC_TYPE_CD",
+   "displayName": "Metric type code",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_wh_partner_data",
+   "column": "PARTNER_ID",
+   "displayName": "Partner ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_wh_partner_data",
+   "column": "PLANTCODE_MASTERDATA_KEY",
+   "displayName": "Plantcode masterdata key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "gmsgq_wh_partner_data",
+   "column": "PLANT_ID",
+   "displayName": "Plant ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_wh_partner_data",
+   "column": "RPT_QTY",
+   "displayName": "Rpt quantity",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "gmsgq_wh_partner_data",
+   "column": "SRC_SYS_CD",
+   "displayName": "Source system code",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "mfg_exec",
+   "column": "ACTV_ACTL_VAL",
+   "displayName": "Active actual value",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "mfg_exec",
+   "column": "BUSINESS_KEY",
+   "displayName": "Business key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "mfg_exec",
+   "column": "MFG_ORD_ID",
+   "displayName": "Manufacturing order ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "mfg_exec",
+   "column": "MFG_ORD_KEY",
+   "displayName": "Manufacturing order key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "mfg_exec",
+   "column": "MFG_ORD_STAT_DESC",
+   "displayName": "Manufacturing order status description",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "mfg_exec",
+   "column": "PROD_UNIT_ID",
+   "displayName": "Product unit ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "mfg_exec",
+   "column": "SHOP_FLOOR_ORD_END_DTS",
+   "displayName": "Shop floor order end timestamp",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "mfg_exec",
+   "column": "SHOP_FLOOR_ORD_ID",
+   "displayName": "Shop floor order ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "mfg_exec",
+   "column": "SHOP_FLOOR_ORD_KEY",
+   "displayName": "Shop floor order key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "mfg_exec",
+   "column": "SHOP_FLOOR_ORD_NM",
+   "displayName": "Shop floor order name",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "mfg_exec",
+   "column": "SHOP_FLOOR_ORD_START_DTS",
+   "displayName": "Shop floor order start timestamp",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "mfg_exec",
+   "column": "SITE_NM",
+   "displayName": "Site name",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "mfg_exec",
+   "column": "SPEC_TYPE",
+   "displayName": "Specification type",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "mfg_exec",
+   "column": "ACTV_EXEC_DTS",
+   "displayName": "Active exec timestamp",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "mfg_exec",
+   "column": "TGT_BATCH_NBR",
+   "displayName": "Tgt batch nbr",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_equipment_eng_glbl",
+   "column": "ASSET_NUMBER",
+   "displayName": "Asset number",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_equipment_eng_glbl",
+   "column": "BUSINESS_KEY",
+   "displayName": "Business key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "ref_equipment_eng_glbl",
+   "column": "SITE_ID",
+   "displayName": "Site ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_equipment_eng_glbl",
+   "column": "SRC_SYS_CD",
+   "displayName": "Source system code",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "ref_gmsgq_scr_leadtime_track_frwd_glbl",
+   "column": "CONFORMANCE_LOT_FLG",
+   "displayName": "Conformance lot flag",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_gmsgq_scr_leadtime_track_frwd_glbl",
+   "column": "MD5_KEY",
+   "displayName": "MD5 key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "ref_gmsgq_scr_leadtime_track_frwd_glbl",
+   "column": "PARENT_MTRL_DESC",
+   "displayName": "Parent mtrl description",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_gmsgq_scr_leadtime_track_frwd_glbl",
+   "column": "UOM_NM",
+   "displayName": "Unit of measure name",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_materialmstr_erp_glbl",
+   "column": "BASE_UOM_NM",
+   "displayName": "Base unit of measure name",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_materialmstr_erp_glbl",
+   "column": "BUSINESS_KEY",
+   "displayName": "Business key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "ref_materialmstr_erp_glbl",
+   "column": "MATERIALMSTR_KEY",
+   "displayName": "Materialmstr key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "ref_materialmstr_erp_glbl",
+   "column": "MAT_DESC",
+   "displayName": "Material description",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_materialmstr_erp_glbl",
+   "column": "MAT_ID",
+   "displayName": "Material ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_materialmstr_erp_glbl",
+   "column": "MD5_KEY",
+   "displayName": "MD5 key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "ref_materialmstr_erp_glbl",
+   "column": "SRC_SYS_CD",
+   "displayName": "Source system code",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "ref_materialmstr_plant_erp_glbl",
+   "column": "BUSINESS_KEY",
+   "displayName": "Business key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "ref_materialmstr_plant_erp_glbl",
+   "column": "MAT_ID",
+   "displayName": "Material ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_materialmstr_plant_erp_glbl",
+   "column": "MD5_KEY",
+   "displayName": "MD5 key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "ref_materialmstr_plant_erp_glbl",
+   "column": "PLANT_ID",
+   "displayName": "Plant ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_materialmstr_plant_erp_glbl",
+   "column": "SRC_SYS_CD",
+   "displayName": "Source system code",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "ref_mfg_proc_critical_proc_param",
+   "column": "BUSINESS_KEY",
+   "displayName": "Business key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "ref_mfg_proc_critical_proc_param",
+   "column": "MD5_KEY",
+   "displayName": "MD5 key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "ref_mfg_proc_critical_proc_param",
+   "column": "NOR_LOWER_LIMIT_VAL",
+   "displayName": "Lower limit value",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_mfg_proc_critical_proc_param",
+   "column": "NOR_UPPER_LIMIT_VAL",
+   "displayName": "Upper limit value",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_mfg_proc_critical_proc_param",
+   "column": "SITE_NM",
+   "displayName": "Site name",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_mfg_proc_flow",
+   "column": "BUSINESS_KEY",
+   "displayName": "Business key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "ref_mfg_proc_flow",
+   "column": "MD5_KEY",
+   "displayName": "MD5 key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "ref_mfg_proc_flow",
+   "column": "SITE_NM",
+   "displayName": "Site name",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_mfg_proc_flow",
+   "column": "IS_UNIQUE",
+   "displayName": "Is unique",
+   "criticality": "standard",
+   "columnClass": "technical"
+  },
+  {
+   "table": "ref_mfg_proc_ipc",
+   "column": "BUSINESS_KEY",
+   "displayName": "Business key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "ref_mfg_proc_ipc",
+   "column": "MD5_KEY",
+   "displayName": "MD5 key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "ref_mfg_proc_ipc",
+   "column": "SITE_NM",
+   "displayName": "Site name",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_pr_element_detail_trkw_glbl",
+   "column": "BUSINESS_KEY",
+   "displayName": "Business key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "ref_pr_element_detail_trkw_glbl",
+   "column": "MD5_KEY",
+   "displayName": "MD5 key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "ref_product_lims_glbl",
+   "column": "CODE",
+   "displayName": "Code",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_product_lims_glbl",
+   "column": "PROD_DESC",
+   "displayName": "Product description",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_product_lims_glbl",
+   "column": "PROD_DESC presence for active",
+   "displayName": "Product description presence for active",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_product_lims_glbl",
+   "column": "BUSINESS_KEY",
+   "displayName": "Business key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "ref_product_lims_glbl",
+   "column": "MD5_KEY",
+   "displayName": "MD5 key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "ref_product_lims_glbl",
+   "column": "SITE_NM",
+   "displayName": "Site name",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_product_lims_glbl",
+   "column": "VERSION",
+   "displayName": "Version",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_product_spec_lims_glbl",
+   "column": "BUSINESS_KEY",
+   "displayName": "Business key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "ref_product_spec_lims_glbl",
+   "column": "MD5_KEY",
+   "displayName": "MD5 key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "ref_product_spec_lims_glbl",
+   "column": "PRODUCT_SPEC_KEY",
+   "displayName": "Product specification key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "ref_product_spec_lims_glbl",
+   "column": "SITE_NM",
+   "displayName": "Site name",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_track_back_erp_glbl",
+   "column": "cmpnt_batch_id",
+   "displayName": "Component batch ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_track_back_erp_glbl",
+   "column": "cmpnt_mat_id",
+   "displayName": "Component material ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_track_back_erp_glbl",
+   "column": "cmpnt_mat_short_id",
+   "displayName": "Component material short ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_track_back_erp_glbl",
+   "column": "cmpnt_plant_id",
+   "displayName": "Component plant ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_track_back_erp_glbl",
+   "column": "md5_key",
+   "displayName": "MD5 key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "ref_track_back_erp_glbl",
+   "column": "parent_batch_id",
+   "displayName": "Parent batch ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_track_back_erp_glbl",
+   "column": "parent_mat_id",
+   "displayName": "Parent material ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_track_back_erp_glbl",
+   "column": "parent_mat_short_id",
+   "displayName": "Parent material short ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_track_back_erp_glbl",
+   "column": "parent_plant_id",
+   "displayName": "Parent plant ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_track_back_erp_glbl",
+   "column": "root_batch_id",
+   "displayName": "Root batch ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_track_back_erp_glbl",
+   "column": "root_mat_id",
+   "displayName": "Root material ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_track_back_erp_glbl",
+   "column": "root_plant_id",
+   "displayName": "Root plant ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_track_back_erp_glbl",
+   "column": "src_sys_cd",
+   "displayName": "Source system code",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "ref_track_forward_erp_glbl",
+   "column": "cmpnt_batch_id",
+   "displayName": "Component batch ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_track_forward_erp_glbl",
+   "column": "cmpnt_mat_id",
+   "displayName": "Component material ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_track_forward_erp_glbl",
+   "column": "cmpnt_mat_short_id",
+   "displayName": "Component material short ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_track_forward_erp_glbl",
+   "column": "cmpnt_plant_id",
+   "displayName": "Component plant ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_track_forward_erp_glbl",
+   "column": "md5_key",
+   "displayName": "MD5 key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "ref_track_forward_erp_glbl",
+   "column": "parent_batch_id",
+   "displayName": "Parent batch ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_track_forward_erp_glbl",
+   "column": "parent_mat_id",
+   "displayName": "Parent material ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_track_forward_erp_glbl",
+   "column": "parent_mat_short_id",
+   "displayName": "Parent material short ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_track_forward_erp_glbl",
+   "column": "parent_plant_id",
+   "displayName": "Parent plant ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_track_forward_erp_glbl",
+   "column": "root_batch_id",
+   "displayName": "Root batch ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_track_forward_erp_glbl",
+   "column": "root_mat_id",
+   "displayName": "Root material ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_track_forward_erp_glbl",
+   "column": "root_plant_id",
+   "displayName": "Root plant ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "ref_track_forward_erp_glbl",
+   "column": "src_sys_cd",
+   "displayName": "Source system code",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "txn_change_control_trkw_glbl",
+   "column": "BUSINESS_KEY",
+   "displayName": "Business key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "txn_change_control_trkw_glbl",
+   "column": "CHANGE",
+   "displayName": "Change",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_change_control_trkw_glbl",
+   "column": "CHANGE_CLASSIFICATION",
+   "displayName": "Change classification",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_change_control_trkw_glbl",
+   "column": "CHANGE_OWNER",
+   "displayName": "Change owner",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_change_control_trkw_glbl",
+   "column": "CHANGE_PARTY",
+   "displayName": "Change party",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_change_control_trkw_glbl",
+   "column": "CHANGE_PLAN_STARTED_BY",
+   "displayName": "Change plan started by",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_change_control_trkw_glbl",
+   "column": "CHANGE_PLAN_STARTED_DATE",
+   "displayName": "Change plan started date",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_change_control_trkw_glbl",
+   "column": "CHANGE_SCOPE",
+   "displayName": "Change scope",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_change_control_trkw_glbl",
+   "column": "EMERGENCY_CHANGE",
+   "displayName": "Emergency change",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_change_control_trkw_glbl",
+   "column": "MD5_KEY",
+   "displayName": "MD5 key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "txn_change_control_trkw_glbl",
+   "column": "PV_IMPACT",
+   "displayName": "Pv impact",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "BUSINESS_KEY",
+   "displayName": "Business key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "CAPA_Required",
+   "displayName": "Capa required",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "Deviation_Event_Owner",
+   "displayName": "Deviation event owner",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "Deviation_Event_Party",
+   "displayName": "Deviation event party",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "Deviation_Event_Scope",
+   "displayName": "Deviation event scope",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "Deviation_Event_Type",
+   "displayName": "Deviation event type",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "MD5_KEY",
+   "displayName": "MD5 key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "Pharmacovigilance_Impact",
+   "displayName": "Pharmacovigilance impact",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "Report_to_Health_Authority",
+   "displayName": "Report to health authority",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "Sent_for_Final_QA_Approval_By",
+   "displayName": "Sent for final QA approval by",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "Sent_for_Final_QA_Approval_On",
+   "displayName": "Sent for final QA approval on",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "Takeda_Lot_Potential_Impact",
+   "displayName": "Takeda lot potential impact",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_deviation_event_trkw_glbl",
+   "column": "Target_Date",
+   "displayName": "Target date",
+   "criticality": "standard",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_genealogy_mes_glbl",
+   "column": "BUSINESS_KEY",
+   "displayName": "Business key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "txn_genealogy_mes_glbl",
+   "column": "LOT_ID",
+   "displayName": "Lot ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_genealogy_mes_glbl",
+   "column": "LOT_INT_ID",
+   "displayName": "Lot internal ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_genealogy_mes_glbl",
+   "column": "MATERIAL_ID",
+   "displayName": "Material ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_genealogy_mes_glbl",
+   "column": "MATERIAL_QUANTITY",
+   "displayName": "Material quantity",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_genealogy_mes_glbl",
+   "column": "MATERIAL_UNIT",
+   "displayName": "Material unit",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_genealogy_mes_glbl",
+   "column": "MFG_END_DATE",
+   "displayName": "Manufacturing end date",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_genealogy_mes_glbl",
+   "column": "MFG_START_DATE",
+   "displayName": "Manufacturing start date",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_genealogy_mes_glbl",
+   "column": "MFG_TYPE",
+   "displayName": "Manufacturing type",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_genealogy_mes_glbl",
+   "column": "SITE_NM",
+   "displayName": "Site name",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_grid_affected_material_and_lot_trkw_glbl",
+   "column": "BUSINESS_KEY",
+   "displayName": "Business key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "txn_grid_affected_material_and_lot_trkw_glbl",
+   "column": "MATERIAL_DESC",
+   "displayName": "Material description",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_grid_affected_material_and_lot_trkw_glbl",
+   "column": "MD5_KEY",
+   "displayName": "MD5 key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "txn_grid_deviation_li_root_cause_trkw_glbl",
+   "column": "BUSINESS_KEY",
+   "displayName": "Business key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "txn_grid_deviation_li_root_cause_trkw_glbl",
+   "column": "MD5_KEY",
+   "displayName": "MD5 key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "txn_lot_result_approved_lims_glbl",
+   "column": "BUSINESS_KEY",
+   "displayName": "Business key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "txn_lot_result_approved_lims_glbl",
+   "column": "MD5_KEY",
+   "displayName": "MD5 key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "txn_lot_result_approved_lims_glbl",
+   "column": "RESULT_ID",
+   "displayName": "Result ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_lot_result_approved_lims_glbl",
+   "column": "SAMPLE_ID",
+   "displayName": "Sample ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_lot_result_approved_lims_glbl",
+   "column": "SITE_NM",
+   "displayName": "Site name",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_result_approved_lims_glbl",
+   "column": "ANALYSIS",
+   "displayName": "Analysis",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_result_approved_lims_glbl",
+   "column": "ANALYSIS_FK",
+   "displayName": "Analysis reference",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_result_approved_lims_glbl",
+   "column": "BUSINESS_KEY",
+   "displayName": "Business key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "txn_result_approved_lims_glbl",
+   "column": "LOT_FK",
+   "displayName": "Lot reference",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_result_approved_lims_glbl",
+   "column": "MD5_KEY",
+   "displayName": "MD5 key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "txn_result_approved_lims_glbl",
+   "column": "RESULT_ID",
+   "displayName": "Result ID",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_result_approved_lims_glbl",
+   "column": "RESULT_KEY",
+   "displayName": "Result key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "txn_result_approved_lims_glbl",
+   "column": "RESULT_TYPE",
+   "displayName": "Result type",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_result_approved_lims_glbl",
+   "column": "SAMPLE_FK",
+   "displayName": "Sample reference",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_result_approved_lims_glbl",
+   "column": "SAMPLE_NUMBER",
+   "displayName": "Sample number",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_result_approved_lims_glbl",
+   "column": "SITE_NM",
+   "displayName": "Site name",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_result_approved_lims_glbl",
+   "column": "SPEC_VERSION",
+   "displayName": "Specification version",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_test_approved_lims_glbl",
+   "column": "BUSINESS_KEY",
+   "displayName": "Business key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "txn_test_approved_lims_glbl",
+   "column": "LOT_FK",
+   "displayName": "Lot reference",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_test_approved_lims_glbl",
+   "column": "MD5_KEY",
+   "displayName": "MD5 key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  },
+  {
+   "table": "txn_test_approved_lims_glbl",
+   "column": "METHOD",
+   "displayName": "Method",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_test_approved_lims_glbl",
+   "column": "QA_STAGE_FK",
+   "displayName": "QA stage reference",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_test_approved_lims_glbl",
+   "column": "SAMPLE_FK",
+   "displayName": "Sample reference",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_test_approved_lims_glbl",
+   "column": "SITE_NM",
+   "displayName": "Site name",
+   "criticality": "critical",
+   "columnClass": "business"
+  },
+  {
+   "table": "txn_test_approved_lims_glbl",
+   "column": "TEST_KEY",
+   "displayName": "Test key",
+   "criticality": "critical",
+   "columnClass": "technical"
+  }
+ ],
+ "channels": {
+  "default": {
+   "stop_bleed": [
+    "Change request in the source system",
+    "Source-system owner"
+   ],
+   "backfill": [
+    "Site procedure",
+    "Source-system owner"
+   ],
+   "accept": [
+    "Hub acceptance",
+    "Data trustee"
+   ],
+   "fix_load": [
+    "Platform ticket",
+    "Data engineering"
+   ],
+   "fix_check": [
+    "Rule catalogue change",
+    "Rules team"
+   ]
+  },
+  "MES": {
+   "stop_bleed": [
+    "MES change request",
+    "MES business owner"
+   ]
+  },
+  "TrackWise": {
+   "stop_bleed": [
+    "TrackWise change request",
+    "QMS business owner"
+   ]
+  },
+  "LIMS": {
+   "stop_bleed": [
+    "LIMS configuration change",
+    "LIMS business owner"
+   ]
+  },
+  "SAP ERP": {
+   "stop_bleed": [
+    "SAP change request",
+    "SAP process owner"
+   ],
+   "backfill": [
+    "Master data request",
+    "Master data owner"
+   ]
+  },
+  "SAP BW": {
+   "stop_bleed": [
+    "SAP BW change request",
+    "SAP BW owner"
+   ]
+  },
+  "JDE": {
+   "stop_bleed": [
+    "JDE change request",
+    "JDE owner"
+   ]
+  },
+  "Veeva": {
+   "stop_bleed": [
+    "Veeva configuration change",
+    "Veeva business owner"
+   ]
+  }
+ },
+ "sitesBySystem": {
+  "MES": [
+   "Site A",
+   "Site B",
+   "Site C"
+  ],
+  "TrackWise": [
+   "Site A",
+   "Site B",
+   "Site D"
+  ],
+  "LIMS": [
+   "Site A",
+   "Site C"
+  ],
+  "SAP ERP": [
+   "Site A",
+   "Site B",
+   "Site C",
+   "Site D"
+  ],
+  "SAP BW": [
+   "Global"
+  ],
+  "JDE": [
+   "Site E"
+  ],
+  "Veeva": [
+   "Global"
+  ],
+  "Equipment MDM": [
+   "Site A",
+   "Site B"
+  ]
+ },
+ "products": [
+  {
+   "id": "batch-genealogy",
+   "name": "Batch Genealogy",
+   "domain": "Manufacturing",
+   "trusteeRole": "Manufacturing data trustee",
+   "tier": "critical",
+   "tierLabel": "GxP critical",
+   "tables": [
+    "txn_genealogy_mes_glbl"
+   ],
+   "qualityScore": 88.2,
+   "openCauses": 1
+  },
+  {
+   "id": "qc-results",
+   "name": "QC Results",
+   "domain": "Quality",
+   "trusteeRole": "Quality data trustee",
+   "tier": "critical",
+   "tierLabel": "GxP critical",
+   "tables": [
+    "txn_lot_result_approved_lims_glbl",
+    "txn_result_approved_lims_glbl",
+    "txn_test_approved_lims_glbl"
+   ],
+   "qualityScore": 89.9,
+   "openCauses": 5
+  },
+  {
+   "id": "change-control",
+   "name": "Change Control",
+   "domain": "Quality",
+   "trusteeRole": "Quality data trustee",
+   "tier": "critical",
+   "tierLabel": "GxP critical",
+   "tables": [
+    "ref_pr_element_detail_trkw_glbl",
+    "txn_change_control_trkw_glbl",
+    "txn_grid_affected_material_and_lot_trkw_glbl"
+   ],
+   "qualityScore": 92.2,
+   "openCauses": 3
+  },
+  {
+   "id": "controlled-documents",
+   "name": "Controlled Documents",
+   "domain": "Quality",
+   "trusteeRole": "Quality data trustee",
+   "tier": "relevant",
+   "tierLabel": "GxP relevant",
+   "tables": [
+    "gmsgq_veeva_station_device",
+    "gmsgq_veeva_station_document",
+    "gmsgq_veeva_user"
+   ],
+   "qualityScore": 93.0,
+   "openCauses": 2
+  },
+  {
+   "id": "supply-chain-responsiveness",
+   "name": "Supply Chain Responsiveness",
+   "domain": "Supply Chain",
+   "trusteeRole": "Supply Chain data trustee",
+   "tier": "business",
+   "tierLabel": "Business",
+   "tables": [
+    "ref_gmsgq_scr_leadtime_track_frwd_glbl"
+   ],
+   "qualityScore": 93.6,
+   "openCauses": 1
+  },
+  {
+   "id": "deviations",
+   "name": "Deviations",
+   "domain": "Quality",
+   "trusteeRole": "Quality data trustee",
+   "tier": "critical",
+   "tierLabel": "GxP critical",
+   "tables": [
+    "ref_pr_element_detail_trkw_glbl",
+    "txn_grid_affected_material_and_lot_trkw_glbl",
+    "txn_deviation_event_trkw_glbl",
+    "txn_grid_deviation_li_root_cause_trkw_glbl"
+   ],
+   "qualityScore": 94.4,
+   "openCauses": 6
+  },
+  {
+   "id": "equipment-master",
+   "name": "Equipment Master",
+   "domain": "Engineering",
+   "trusteeRole": "Engineering data trustee",
+   "tier": "relevant",
+   "tierLabel": "GxP relevant",
+   "tables": [
+    "ref_equipment_eng_glbl"
+   ],
+   "qualityScore": 94.7,
+   "openCauses": 1
+  },
+  {
+   "id": "manufacturing-execution",
+   "name": "Manufacturing Execution",
+   "domain": "Manufacturing",
+   "trusteeRole": "Manufacturing data trustee",
+   "tier": "critical",
+   "tierLabel": "GxP critical",
+   "tables": [
+    "mfg_exec"
+   ],
+   "qualityScore": 95.2,
+   "openCauses": 2
+  },
+  {
+   "id": "warehousing",
+   "name": "Warehousing",
+   "domain": "Supply Chain",
+   "trusteeRole": "Supply Chain data trustee",
+   "tier": "business",
+   "tierLabel": "Business",
+   "tables": [
+    "gmsgq_wh_partner_data"
+   ],
+   "qualityScore": 95.8,
+   "openCauses": 2
+  },
+  {
+   "id": "product-specifications",
+   "name": "Product Specifications",
+   "domain": "Quality",
+   "trusteeRole": "Quality data trustee",
+   "tier": "relevant",
+   "tierLabel": "GxP relevant",
+   "tables": [
+    "ref_product_lims_glbl",
+    "ref_product_spec_lims_glbl"
+   ],
+   "qualityScore": 96.6,
+   "openCauses": 3
+  },
+  {
+   "id": "transportation",
+   "name": "Transportation",
+   "domain": "Supply Chain",
+   "trusteeRole": "Supply Chain data trustee",
+   "tier": "business",
+   "tierLabel": "Business",
+   "tables": [
+    "gmsgq_dim_sapbw_node_distn_glbl",
+    "gmsgq_dim_sapbw_node_geo_glbl",
+    "gmsgq_transport_emission_factors",
+    "gmsgq_txn_sapbw_e2e_shipment_glbl"
+   ],
+   "qualityScore": 96.7,
+   "openCauses": 8
+  },
+  {
+   "id": "in-process-controls",
+   "name": "In-Process Controls",
+   "domain": "Manufacturing",
+   "trusteeRole": "Manufacturing data trustee",
+   "tier": "relevant",
+   "tierLabel": "GxP relevant",
+   "tables": [
+    "ref_mfg_proc_ipc"
+   ],
+   "qualityScore": 96.8,
+   "openCauses": 1
+  },
+  {
+   "id": "lot-genealogy",
+   "name": "Lot Genealogy",
+   "domain": "Supply Chain",
+   "trusteeRole": "Supply Chain data trustee",
+   "tier": "relevant",
+   "tierLabel": "GxP relevant",
+   "tables": [
+    "ref_track_back_erp_glbl",
+    "ref_track_forward_erp_glbl"
+   ],
+   "qualityScore": 97.0,
+   "openCauses": 2
+  },
+  {
+   "id": "material-master",
+   "name": "Material Master",
+   "domain": "Supply Chain",
+   "trusteeRole": "Supply Chain data trustee",
+   "tier": "relevant",
+   "tierLabel": "GxP relevant",
+   "tables": [
+    "gmsgq_jde_proddta_f4102_adt",
+    "ref_materialmstr_erp_glbl",
+    "ref_materialmstr_plant_erp_glbl"
+   ],
+   "qualityScore": 97.5,
+   "openCauses": 3
+  },
+  {
+   "id": "critical-process-parameters",
+   "name": "Critical Process Parameters",
+   "domain": "Manufacturing",
+   "trusteeRole": "Manufacturing data trustee",
+   "tier": "relevant",
+   "tierLabel": "GxP relevant",
+   "tables": [
+    "ref_mfg_proc_critical_proc_param"
+   ],
+   "qualityScore": 98.2,
+   "openCauses": 1
+  },
+  {
+   "id": "process-flow",
+   "name": "Process Flow",
+   "domain": "Manufacturing",
+   "trusteeRole": "Manufacturing data trustee",
+   "tier": "relevant",
+   "tierLabel": "GxP relevant",
+   "tables": [
+    "ref_mfg_proc_flow"
+   ],
+   "qualityScore": 100.0,
+   "openCauses": 0
+  }
+ ],
+ "routing": [
+  {
+   "system": "MES",
+   "site": "Site A",
+   "lever": "stop_bleed",
+   "ownerGroup": "MES business owner \u00b7 Site A",
+   "channel": "MES change request",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "MES",
+   "site": "Site A",
+   "lever": "backfill",
+   "ownerGroup": "Source-system owner \u00b7 Site A",
+   "channel": "Site procedure",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "MES",
+   "site": "Site A",
+   "lever": "fix_load",
+   "ownerGroup": "Data engineering",
+   "channel": "Platform ticket",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "MES",
+   "site": "Site A",
+   "lever": "fix_check",
+   "ownerGroup": "Rules team",
+   "channel": "Rule catalogue change",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "MES",
+   "site": "Site A",
+   "lever": "accept",
+   "ownerGroup": "Data trustee",
+   "channel": "Hub acceptance",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "MES",
+   "site": "Site B",
+   "lever": "stop_bleed",
+   "ownerGroup": "MES business owner \u00b7 Site B",
+   "channel": "MES change request",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "MES",
+   "site": "Site B",
+   "lever": "backfill",
+   "ownerGroup": "Source-system owner \u00b7 Site B",
+   "channel": "Site procedure",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "MES",
+   "site": "Site B",
+   "lever": "fix_load",
+   "ownerGroup": "Data engineering",
+   "channel": "Platform ticket",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "MES",
+   "site": "Site B",
+   "lever": "fix_check",
+   "ownerGroup": "Rules team",
+   "channel": "Rule catalogue change",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "MES",
+   "site": "Site B",
+   "lever": "accept",
+   "ownerGroup": "Data trustee",
+   "channel": "Hub acceptance",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "MES",
+   "site": "Site C",
+   "lever": "stop_bleed",
+   "ownerGroup": "MES business owner \u00b7 Site C",
+   "channel": "MES change request",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "MES",
+   "site": "Site C",
+   "lever": "backfill",
+   "ownerGroup": "Source-system owner \u00b7 Site C",
+   "channel": "Site procedure",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "MES",
+   "site": "Site C",
+   "lever": "fix_load",
+   "ownerGroup": "Data engineering",
+   "channel": "Platform ticket",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "MES",
+   "site": "Site C",
+   "lever": "fix_check",
+   "ownerGroup": "Rules team",
+   "channel": "Rule catalogue change",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "MES",
+   "site": "Site C",
+   "lever": "accept",
+   "ownerGroup": "Data trustee",
+   "channel": "Hub acceptance",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "TrackWise",
+   "site": "Site A",
+   "lever": "stop_bleed",
+   "ownerGroup": "QMS business owner \u00b7 Site A",
+   "channel": "TrackWise change request",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "TrackWise",
+   "site": "Site A",
+   "lever": "backfill",
+   "ownerGroup": "Source-system owner \u00b7 Site A",
+   "channel": "Site procedure",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "TrackWise",
+   "site": "Site A",
+   "lever": "fix_load",
+   "ownerGroup": "Data engineering",
+   "channel": "Platform ticket",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "TrackWise",
+   "site": "Site A",
+   "lever": "fix_check",
+   "ownerGroup": "Rules team",
+   "channel": "Rule catalogue change",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "TrackWise",
+   "site": "Site A",
+   "lever": "accept",
+   "ownerGroup": "Data trustee",
+   "channel": "Hub acceptance",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "TrackWise",
+   "site": "Site B",
+   "lever": "stop_bleed",
+   "ownerGroup": "QMS business owner \u00b7 Site B",
+   "channel": "TrackWise change request",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "TrackWise",
+   "site": "Site B",
+   "lever": "backfill",
+   "ownerGroup": "Source-system owner \u00b7 Site B",
+   "channel": "Site procedure",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "TrackWise",
+   "site": "Site B",
+   "lever": "fix_load",
+   "ownerGroup": "Data engineering",
+   "channel": "Platform ticket",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "TrackWise",
+   "site": "Site B",
+   "lever": "fix_check",
+   "ownerGroup": "Rules team",
+   "channel": "Rule catalogue change",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "TrackWise",
+   "site": "Site B",
+   "lever": "accept",
+   "ownerGroup": "Data trustee",
+   "channel": "Hub acceptance",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "TrackWise",
+   "site": "Site D",
+   "lever": "stop_bleed",
+   "ownerGroup": "QMS business owner \u00b7 Site D",
+   "channel": "TrackWise change request",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "TrackWise",
+   "site": "Site D",
+   "lever": "backfill",
+   "ownerGroup": "Source-system owner \u00b7 Site D",
+   "channel": "Site procedure",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "TrackWise",
+   "site": "Site D",
+   "lever": "fix_load",
+   "ownerGroup": "Data engineering",
+   "channel": "Platform ticket",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "TrackWise",
+   "site": "Site D",
+   "lever": "fix_check",
+   "ownerGroup": "Rules team",
+   "channel": "Rule catalogue change",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "TrackWise",
+   "site": "Site D",
+   "lever": "accept",
+   "ownerGroup": "Data trustee",
+   "channel": "Hub acceptance",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "LIMS",
+   "site": "Site A",
+   "lever": "stop_bleed",
+   "ownerGroup": "LIMS business owner \u00b7 Site A",
+   "channel": "LIMS configuration change",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "LIMS",
+   "site": "Site A",
+   "lever": "backfill",
+   "ownerGroup": "Source-system owner \u00b7 Site A",
+   "channel": "Site procedure",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "LIMS",
+   "site": "Site A",
+   "lever": "fix_load",
+   "ownerGroup": "Data engineering",
+   "channel": "Platform ticket",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "LIMS",
+   "site": "Site A",
+   "lever": "fix_check",
+   "ownerGroup": "Rules team",
+   "channel": "Rule catalogue change",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "LIMS",
+   "site": "Site A",
+   "lever": "accept",
+   "ownerGroup": "Data trustee",
+   "channel": "Hub acceptance",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "LIMS",
+   "site": "Site C",
+   "lever": "stop_bleed",
+   "ownerGroup": "LIMS business owner \u00b7 Site C",
+   "channel": "LIMS configuration change",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "LIMS",
+   "site": "Site C",
+   "lever": "backfill",
+   "ownerGroup": "Source-system owner \u00b7 Site C",
+   "channel": "Site procedure",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "LIMS",
+   "site": "Site C",
+   "lever": "fix_load",
+   "ownerGroup": "Data engineering",
+   "channel": "Platform ticket",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "LIMS",
+   "site": "Site C",
+   "lever": "fix_check",
+   "ownerGroup": "Rules team",
+   "channel": "Rule catalogue change",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "LIMS",
+   "site": "Site C",
+   "lever": "accept",
+   "ownerGroup": "Data trustee",
+   "channel": "Hub acceptance",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "SAP ERP",
+   "site": "Site A",
+   "lever": "stop_bleed",
+   "ownerGroup": "SAP process owner \u00b7 Site A",
+   "channel": "SAP change request",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "SAP ERP",
+   "site": "Site A",
+   "lever": "backfill",
+   "ownerGroup": "Master data owner \u00b7 Site A",
+   "channel": "Master data request",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "SAP ERP",
+   "site": "Site A",
+   "lever": "fix_load",
+   "ownerGroup": "Data engineering",
+   "channel": "Platform ticket",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "SAP ERP",
+   "site": "Site A",
+   "lever": "fix_check",
+   "ownerGroup": "Rules team",
+   "channel": "Rule catalogue change",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "SAP ERP",
+   "site": "Site A",
+   "lever": "accept",
+   "ownerGroup": "Data trustee",
+   "channel": "Hub acceptance",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "SAP ERP",
+   "site": "Site B",
+   "lever": "stop_bleed",
+   "ownerGroup": "SAP process owner \u00b7 Site B",
+   "channel": "SAP change request",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "SAP ERP",
+   "site": "Site B",
+   "lever": "backfill",
+   "ownerGroup": "Master data owner \u00b7 Site B",
+   "channel": "Master data request",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "SAP ERP",
+   "site": "Site B",
+   "lever": "fix_load",
+   "ownerGroup": "Data engineering",
+   "channel": "Platform ticket",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "SAP ERP",
+   "site": "Site B",
+   "lever": "fix_check",
+   "ownerGroup": "Rules team",
+   "channel": "Rule catalogue change",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "SAP ERP",
+   "site": "Site B",
+   "lever": "accept",
+   "ownerGroup": "Data trustee",
+   "channel": "Hub acceptance",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "SAP ERP",
+   "site": "Site C",
+   "lever": "stop_bleed",
+   "ownerGroup": "SAP process owner \u00b7 Site C",
+   "channel": "SAP change request",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "SAP ERP",
+   "site": "Site C",
+   "lever": "backfill",
+   "ownerGroup": "Master data owner \u00b7 Site C",
+   "channel": "Master data request",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "SAP ERP",
+   "site": "Site C",
+   "lever": "fix_load",
+   "ownerGroup": "Data engineering",
+   "channel": "Platform ticket",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "SAP ERP",
+   "site": "Site C",
+   "lever": "fix_check",
+   "ownerGroup": "Rules team",
+   "channel": "Rule catalogue change",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "SAP ERP",
+   "site": "Site C",
+   "lever": "accept",
+   "ownerGroup": "Data trustee",
+   "channel": "Hub acceptance",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "SAP ERP",
+   "site": "Site D",
+   "lever": "stop_bleed",
+   "ownerGroup": "SAP process owner \u00b7 Site D",
+   "channel": "SAP change request",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "SAP ERP",
+   "site": "Site D",
+   "lever": "backfill",
+   "ownerGroup": "Master data owner \u00b7 Site D",
+   "channel": "Master data request",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "SAP ERP",
+   "site": "Site D",
+   "lever": "fix_load",
+   "ownerGroup": "Data engineering",
+   "channel": "Platform ticket",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "SAP ERP",
+   "site": "Site D",
+   "lever": "fix_check",
+   "ownerGroup": "Rules team",
+   "channel": "Rule catalogue change",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "SAP ERP",
+   "site": "Site D",
+   "lever": "accept",
+   "ownerGroup": "Data trustee",
+   "channel": "Hub acceptance",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "SAP BW",
+   "site": "Global",
+   "lever": "stop_bleed",
+   "ownerGroup": "SAP BW owner",
+   "channel": "SAP BW change request",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "SAP BW",
+   "site": "Global",
+   "lever": "backfill",
+   "ownerGroup": "Source-system owner",
+   "channel": "Site procedure",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "SAP BW",
+   "site": "Global",
+   "lever": "fix_load",
+   "ownerGroup": "Data engineering",
+   "channel": "Platform ticket",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "SAP BW",
+   "site": "Global",
+   "lever": "fix_check",
+   "ownerGroup": "Rules team",
+   "channel": "Rule catalogue change",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "SAP BW",
+   "site": "Global",
+   "lever": "accept",
+   "ownerGroup": "Data trustee",
+   "channel": "Hub acceptance",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "JDE",
+   "site": "Site E",
+   "lever": "stop_bleed",
+   "ownerGroup": "JDE owner \u00b7 Site E",
+   "channel": "JDE change request",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "JDE",
+   "site": "Site E",
+   "lever": "backfill",
+   "ownerGroup": "Source-system owner \u00b7 Site E",
+   "channel": "Site procedure",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "JDE",
+   "site": "Site E",
+   "lever": "fix_load",
+   "ownerGroup": "Data engineering",
+   "channel": "Platform ticket",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "JDE",
+   "site": "Site E",
+   "lever": "fix_check",
+   "ownerGroup": "Rules team",
+   "channel": "Rule catalogue change",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "JDE",
+   "site": "Site E",
+   "lever": "accept",
+   "ownerGroup": "Data trustee",
+   "channel": "Hub acceptance",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "Veeva",
+   "site": "Global",
+   "lever": "stop_bleed",
+   "ownerGroup": "Veeva business owner",
+   "channel": "Veeva configuration change",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "Veeva",
+   "site": "Global",
+   "lever": "backfill",
+   "ownerGroup": "Source-system owner",
+   "channel": "Site procedure",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "Veeva",
+   "site": "Global",
+   "lever": "fix_load",
+   "ownerGroup": "Data engineering",
+   "channel": "Platform ticket",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "Veeva",
+   "site": "Global",
+   "lever": "fix_check",
+   "ownerGroup": "Rules team",
+   "channel": "Rule catalogue change",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "Veeva",
+   "site": "Global",
+   "lever": "accept",
+   "ownerGroup": "Data trustee",
+   "channel": "Hub acceptance",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "Equipment MDM",
+   "site": "Site A",
+   "lever": "stop_bleed",
+   "ownerGroup": "Source-system owner \u00b7 Site A",
+   "channel": "Change request in the source system",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "Equipment MDM",
+   "site": "Site A",
+   "lever": "backfill",
+   "ownerGroup": "Source-system owner \u00b7 Site A",
+   "channel": "Site procedure",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "Equipment MDM",
+   "site": "Site A",
+   "lever": "fix_load",
+   "ownerGroup": "Data engineering",
+   "channel": "Platform ticket",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "Equipment MDM",
+   "site": "Site A",
+   "lever": "fix_check",
+   "ownerGroup": "Rules team",
+   "channel": "Rule catalogue change",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "Equipment MDM",
+   "site": "Site A",
+   "lever": "accept",
+   "ownerGroup": "Data trustee",
+   "channel": "Hub acceptance",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "Equipment MDM",
+   "site": "Site B",
+   "lever": "stop_bleed",
+   "ownerGroup": "Source-system owner \u00b7 Site B",
+   "channel": "Change request in the source system",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "Equipment MDM",
+   "site": "Site B",
+   "lever": "backfill",
+   "ownerGroup": "Source-system owner \u00b7 Site B",
+   "channel": "Site procedure",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "Equipment MDM",
+   "site": "Site B",
+   "lever": "fix_load",
+   "ownerGroup": "Data engineering",
+   "channel": "Platform ticket",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "Equipment MDM",
+   "site": "Site B",
+   "lever": "fix_check",
+   "ownerGroup": "Rules team",
+   "channel": "Rule catalogue change",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  },
+  {
+   "system": "Equipment MDM",
+   "site": "Site B",
+   "lever": "accept",
+   "ownerGroup": "Data trustee",
+   "channel": "Hub acceptance",
+   "notify": "Teams channel + email digest",
+   "sla": null
+  }
+ ],
+ "dependencies": {
+  "failureLedger": "available",
+  "ruleVersioning": "available",
+  "recordKeys": "all tables",
+  "lifecycleFields": "confirmed",
+  "routingTable": "loaded"
+ }
+}

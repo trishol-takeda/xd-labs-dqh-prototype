@@ -1,9 +1,11 @@
 @if (table(); as t) {
   <app-crumbs [crumbs]="crumbs()" />
-  <h2 class="rh-title">{{ t.plainName }}</h2>
+  <h2 class="rh-title">{{ title() }}</h2>
   <p class="rh-sub">
-    {{ t.sourceSystem }} · {{ t.rules }} checks ·
-    <span [class]="open() ? 'rh-count' : 'rh-zero'">{{ open() }} open {{ plural(open(), 'cause') }}</span>
+    @if (fromProduct()) {
+      {{ t.plainName }} ·
+    }
+    {{ t.sourceSystem }} · <span [class]="open() ? 'rh-count' : 'rh-zero'">{{ open() }} open {{ plural(open(), 'finding') }}</span>
     @if (alsoUsedBy()) {
       · also used by {{ alsoUsedBy() }}
     }
@@ -15,11 +17,11 @@
     </button>
   </app-summary-line>
   @if (showAllChecks()) {
-    <div class="rh-block"><app-check-list unit="failing" [items]="checks()" /></div>
+    <div class="rh-block"><app-check-list [items]="checks()" /></div>
   }
 
   @if (isEmpty()) {
-    <app-state-panel kind="empty" title="No open causes" message="The last run found no failing records in this table." />
+    <app-state-panel kind="empty" title="No open findings" message="The last check found no failing records in this table." />
   } @else {
     @for (section of sections(); track section.status) {
       <section class="rh-section">
@@ -33,8 +35,8 @@
         @if (!section.collapsed) {
           <p class="rh-meaning">{{ statusMeaning[section.status] }}</p>
           <div class="rh-rows">
-            @for (c of section.list; track c.id) {
-              <app-cause-row [cause]="c" />
+            @for (f of section.list; track f.id) {
+              <app-finding-row [finding]="f" />
             }
           </div>
         }
