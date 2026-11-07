@@ -6,6 +6,6 @@
 >
   <path [attr.d]="path()" fill="none" stroke="var(--muted)" stroke-width="1.5" />
   @if (variant() === 'full') {
-    <circle [attr.cx]="last()[0]" [attr.cy]="last()[1]" r="3" fill="var(--danger-fg)" />
+    <circle [attr.cx]="last()[0]" [attr.cy]="last()[1]" r="3" [attr.fill]="dot()" />
   }
 </svg>

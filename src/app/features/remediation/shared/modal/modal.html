@@ -1,0 +1,10 @@
+<dialog #dlg class="rh-dialog" aria-labelledby="rh-dlg-title" (close)="closed.emit()">
+  <div class="rh-in">
+    <h3 id="rh-dlg-title">{{ title() }}</h3>
+    <ng-content />
+    <div class="rh-btns">
+      <button type="button" class="rh-btn rh-ghost" (click)="closed.emit()">Cancel</button>
+      <button type="button" class="rh-btn" (click)="confirmed.emit()">{{ confirmLabel() }}</button>
+    </div>
+  </div>
+</dialog>

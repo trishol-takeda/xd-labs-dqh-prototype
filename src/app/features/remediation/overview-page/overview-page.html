@@ -1,0 +1,77 @@
+@if (model(); as m) {
+  <h2 class="rh-title">Overview</h2>
+
+  <p class="rh-hero">
+    <span [class]="m.down ? 'rh-down' : 'rh-up'">{{ m.down ? 'Fewer new failures' : 'More new failures' }}</span>
+    than four weeks ago: {{ m.down ? 'down' : 'up' }} {{ m.pct }}%.
+    {{ m.needs.length }} {{ plural(m.needs.length, 'finding') }} {{ m.needs.length === 1 ? 'needs' : 'need' }} a decision{{ m.pastTarget ? ', ' + m.pastTarget + ' past target.' : '.' }}
+  </p>
+  <p class="rh-hero-sub">As of {{ fmtDate(asOf()) }}. Counts leave out records that are closed and will not be corrected.</p>
+
+  <div class="rh-big3">
+    <a class="rh-big rh-bad" routerLink="/remediation/all">
+      <div class="rh-v">{{ m.needs.length }}</div>
+      <div class="rh-l">{{ plural(m.needs.length, 'finding') }} {{ m.needs.length === 1 ? 'needs' : 'need' }} a decision</div>
+      <div class="rh-d">of {{ m.openCount }} open</div>
+    </a>
+    <a class="rh-big" [class.rh-bad]="m.pastTarget" routerLink="/remediation/all">
+      <div class="rh-v">{{ m.pastTarget }}</div>
+      <div class="rh-l">past target</div>
+      <div class="rh-d">oldest {{ m.oldestDays }} working days</div>
+    </a>
+    <div class="rh-big">
+      <div class="rh-v">{{ compact(m.now) }}</div>
+      <div class="rh-l">new failures this week</div>
+      <div class="rh-d">{{ m.down ? '↓' : '↑' }} {{ compact(m.delta < 0 ? -m.delta : m.delta) }} vs four weeks ago</div>
+    </div>
+  </div>
+
+  <section class="rh-chart" aria-labelledby="rh-chart-title">
+    <h3 id="rh-chart-title">New failures per week</h3>
+    <p class="rh-cap">The line that should fall. It drops when a stop-the-bleed action goes live.</p>
+    <svg [attr.viewBox]="'0 0 ' + chartWidth + ' ' + chartHeight" preserveAspectRatio="none" role="img" aria-label="New failures per week">
+      <path [attr.d]="chart().area" fill="var(--danger-bg)" />
+      <path [attr.d]="chart().line" fill="none" stroke="var(--danger-fg)" stroke-width="2" />
+      <circle [attr.cx]="chart().x" [attr.cy]="chart().y" r="4" fill="var(--danger-fg)" />
+    </svg>
+    <div class="rh-chart-axis">
+      <span>{{ fmtDate(m.runs[0]) }}</span><span>{{ compact(m.now) }} this week</span><span>{{ fmtDate(m.runs[m.runs.length - 1]) }}</span>
+    </div>
+  </section>
+
+  <section class="rh-first" aria-labelledby="rh-first-title">
+    <h3 id="rh-first-title">Where to look first</h3>
+    @for (item of first(); track item.finding.id) {
+      <a [routerLink]="['/remediation', 'f', item.finding.id]">
+        <span class="rh-rank">{{ item.rank }}</span>
+        <span>
+          <span class="rh-t">{{ item.finding.products[0] }} · {{ item.finding.symptomLabel }} · {{ item.finding.site }}</span><br />
+          <span class="rh-m">{{ item.finding.tablePlainName }} · {{ segWords(item.finding) }}</span>
+        </span>
+        <span class="rh-next" [class.over]="item.finding.pastTarget">{{ item.next }}</span>
+      </a>
+    }
+  </section>
+
+  <div class="rh-doms">
+    @for (dom of m.domains; track dom.name) {
+      <a class="rh-domt" [routerLink]="['/remediation', 'p', dom.productId]">
+        <div class="rh-n">{{ dom.name }}</div>
+        <div class="rh-v">{{ dom.open }}</div>
+        <div class="rh-l">open findings</div>
+        @if (dom.pastTarget) {
+          <div class="rh-o">{{ dom.pastTarget }} past target</div>
+        } @else {
+          <div class="rh-l rh-green">none past target</div>
+        }
+      </a>
+    }
+  </div>
+
+  <p class="rh-more">
+    <button type="button" class="rh-toggle" [attr.aria-expanded]="showMore()" (click)="showMore.set(!showMore())">{{ showMore() ? 'Hide breakdowns' : 'Show breakdowns' }}</button>
+  </p>
+  @if (showMore() && breakdown(); as b) {
+    <app-overview-breakdown [model]="b" [trend]="m.trend" />
+  }
+}

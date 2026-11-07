@@ -1,0 +1,30 @@
+<div class="rh-rec-wrap">
+  <table class="rh-grid-table">
+    <thead>
+      <tr>
+        <th scope="col">Key in {{ sourceSystem() }}</th>
+        <th scope="col">Record</th>
+        @for (f of fields(); track f.column) {
+          <th scope="col" class="rh-mid">{{ f.name }}</th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of rows(); track $index) {
+        <tr>
+          <td class="rh-key-cell">{{ row.key }}</td>
+          <td class="rh-seg-cell">{{ labels()[row.segment] }}</td>
+          @for (f of fields(); track f.column) {
+            <td class="rh-mid">
+              @if (row.failsFields.includes(f.column)) {
+                <span class="rh-x" [attr.title]="row.values?.[f.column] ?? ''">✕<span class="sr-only"> {{ f.problem }}</span></span>
+              } @else {
+                <span class="rh-ok" aria-hidden="true">·</span>
+              }
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

@@ -7,22 +7,45 @@
         <button type="button" [attr.aria-pressed]="store.screenState() === s.key" (click)="store.screenState.set(s.key)">{{ s.label }}</button>
       }
     </div>
-    @if (store.activeCauseId()) {
-      <div class="rh-grp" role="group" aria-label="Simulate next check">
-        <span>Simulate next check</span>
-        @for (s of simulations; track s.key) {
-          <button type="button" (click)="store.simulate(s.key)">{{ s.label }}</button>
-        }
-      </div>
-    }
     <div class="rh-grp" role="group" aria-label="View as">
       <span>View as</span>
       @for (r of roles; track r.key) {
-        <button type="button" [attr.aria-pressed]="store.role() === r.key" (click)="store.setRole(r.key)">{{ r.label }}</button>
+        <button type="button" [attr.aria-pressed]="store.role() === r.key" (click)="setRole(r.key)">{{ r.label }}</button>
       }
     </div>
+    @if (store.role() === 'trustee') {
+      <div class="rh-grp">
+        <label for="rh-domain">Trustee of</label>
+        <select id="rh-domain" [value]="store.myDomain()" (change)="setDomain($event)">
+          @for (d of domains; track d) {
+            <option [value]="d" [selected]="d === store.myDomain()">{{ d }}</option>
+          }
+        </select>
+      </div>
+    }
+    @if (store.activeFindingId()) {
+      <div class="rh-grp">
+        <button type="button" (click)="store.advance()">Advance action</button>
+      </div>
+      <div class="rh-grp" role="group" aria-label="Simulate next check">
+        <span>Simulate next check</span>
+        <label for="rh-sim-new">new failures</label>
+        <select id="rh-sim-new" [value]="simNew()" (change)="setSimNew($event)">
+          @for (o of newFailureOptions; track o.key) {
+            <option [value]="o.key" [selected]="o.key === simNew()">{{ o.label }}</option>
+          }
+        </select>
+        <label for="rh-sim-back">backlog</label>
+        <select id="rh-sim-back" [value]="simBacklog()" (change)="setSimBacklog($event)">
+          @for (o of backlogOptions; track o.key) {
+            <option [value]="o.key" [selected]="o.key === simBacklog()">{{ o.label }}</option>
+          }
+        </select>
+        <button type="button" (click)="simulate()">Run</button>
+      </div>
+    }
     <button type="button" (click)="reset()">Reset</button>
-    <span class="rh-note">Mock data · failing counts are simulated</span>
+    <span class="rh-note">Mock data · counts are simulated</span>
   </div>
 </section>
 
@@ -30,10 +53,20 @@
   <div class="rh-wrap">
     <h1><span class="rh-mark"></span>{{ appName }}</h1>
     <nav class="rh-nav" aria-label="Remediation Hub">
-      <a routerLink="/remediation" [class.on]="!onQueue()" [attr.aria-current]="!onQueue() ? 'page' : null">Data products</a>
-      <a routerLink="/remediation/queue" [class.on]="onQueue()" [attr.aria-current]="onQueue() ? 'page' : null">
-        {{ queueLabel() }}@if (store.queueCount()) {<span class="rh-n">{{ store.queueCount() }}</span>}
-      </a>
+      <a routerLink="/remediation/overview" [class.on]="section() === 'overview'" [attr.aria-current]="section() === 'overview' ? 'page' : null">Overview</a>
+      @if (store.role() === 'leader') {
+        <a routerLink="/remediation/all" [class.on]="section() === 'products'" [attr.aria-current]="section() === 'products' ? 'page' : null">All products</a>
+      } @else {
+        <a routerLink="/remediation" [class.on]="section() === 'products'" [attr.aria-current]="section() === 'products' ? 'page' : null">
+          {{ store.role() === 'trustee' ? 'My products' : 'Data products' }}
+        </a>
+        <a routerLink="/remediation/queue" [class.on]="section() === 'queue'" [attr.aria-current]="section() === 'queue' ? 'page' : null">
+          {{ queueLabel() }}@if (store.queue().length) {<span class="rh-n">{{ store.queue().length }}</span>}
+        </a>
+        @if (store.role() === 'trustee' || store.role() === 'qa') {
+          <a routerLink="/remediation/register" [class.on]="section() === 'register'" [attr.aria-current]="section() === 'register' ? 'page' : null">Acceptances</a>
+        }
+      }
     </nav>
   </div>
 </header>

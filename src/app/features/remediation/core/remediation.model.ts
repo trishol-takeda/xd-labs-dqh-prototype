@@ -1,29 +1,34 @@
-/** Shapes of the four JSON files in public/data/remediation, plus the prototype's own view types. */
+/** Shapes of the four JSON files in public/data/remediation (build pack v2), plus the prototype's own view types. */
 
 export type Tier = 'critical' | 'relevant' | 'business';
-export type VisibleStatus = 'needs_you' | 'waiting' | 'fixed';
-export type CauseState = 'new' | 'confirmed' | 'in_progress' | 'reopened' | 'closed' | 'accepted';
-export type FixerStatus = 'awaiting_run' | 'wont_fix' | null;
-export type Role = 'trustee' | 'fixer' | 'rules';
+export type Role = 'trustee' | 'qa' | 'rules' | 'leader';
 export type ScreenState = 'normal' | 'loading' | 'empty' | 'error';
-export type SimulationMode = 'all' | 'some' | 'none';
-export type DialogKind = 'send' | 'dispute' | 'accept' | 'wont' | 'ruleChange';
+export type VisibleStatus = 'needs_you' | 'in_progress' | 'fixed';
+export type FindingState = 'new' | 'scoped' | 'investigated' | 'actions_open' | 'verifying' | 'closed' | 'accepted';
+export type SegmentKey = 'newSinceDetection' | 'inFlight' | 'recentClosed' | 'historical';
+export type LeverKey = 'stop_bleed' | 'backfill' | 'accept' | 'fix_load' | 'fix_check';
+export type ActionStatus = 'open' | 'live' | 'done';
+export type DecisionKey = 'scope' | 'impact' | 'investigate' | 'actions';
+export type Assessment = 'none' | 'possible' | 'confirmed';
+export type NewFailuresChoice = 'none' | 'some' | 'same';
+export type BacklogChoice = 'same' | 'reduced' | 'cleared';
+export type TableKind = 'transactional' | 'reference';
 
-export interface RootCauseDef {
-  label: string;
-  fixer_role: string;
-  explain: string;
-}
+/* ---------- vocab.json ---------- */
 
-export interface ProductsMeta {
-  generatedOn: string;
-  tiers: Record<Tier, string>;
+export interface Vocab {
+  asOf: string;
   runs: string[];
-  rootCauses: Record<string, RootCauseDef>;
-  fixerLanes: Record<string, { label: string; role: string }>;
+  symptoms: Record<string, { label: string }>;
+  rootCauses: { key: string; label: string }[];
+  levers: Record<LeverKey, { label: string; meaning: string }>;
   visibleStatuses: Record<VisibleStatus, string>;
-  note?: string;
+  targetWorkingDays: Record<Tier, { scope: number; actions: number }>;
+  tiers: Record<Tier, string>;
+  segmentOrder: SegmentKey[];
 }
+
+/* ---------- registry.json ---------- */
 
 export interface Product {
   id: string;
@@ -34,10 +39,9 @@ export interface Product {
   tierLabel: string;
   tables: string[];
   qualityScore: number | null;
-  openCauses: number;
 }
 
-export interface Table {
+export interface RegistryTable {
   id: string;
   plainName: string;
   sourceSystem: string;
@@ -46,47 +50,124 @@ export interface Table {
   products: string[];
   domain: string;
   approxRecords: number;
-  registryNote: string;
-  qualityScore: number | null;
-  openCauses: number;
-  rules: number;
+  kind: TableKind;
+  siteField: string | null;
 }
 
-export interface Rule {
+/** system → lever → [channel label, owner role]; `default` is merged under each system. */
+export type ChannelMap = Record<string, Partial<Record<LeverKey, [string, string]>>>;
+
+export interface Route {
+  system: string;
+  site: string;
+  lever: LeverKey;
+  ownerGroup: string;
+  channel: string;
+  notify: string;
+}
+
+export interface Registry {
+  tables: RegistryTable[];
+  channels: ChannelMap;
+  products: Product[];
+  routing: Route[];
+}
+
+/* ---------- rules.json (the checks) ---------- */
+
+export interface Check {
   id: string;
   table: string;
   column: string;
-  ruleType: string;
-  dimension: string;
-  origin: string;
-  plainName: string;
+  fieldName: string;
+  requirement: string;
+  problem: string;
   whatItChecks: string;
   whatFailureMeans: string;
-  columnClass: string;
-  rootCause: string;
-  fixerLane: string;
-  version: number;
   failingNow: number;
-  history: number[];
 }
 
-export interface CauseRule {
-  id: string;
-  plainName: string;
+/* ---------- findings.json ---------- */
+
+export interface FindingField {
   column: string;
+  name: string;
+  criticality: 'critical' | 'standard';
+  requirement: string;
+  problem: string;
   failingNow: number;
-  version: number;
+  whatItChecks: string;
+  whatFailureMeans: string;
 }
 
-export interface CauseRun {
+export interface Segments {
+  newSinceDetection: number;
+  inFlight: number;
+  recentClosed: number;
+  historical: number;
+  labels: Record<SegmentKey, string>;
+}
+
+export interface ScopeDecision {
+  inScope: SegmentKey[];
+  parked: SegmentKey[];
+  reason: string;
+  by: string;
+  qaConcurrence: boolean;
+  concurred?: boolean;
+  at: string;
+}
+
+export interface ImpactDecision {
+  assessment: Assessment;
+  note: string;
+  deviationRef: string | null;
+  by: string;
+}
+
+export interface InvestigationDecision {
+  rootCauses: string[];
+  note: string;
+  otherSitesChecked: boolean;
+  by: string;
+  at: string;
+}
+
+export interface FindingAction {
+  id: string;
+  lever: LeverKey;
+  leverLabel: string;
+  ownerRole: string;
+  channel: string;
+  reference: string | null;
+  effectiveDate: string | null;
+  status: ActionStatus;
+  interimControl: string | null;
+  scopeSegments: SegmentKey[];
+  approvals: string[];
+  reviewBy: string | null;
+  trusteeSigned?: boolean;
+  qaSigned?: boolean;
+  outcome?: 'changed' | 'stands';
+}
+
+export interface Signals {
+  bleedStopped: { cleanChecks: number; required: number; since: string | null };
+  backlog: { inScopeRemaining: number; acceptedCount: number };
+}
+
+export interface HistoryRun {
   run: string;
   failing: number;
-  ruleVersion: number;
+  newFailing: number;
+  ruleVersion?: number;
 }
 
 export interface SampleRecord {
   key: string;
-  checksFailed: number;
+  segment: SegmentKey;
+  failsFields: string[];
+  values?: Record<string, string>;
 }
 
 export interface AuditEntry {
@@ -96,43 +177,81 @@ export interface AuditEntry {
   text: string;
 }
 
-export interface Cause {
+export interface Finding {
   id: string;
   table: string;
   tablePlainName: string;
   sourceSystem: string;
+  site: string;
   products: string[];
-  rootCause: string;
-  rootCauseLabel: string;
-  explanation: string;
-  fixerLane: string;
-  fixerLabel: string;
-  fixerRole: string;
+  domain: string;
+  symptom: string;
+  symptomLabel: string;
   tier: Tier;
   tierLabel: string;
-  state: CauseState;
-  visibleStatus: VisibleStatus;
-  rules: CauseRule[];
+  fields: FindingField[];
+  fieldNames: string[];
   failingNow: number;
+  segments: Segments;
   firstSeen: string;
-  history: CauseRun[];
-  scoreLiftIfFixed: number;
-  recordKeyField: string | null;
+  ageWorkingDays: number;
+  targetWorkingDays: number;
+  pastTarget: boolean;
+  impactScore: number;
+  state: FindingState;
+  visibleStatus: VisibleStatus;
+  fixedGoingForward: boolean;
+  cameBack?: boolean;
+  decisions: { scope: ScopeDecision | null; impact: ImpactDecision | null; investigation: InvestigationDecision | null };
+  actions: FindingAction[];
+  signals: Signals;
+  history: HistoryRun[];
   sampleRecords: SampleRecord[];
-  fixerStatus: FixerStatus;
-  disputeScope: string;
+  recordKeyField: string | null;
+  lifecycleField: string;
+  siteField: string | null;
   audit: AuditEntry[];
-  disputed?: boolean;
-  reviewBy?: string;
 }
 
 /** Everything the hub reads and mutates, in one object so a transition can be a pure function of it. */
 export interface Dataset {
-  meta: ProductsMeta;
-  products: Product[];
-  tables: Table[];
-  rules: Rule[];
-  causes: Cause[];
+  vocab: Vocab;
+  registry: Registry;
+  findings: Finding[];
+  rules: Check[];
+}
+
+/* ---------- inputs to transitions ---------- */
+
+export interface ScopeInput {
+  inScope: SegmentKey[];
+  reason: string;
+}
+
+export interface ImpactInput {
+  assessment: Assessment;
+  note: string;
+  deviationRef: string | null;
+}
+
+export interface InvestigationInput {
+  rootCauses: string[];
+  note: string;
+  otherSitesChecked: boolean;
+}
+
+export interface ActionInput {
+  lever: LeverKey;
+  reference: string | null;
+  effectiveDate: string | null;
+  covers: SegmentKey[];
+  interimControl: string | null;
+  reviewBy: string | null;
+}
+
+export interface SimulationInput {
+  newFailures: NewFailuresChoice;
+  backlog: BacklogChoice;
 }
 
 /* ---------- view models ---------- */
@@ -145,24 +264,36 @@ export interface Crumb {
 
 export interface CheckItem {
   id: string;
-  plainName: string;
-  field: string;
+  name: string;
+  requirement: string;
+  criticalField: boolean;
   failingNow: number;
+  problem: string;
   whatItChecks: string;
   whatFailureMeans: string;
-  history: number[];
-  /** Cause this check belongs to, shown as a link on the table screen. */
-  cause?: { id: string; label: string };
 }
 
-export interface TableSummary {
+export interface Summary {
   checks: number;
   passing: number;
   failing: number;
   open: number;
 }
 
-export interface DialogResult {
-  text: string;
-  reviewBy?: string;
+export interface BadgeView {
+  kind: 'over' | 'badge';
+  label: string;
+}
+
+export interface JourneyStep {
+  label: string;
+  state: 'done' | 'now' | 'todo';
+  note: string;
+}
+
+export interface RecordRow {
+  key: string;
+  segment: SegmentKey;
+  failsFields: string[];
+  values?: Record<string, string>;
 }

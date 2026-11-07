@@ -1,0 +1,39 @@
+<h2 class="rh-title">Acceptances</h2>
+<p class="rh-sub">Records that will not be corrected, with who signed and when they are reviewed again. {{ rows().length }} open.</p>
+
+@if (rows().length === 0) {
+  <app-state-panel kind="empty" title="No acceptances yet" />
+} @else {
+  <div class="rh-rec-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Finding</th>
+          <th scope="col" class="num">Records accepted</th>
+          <th scope="col">Signed</th>
+          <th scope="col">Review by</th>
+          <th scope="col">Reference</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.action.id) {
+          <tr>
+            <td>
+              <a [routerLink]="['/remediation', 'f', row.finding.id]">{{ row.finding.products[0] }} · {{ row.finding.symptomLabel }} · {{ row.finding.site }}</a><br />
+              <span class="rh-dim">{{ row.finding.tablePlainName }}</span>
+            </td>
+            <td class="num">{{ full(row.records) }}</td>
+            <td>
+              {{ row.signed.trustee ? 'Data trustee ✓' : 'Data trustee pending' }}
+              @if (row.finding.tier === 'critical') {
+                <br />{{ row.signed.qa ? 'Quality approver ✓' : 'Quality approver pending' }}
+              }
+            </td>
+            <td [class.over]="row.due">{{ row.action.reviewBy ? fmtDate(row.action.reviewBy) : '—' }}</td>
+            <td>{{ row.action.reference || '—' }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

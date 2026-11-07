@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { SPARK_SIZES } from './spark.constants';
 
-/** Decorative line of failing counts over time. `full` also marks the latest point. */
+/** Decorative line of counts over time. `full` also marks the latest point. */
 @Component({
   selector: 'app-spark',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -10,6 +10,8 @@ import { SPARK_SIZES } from './spark.constants';
 export class Spark {
   readonly values = input.required<readonly number[]>();
   readonly variant = input<'mini' | 'full'>('full');
+  /** Colour of the latest-point dot. */
+  readonly dot = input('var(--danger-fg)');
 
   protected readonly size = computed(() => SPARK_SIZES[this.variant()]);
   protected readonly points = computed(() => {

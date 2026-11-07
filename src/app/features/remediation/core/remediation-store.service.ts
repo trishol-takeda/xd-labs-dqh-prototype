@@ -1,9 +1,22 @@
 import { Injectable, computed, signal } from '@angular/core';
-import { REMEDIATION_DATA_FILES, ROLE_LABEL, TOAST_MS } from './remediation.constants';
-import { Cause, Dataset, Product, Role, ScreenState, SimulationMode, Table } from './remediation.model';
+import { DEFAULT_DOMAIN, REMEDIATION_DATA_FILES, ROLE_LABEL, TOAST_MS } from './remediation.constants';
+import {
+  ActionInput,
+  Dataset,
+  Finding,
+  FindingAction,
+  ImpactInput,
+  InvestigationInput,
+  Product,
+  RegistryTable,
+  Role,
+  ScopeInput,
+  ScreenState,
+  SimulationInput,
+} from './remediation.model';
 import { seedDataset } from './remediation.seed';
 import * as lifecycle from './remediation.transitions';
-import { compareCauses, full } from './remediation.util';
+import { advanceTarget, byImpact, queueList } from './remediation.util';
 
 export type LoadStatus = 'idle' | 'loading' | 'ready' | 'error';
 
@@ -20,41 +33,33 @@ export class RemediationStore {
   readonly data = signal<Dataset | null>(null);
   readonly role = signal<Role>('trustee');
   readonly roleLabel = computed(() => ROLE_LABEL[this.role()]);
+  /** The domain a trustee is "of": their landing page and queue follow it. */
+  readonly myDomain = signal<string>(DEFAULT_DOMAIN);
   readonly screenState = signal<ScreenState>('normal');
   readonly toast = signal<string | null>(null);
-  /** The cause on screen, if any: the controls bar shows "Simulate next check" only then. */
-  readonly activeCauseId = signal<string | null>(null);
+  /** The finding on screen, if any: the prototype bar shows "Advance action" and "Simulate next check" only then. */
+  readonly activeFindingId = signal<string | null>(null);
 
-  readonly products = computed(() => this.data()?.products ?? []);
-  readonly causes = computed(() => this.data()?.causes ?? []);
-  readonly openCauseCount = computed(() => this.causes().filter((c) => c.visibleStatus !== 'fixed').length);
+  readonly findings = computed(() => this.data()?.findings ?? []);
+  readonly products = computed(() => this.data()?.registry.products ?? []);
+  readonly activeFinding = computed(() => this.findings().find((f) => f.id === this.activeFindingId()));
 
-  /** The role's queue: what trustees must review, what fixers must correct, what the Rules team must answer. */
-  readonly queue = computed<Cause[]>(() => {
-    const role = this.role();
-    const all = this.causes();
-    const list =
-      role === 'fixer' ? all.filter((c) => c.visibleStatus === 'waiting') : role === 'rules' ? all.filter((c) => c.disputed) : all.filter((c) => c.visibleStatus === 'needs_you');
-    return [...list].sort(compareCauses);
-  });
-
-  /** The number on the queue link: fixers only count causes they have not answered yet. */
-  readonly queueCount = computed(() => {
-    const role = this.role();
-    if (role === 'fixer') return this.causes().filter((c) => c.visibleStatus === 'waiting' && !c.fixerStatus).length;
-    return this.queue().length;
+  /** The role's queue, by impact score (never by record count). */
+  readonly queue = computed<Finding[]>(() => {
+    const d = this.data();
+    return d ? queueList(d, this.role(), this.myDomain()).sort(byImpact) : [];
   });
 
   async load(): Promise<void> {
     this.loadStatus.set('loading');
     try {
-      const [products, tables, rules, causes] = await Promise.all([
-        this.json<{ meta: Dataset['meta']; products: Dataset['products'] }>(REMEDIATION_DATA_FILES.products),
-        this.json<{ tables: Dataset['tables'] }>(REMEDIATION_DATA_FILES.tables),
+      const [vocab, registry, findings, rules] = await Promise.all([
+        this.json<Dataset['vocab']>(REMEDIATION_DATA_FILES.vocab),
+        this.json<Dataset['registry']>(REMEDIATION_DATA_FILES.registry),
+        this.json<{ findings: Dataset['findings'] }>(REMEDIATION_DATA_FILES.findings),
         this.json<{ rules: Dataset['rules'] }>(REMEDIATION_DATA_FILES.rules),
-        this.json<{ causes: Dataset['causes'] }>(REMEDIATION_DATA_FILES.causes),
       ]);
-      this.loaded = { meta: products.meta, products: products.products, tables: tables.tables, rules: rules.rules, causes: causes.causes };
+      this.loaded = { vocab, registry, findings: findings.findings, rules: rules.rules };
       this.data.set(seedDataset(this.loaded));
       this.loadStatus.set('ready');
     } catch {
@@ -62,11 +67,12 @@ export class RemediationStore {
     }
   }
 
-  /** Back to the seeded start state: same data, trustee view, normal screen. */
+  /** Back to the seeded start state: same data, trustee of Manufacturing, normal screen. */
   reset(): void {
     if (!this.loaded) return;
     this.data.set(seedDataset(this.loaded));
     this.role.set('trustee');
+    this.myDomain.set(DEFAULT_DOMAIN);
     this.screenState.set('normal');
     this.showToast('Reset.');
   }
@@ -84,44 +90,59 @@ export class RemediationStore {
   productByName(name: string | undefined): Product | undefined {
     return this.products().find((p) => p.name === name);
   }
-  table(id: string): Table | undefined {
-    return this.data()?.tables.find((t) => t.id === id);
+  table(id: string): RegistryTable | undefined {
+    return this.data()?.registry.tables.find((t) => t.id === id);
   }
-  cause(id: string): Cause | undefined {
-    return this.causes().find((c) => c.id === id);
-  }
-
-  /* ---------- actions ---------- */
-
-  sendForCorrection(c: Cause, note: string): void {
-    this.change(lifecycle.sendForCorrection(this.dataset(), c.id, note, now()), `Sent to ${c.fixerRole}.`);
-  }
-  dispute(c: Cause, why: string): void {
-    this.change(lifecycle.disputeRule(this.dataset(), c.id, why, now()), 'Dispute sent to the Rules team.');
-  }
-  accept(c: Cause, why: string, reviewBy: string): void {
-    this.change(lifecycle.acceptRemaining(this.dataset(), c.id, why, reviewBy, now()), 'Accepted and recorded.');
-  }
-  markDone(c: Cause): void {
-    this.change(lifecycle.markDone(this.dataset(), c.id, now()), 'Marked as done.');
-  }
-  cannotFix(c: Cause, why: string): void {
-    this.change(lifecycle.cannotFix(this.dataset(), c.id, why, now()), 'Sent back to the trustee.');
-  }
-  changeRule(c: Cause, what: string): void {
-    this.change(lifecycle.changeRule(this.dataset(), c.id, what, now()), `Version ${lifecycle.nextRuleVersion(c)} published.`);
-  }
-  ruleStands(c: Cause): void {
-    this.change(lifecycle.ruleStands(this.dataset(), c.id, now()), 'Dispute closed. The rule stands.');
+  finding(id: string): Finding | undefined {
+    return this.findings().find((f) => f.id === id);
   }
 
-  /** The prototype controls' "Simulate next check", applied to the cause on screen. */
-  simulate(mode: SimulationMode): void {
-    const id = this.activeCauseId();
-    if (!id) return;
-    const next = lifecycle.simulateRun(this.dataset(), id, mode);
-    const failing = next.causes.find((c) => c.id === id)?.failingNow ?? 0;
-    this.change(next, mode === 'all' ? 'Next run: no failures.' : mode === 'some' ? `Next run: ${full(failing)} still failing.` : 'Next run: no change.');
+  /* ---------- decisions ---------- */
+
+  setScope(f: Finding, input: ScopeInput): void {
+    this.change(lifecycle.setScope(this.dataset(), f.id, input, now()), 'Scope saved.');
+  }
+  concur(f: Finding): void {
+    this.change(lifecycle.concurWithScope(this.dataset(), f.id, now()), 'Scope concurred.');
+  }
+  assessImpact(f: Finding, input: ImpactInput): void {
+    this.change(lifecycle.assessImpact(this.dataset(), f.id, input, this.role(), now()), 'Impact recorded.');
+  }
+  recordRootCause(f: Finding, input: InvestigationInput): void {
+    this.change(lifecycle.recordRootCause(this.dataset(), f.id, input, now()), 'Root cause recorded.');
+  }
+  addAction(f: Finding, input: ActionInput): void {
+    this.change(lifecycle.addAction(this.dataset(), f.id, input, now()), 'Action added.');
+  }
+  sign(f: Finding, action: FindingAction, who: string): void {
+    this.change(lifecycle.signAction(this.dataset(), f.id, action.id, who, now()), 'Signed.');
+  }
+
+  /* ---------- Rules team ---------- */
+
+  publishCheckChange(f: Finding, what: string): void {
+    const version = (f.history[f.history.length - 1].ruleVersion ?? 1) + 1;
+    this.change(lifecycle.publishCheckChange(this.dataset(), f.id, what, now()), `Version ${version} published.`);
+  }
+  checkStands(f: Finding): void {
+    this.change(lifecycle.checkStands(this.dataset(), f.id, now()), 'Check stands.');
+  }
+
+  /* ---------- prototype controls ---------- */
+
+  /** Marks the finding's first open action live, then done. */
+  advance(): void {
+    const f = this.activeFinding();
+    if (!f || !advanceTarget(f)) {
+      this.showToast('No action to advance.');
+      return;
+    }
+    this.change(lifecycle.advanceAction(this.dataset(), f.id, now()), 'Action advanced.');
+  }
+
+  simulate(input: SimulationInput): void {
+    const id = this.activeFindingId();
+    if (id) this.change(lifecycle.simulateCheck(this.dataset(), id, input), 'Next check applied.');
   }
 
   showToast(text: string): void {

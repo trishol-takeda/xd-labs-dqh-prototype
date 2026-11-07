@@ -1,0 +1,11 @@
+<ol class="rh-journey" aria-label="Where this finding is">
+  @for (step of steps(); track step.label) {
+    <li [class]="'rh-jst ' + step.state" [attr.aria-current]="step.state === 'now' ? 'step' : null">
+      <b>{{ step.label }}</b>
+      <small>{{ step.note }}</small>
+      @if (step.state === 'now') {
+        <span class="rh-here">You are here</span>
+      }
+    </li>
+  }
+</ol>

@@ -1,0 +1,8 @@
+<app-modal title="Publish changed check" [confirmLabel]="'Publish version ' + version()" (confirmed)="publish()" (closed)="closed.emit()">
+  <p>Creates version {{ version() }} of the {{ checks() }} in this finding. Counts start again from the next check; earlier checks keep version {{ version() - 1 }}.</p>
+  <label for="rh-rc-what">What changed (required)</label>
+  <textarea id="rh-rc-what" [value]="what()" [attr.aria-invalid]="missing() ? 'true' : null" (input)="what.set($any($event.target).value); missing.set(false)"></textarea>
+  @if (finding().tier === 'critical') {
+    <p class="rh-gap">GxP critical: Quality approval recorded with this change.</p>
+  }
+</app-modal>
