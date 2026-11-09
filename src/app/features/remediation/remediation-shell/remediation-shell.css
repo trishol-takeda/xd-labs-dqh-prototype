@@ -253,22 +253,39 @@
 .rh-ok { color: var(--muted); }
 .rh-after { margin-top: 8px; }
 
-/* decisions */
-.rh-decisions { border-top: 1px solid var(--line); }
-.rh-dec { display: grid; grid-template-columns: 9.5rem minmax(0, 1fr) auto; gap: 8px 18px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); }
-.rh-dec .rh-k { font-weight: var(--prim-typography-weight-semibold); }
-.rh-dec .rh-num { display: inline-grid; place-items: center; width: 22px; height: 22px; margin-right: 8px; border-radius: var(--border-radius-full); background: var(--header-bg); color: var(--color-text-inverse); font-size: var(--typography-label-sm-size); }
-.rh-dec.done .rh-num { background: var(--color-background-utility-success); }
-.rh-dec.next .rh-num { background: var(--brand); }
-.rh-dec.later { opacity: 0.55; }
-.rh-dec .rh-v { color: var(--ink-2); font-size: var(--typography-body-md-size); line-height: var(--typography-body-md-line-height); }
-.rh-dec .rh-v b { color: var(--ink); font-weight: var(--prim-typography-weight-semibold); }
-.rh-dec .rh-v .rh-btn { margin-left: 8px; }
-.rh-dec .rh-act { justify-self: end; }
+/* proposal card */
+.rh-prop { margin-bottom: 24px; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--brand); border-radius: var(--radius); }
+.rh-prop .rh-ph { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+.rh-prop .rh-ph h3 { font-size: var(--typography-heading-md-size); line-height: var(--typography-heading-md-line-height); font-weight: var(--prim-typography-weight-semibold); }
+.rh-prop .rh-who { color: var(--muted); font-size: var(--typography-label-sm-size); }
+.rh-pb { display: grid; grid-template-columns: 9.5rem minmax(0, 1fr) auto; gap: 8px 18px; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+.rh-pb .rh-k { font-weight: var(--prim-typography-weight-semibold); }
+.rh-pb .rh-k small { display: block; color: var(--muted); font-size: var(--typography-label-sm-size); font-weight: var(--prim-typography-weight-regular); }
+.rh-pb .rh-sum { margin-bottom: 6px; font-size: var(--typography-body-lg-size, 1rem); line-height: var(--typography-body-lg-line-height, 1.5); }
+.rh-pb .rh-sum.rh-sum-sm { font-size: var(--typography-body-md-size); }
+.rh-pb .rh-conf { color: var(--ink-2); font-size: var(--typography-label-md-size); }
+.rh-pb .rh-conf.rh-gap { margin-top: 8px; }
+.rh-pb .rh-conf b { color: var(--ink); }
+.rh-pb .rh-ev { margin: 8px 0 0; padding-left: 18px; color: var(--ink-2); font-size: var(--typography-label-md-size); }
+.rh-pb .rh-ov { justify-self: end; }
+.rh-pb.rh-overridden { background: var(--warning-bg); }
+.rh-pb .rh-ovnote { margin-top: 8px; color: var(--warning-fg); font-size: var(--typography-label-md-size); font-weight: var(--prim-typography-weight-semibold); }
+.rh-segtiles { display: flex; flex-wrap: wrap; gap: 6px; }
+.rh-segtiles span { padding: 3px 10px; border: 1px solid var(--line); border-radius: var(--border-radius-full); font-size: var(--typography-label-sm-size); }
+.rh-segtiles span.in { border-color: var(--danger-line); color: var(--danger-fg); font-weight: var(--prim-typography-weight-semibold); }
+.rh-segtiles span.pk { color: var(--muted); }
+.rh-plan-wrap { overflow-x: auto; }
+.rh-plan { min-width: 420px; }
+.rh-plan td { vertical-align: top; }
+.rh-plan .rh-why, .rh-why { color: var(--muted); font-size: var(--typography-label-sm-size); }
+.rh-confirm { position: sticky; bottom: 0; z-index: 5; background: var(--surface); border-top: 1px solid var(--line); border-radius: 0 0 var(--radius) var(--radius); display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 14px 18px; }
+.rh-confirm input[type='text'] { flex: 1 1 14rem; min-width: 0; }
+.rh-confirmed { padding: 14px 18px; background: var(--success-bg); border-radius: 0 0 var(--radius) var(--radius); color: var(--success-fg); }
+.rh-confirmed b { color: var(--success-fg); }
 
 /* actions and signatures */
 .rh-pill { display: inline-block; padding: 2px 8px; border-radius: var(--border-radius-full); font-size: var(--typography-label-sm-size); font-weight: var(--prim-typography-weight-semibold); }
-.rh-pill.open { background: var(--warning-bg); color: var(--warning-fg); }
+.rh-pill.proposed, .rh-pill.raised, .rh-pill.open { background: var(--warning-bg); color: var(--warning-fg); }
 .rh-pill.live { background: var(--info-bg); color: var(--info-fg); }
 .rh-pill.done { background: var(--success-bg); color: var(--success-fg); }
 .rh-sigbox { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 10px; padding: 10px 12px; border: 1px dashed var(--line-strong); border-radius: var(--radius); color: var(--ink-2); }
@@ -352,11 +369,6 @@
 .rh-opts legend { margin-bottom: 6px; padding: 0; font-weight: var(--prim-typography-weight-semibold); }
 .rh-dialog label.rh-opt { display: flex; align-items: center; gap: 6px; margin: 0; padding: 6px 10px; border: 1px solid var(--line); border-radius: var(--border-radius-md); font-weight: var(--prim-typography-weight-regular); }
 .rh-dialog label.rh-opt.rh-plain { border: 0; padding: 0; }
-.rh-levers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-.rh-lever { padding: 10px 12px; text-align: left; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--border-radius-md); color: var(--ink); }
-.rh-lever b { display: block; }
-.rh-lever span { color: var(--ink-2); font-size: var(--typography-label-sm-size); }
-.rh-lever[aria-pressed='true'] { border-color: var(--brand); background: var(--brand-soft); }
 .rh-dialog [aria-invalid='true'] { border-color: var(--danger-line); }
 .rh-dialog input[readonly] { background: var(--surface-2); color: var(--ink-2); }
 
@@ -370,9 +382,8 @@
 @media (max-width: 640px) {
   .rh-big3, .rh-kpis { grid-template-columns: minmax(0, 1fr); }
   .rh-segs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .rh-dec { grid-template-columns: minmax(0, 1fr); }
-  .rh-dec .rh-act { justify-self: start; }
-  .rh-levers { grid-template-columns: minmax(0, 1fr); }
+  .rh-pb { grid-template-columns: minmax(0, 1fr); }
+  .rh-pb .rh-ov { justify-self: start; }
   .rh-hero { font-size: var(--typography-heading-md-size); }
   .rh .rh-first a { grid-template-columns: auto minmax(0, 1fr); }
   .rh-first .rh-next { grid-column: 2; white-space: normal; }

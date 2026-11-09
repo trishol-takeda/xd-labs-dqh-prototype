@@ -1,0 +1,12 @@
+<app-modal title="Quality concurrence" confirmLabel="Concur" (confirmed)="save()" (closed)="closed.emit()">
+  <p>
+    Scope and action plan as confirmed by the trustee. Impact pre-assessed as <b>{{ finding().proposal.qa.assessment }}</b
+    >: {{ finding().proposal.qa.rationale }}
+  </p>
+  @if (finding().proposal.qa.requiresDeviation) {
+    <label for="rh-dev">Deviation reference (required)</label>
+    <input #field id="rh-dev" type="text" placeholder="DEV-26-0000" [value]="deviation()" [attr.aria-invalid]="missing() ? 'true' : null" (input)="deviation.set($any($event.target).value); missing.set(false)" />
+  }
+  <label for="rh-concur-note">Note (optional)</label>
+  <textarea id="rh-concur-note" [value]="note()" (input)="note.set($any($event.target).value)"></textarea>
+</app-modal>

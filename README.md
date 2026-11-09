@@ -14,7 +14,7 @@ Hash routing, so deep links work on any static host.
 
 ## The model in one paragraph
 
-Trustee → Data product → Table → Field → Check → Failing records → **Finding** → Decisions → Actions → Verification. A finding is one table × symptom × site and is already computed in the data. Its failing records are split into four population segments (new since detection, open, recent, historical); the headline is the segments, never the total. The trustee takes four decisions in order (Scope, Impact, Root cause, Actions); actions are routed to an owner group at a site; electronic signatures are required on acceptances. Two signals decide closure (bleed stopped, backlog cleared or accepted) and only the simulated checks close or reopen a finding. Four roles: Data trustee, Quality approver, Rules team, Leadership. Every decision appends to an audit history.
+Trustee → Data product → Table → Field → Check → Failing records → **Finding** → Decisions → Actions → Verification. A finding is one table × symptom × site and is already computed in the data. Its failing records are split into four population segments (new since detection, open, recent, historical); the headline is the segments, never the total. The system drafts a proposal (scope, root cause with evidence, action plan, Quality pre-assessment); the trustee confirms it in one click or overrides a block with a reason, and the Quality approver concurs in their own lane. Seven stages: Detected → Proposed → Confirmed → Raised → Live → Verified → Closed. Actions are routed to an owner group at a site; electronic signatures are required on acceptances. Two signals decide closure (bleed stopped, backlog cleared or accepted) and only the simulated checks close or reopen a finding. Four roles: Data trustee, Quality approver, Rules team, Leadership. Every decision appends to an audit history.
 
 ## Screens
 
@@ -26,7 +26,7 @@ Trustee → Data product → Table → Field → Check → Failing records → *
 | `/#/remediation/overview` | Overview (leadership): headline, three numbers, trend, where to look first, domains, breakdowns |
 | `/#/remediation/p/:productId` | Product: its tables (a single-table product opens its table) |
 | `/#/remediation/t/:tableId` | Table: all checks, findings in Needs you / In progress / Fixed by impact score |
-| `/#/remediation/f/:findingId` | Finding: journey, four decisions, segments, failing fields, actions, signals, history |
+| `/#/remediation/f/:findingId` | Finding: journey, proposal card (confirm or override), segments, failing fields, actions, signals, history |
 | `/#/remediation/f/:findingId/records` | The first 50 failing records |
 | `/#/remediation/f/:findingId/export` | Inspection export (plain text) |
 | `/#/remediation/queue` | The role's queue: Needs me, Scope & impact, Check changes |
@@ -38,7 +38,7 @@ Trustee → Data product → Table → Field → Check → Failing records → *
 
 | File | Source |
 |---|---|
-| `public/data/remediation/{vocab,registry,findings,rules}.json` | Remediation Hub build pack v2 (`tmp/remediation-hub-build-pack-v2`). Read-only: loaded once, mutated in memory, never hand-edited |
+| `public/data/remediation/{vocab,registry,findings,rules}.json` | Remediation Hub build pack v3 (`tmp/remediation-hub-build-pack-v3`). Read-only: loaded once, mutated in memory, never hand-edited |
 
 ## Code map
 
@@ -46,14 +46,14 @@ Trustee → Data product → Table → Field → Check → Failing records → *
 |---|---|
 | `src/app/features/remediation/core/remediation.model.ts` | Data shapes, transition inputs and view models |
 | `src/app/features/remediation/core/remediation.constants.ts` | Copy, roles, status labels, mock factors |
-| `src/app/features/remediation/core/remediation.util.ts` | Pure selectors: badges, next decision, journey, verdict, routing, export text |
+| `src/app/features/remediation/core/remediation.util.ts` | Pure selectors: badges, journey, verdict, routing, export text |
 | `src/app/features/remediation/core/remediation.overview.ts` | Pure selectors behind the Overview |
-| `src/app/features/remediation/core/remediation.transitions.ts` | The lifecycle as pure functions (decisions, actions, signatures, Rules team, simulated check) |
+| `src/app/features/remediation/core/remediation.transitions.ts` | The lifecycle as pure functions (proposal override and confirm, Quality concurrence, actions, signatures, Rules team, simulated check) |
 | `src/app/features/remediation/core/remediation-store.service.ts` | One signal store: loads data, holds role, domain and screen state, calls the transitions |
 | `src/app/features/remediation/remediation-shell/` | Prototype bar, role-aware nav, toast, shared stylesheet (takOS tokens, `rh-` prefixed) |
 | `src/app/features/remediation/*-page/` | The screens |
 | `src/app/features/remediation/dialogs/` | Scope, impact, root cause, action, signature and changed-check dialogs |
-| `src/app/features/remediation/shared/` | Chip, breadcrumbs, check list, finding row, journey strip, segment tiles, record grid, decision row, modal, product grid |
+| `src/app/features/remediation/shared/` | Chip, breadcrumbs, check list, finding row, journey strip, segment tiles, record grid, modal, product grid |
 | `src/takos-tokens.css` | takOS design tokens |
 
 ## Open questions

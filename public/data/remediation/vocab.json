@@ -149,5 +149,69 @@
   "recentClosed",
   "historical"
  ],
- "impactScore": "tier weight (3/2/1) \u00d7 field criticality (1.5 if any CDE) \u00d7 (1 + sqrt(open + recent + new)/10) \u00d7 (1 + days past target/30). Historical volume excluded by design."
+ "impactScore": "tier weight (3/2/1) \u00d7 field criticality (1.5 if any CDE) \u00d7 (1 + sqrt(open + recent + new)/10) \u00d7 (1 + days past target/30). Historical volume excluded by design.",
+ "stages": [
+  "detected",
+  "proposed",
+  "confirmed",
+  "raised",
+  "live",
+  "verified",
+  "closed"
+ ],
+ "stageLabels": {
+  "detected": "Detected",
+  "proposed": "Proposed",
+  "confirmed": "Confirmed",
+  "raised": "Raised",
+  "live": "Live",
+  "verified": "Verified",
+  "closed": "Closed"
+ },
+ "actionStatuses": [
+  "proposed",
+  "raised",
+  "live",
+  "done"
+ ],
+ "planFor": {
+  "optional_in_template": [
+   "stop_bleed",
+   "backfill"
+  ],
+  "no_validation": [
+   "stop_bleed",
+   "backfill"
+  ],
+  "training_practice": [
+   "stop_bleed",
+   "backfill"
+  ],
+  "interface_drops": [
+   "fix_load"
+  ],
+  "load_logic": [
+   "fix_load"
+  ],
+  "legacy_migration": [
+   "fix_check"
+  ],
+  "master_not_created": [
+   "stop_bleed",
+   "backfill"
+  ],
+  "process_sequence": [
+   "stop_bleed"
+  ],
+  "duplicate_entry": [
+   "fix_load",
+   "stop_bleed"
+  ],
+  "check_too_broad": [
+   "fix_check"
+  ],
+  "other": [
+   "stop_bleed"
+  ]
+ }
 }

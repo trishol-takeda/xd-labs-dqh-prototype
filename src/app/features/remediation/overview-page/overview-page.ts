@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { RemediationStore } from '../core/remediation-store.service';
-import { NEXT_LABEL } from '../core/remediation.constants';
+import { CONFIRM_LABEL } from '../core/remediation.constants';
 import { breakdownModel, overviewModel } from '../core/remediation.overview';
-import { compact, fmtDate, nextDecision, plural, segWords } from '../core/remediation.util';
+import { compact, fmtDate, plural, segWords } from '../core/remediation.util';
 import { OverviewBreakdown } from './overview-breakdown/overview-breakdown';
 import { CHART_HEIGHT, CHART_PAD, CHART_WIDTH, CHART_LABEL_ROOM } from './overview.constants';
 
@@ -46,9 +46,6 @@ export class OverviewPage {
   });
 
   protected readonly first = computed(() =>
-    (this.model()?.top ?? []).map((f, i) => {
-      const key = nextDecision(f);
-      return { finding: f, rank: i + 1, next: (key ? NEXT_LABEL[key] : '') + (f.pastTarget ? ` · ${f.ageWorkingDays} d` : '') };
-    }),
+    (this.model()?.top ?? []).map((f, i) => ({ finding: f, rank: i + 1, next: CONFIRM_LABEL + (f.pastTarget ? ` · ${f.ageWorkingDays} d` : '') })),
   );
 }
