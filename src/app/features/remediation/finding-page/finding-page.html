@@ -18,77 +18,26 @@
 
       @if (f.visibleStatus === 'fixed') {
         <section class="rh-closed" aria-labelledby="rh-closed-title">
-          <h3 id="rh-closed-title">{{ f.state === 'accepted' ? 'Closed by acceptance' : 'Closed' }}{{ closedOn() ? ' on ' + fmtDate(closedOn()!) : '' }}</h3>
+          <h3 id="rh-closed-title">Closed{{ closedOn() ? ' on ' + fmtDate(closedOn()!) : '' }}</h3>
           <p>
-            @if (f.state === 'accepted') {
-              Remaining records were accepted with signatures; nothing is left in scope.
-            } @else {
-              No new failures for {{ f.signals.bleedStopped.required }} consecutive checks and nothing left in scope. Closure was decided by the checks, not by a person.
-            }
+            No new failures for {{ f.signals.bleedStopped.required }} consecutive checks and nothing left in scope. Closure was decided by the checks, not by a person.
             The complete record is in the <a [routerLink]="['/remediation', 'f', f.id, 'export']">inspection export</a>. If the same failures return, this finding reopens on its own.
           </p>
         </section>
       }
 
-      <section class="rh-block" aria-labelledby="rh-decisions">
-        <h3 id="rh-decisions">Decisions</h3>
-        <div class="rh-decisions">
-          <app-decision-row [number]="1" [label]="decisionLabel.scope" [state]="decisionState('scope')">
-            @if (f.decisions.scope; as s) {
-              Scoped by {{ s.by }} on {{ fmtDate(s.at) }} · {{ s.reason }}
-              @if (s.qaConcurrence) {
-                @if (s.concurred) {
-                  · <b>QA concurred</b>
-                } @else {
-                  · <b>QA concurrence pending</b>
-                  @if (store.role() === 'qa') {
-                    <button type="button" class="rh-btn rh-ghost rh-sm" (click)="concur()">Concur</button>
-                  }
-                }
-              }
-            }
-            @if (decisionState('scope') === 'next' && canAct('scope')) {
-              <button rowAction type="button" class="rh-btn rh-sm" (click)="open('scope')">{{ nextLabel.scope }}</button>
-            }
-          </app-decision-row>
+      <app-proposal-card [finding]="f" [keys]="keys()" [canAct]="canConfirm()" (overrideBlock)="startOverride($event)" (confirmed)="confirm($event)" />
 
-          <app-decision-row [number]="2" [label]="decisionLabel.impact" [state]="decisionState('impact')">
-            @if (f.decisions.impact; as i) {
-              Impact: <b>{{ i.assessment }}</b> · {{ i.note }}
-              @if (i.deviationRef) {
-                · Deviation <b>{{ i.deviationRef }}</b>
-              }
-              · by {{ i.by }}
-            }
-            @if (decisionState('impact') === 'next' && canAct('impact')) {
-              <button rowAction type="button" class="rh-btn rh-sm" (click)="open('impact')">{{ nextLabel.impact }}</button>
-            }
-          </app-decision-row>
-
-          <app-decision-row [number]="3" [label]="decisionLabel.investigate" [state]="decisionState('investigate')">
-            @if (f.decisions.investigation; as v) {
-              Root cause: <b>{{ rootCauseLabels() }}</b> · {{ v.note }}
-              @if (v.otherSitesChecked) {
-                · other sites checked
-              }
-            }
-            @if (decisionState('investigate') === 'next' && canAct('investigate')) {
-              <button rowAction type="button" class="rh-btn rh-sm" (click)="open('investigate')">{{ nextLabel.investigate }}</button>
-            }
-          </app-decision-row>
-
-          <app-decision-row [number]="4" [label]="decisionLabel.actions" [state]="decisionState('actions')">
-            @if (f.actions.length) {
-              <b>{{ f.actions.length }} {{ f.actions.length === 1 ? 'action' : 'actions' }} planned</b>
-            }
-            @if (decisionState('actions') === 'next' && canAct('actions')) {
-              <button rowAction type="button" class="rh-btn rh-sm" (click)="open('action')">{{ nextLabel.actions }}</button>
-            } @else if (f.actions.length && store.role() === 'trustee' && f.visibleStatus !== 'fixed') {
-              <button rowAction type="button" class="rh-btn rh-ghost rh-sm" (click)="open('action')">Add another action</button>
-            }
-          </app-decision-row>
+      @if (needsConcurrence()) {
+        <div class="rh-sigbox">
+          <b>Quality concurrence</b> · impact pre-assessed as <b>{{ f.proposal.qa.assessment }}</b
+          >.
+          @if (f.proposal.qa.requiresDeviation) {
+            Raise the deviation and record its reference.
+          }
+          <button type="button" class="rh-btn rh-sm" (click)="open('concur')">Concur{{ f.proposal.qa.requiresDeviation ? ' and record deviation' : '' }}</button>
         </div>
-      </section>
+      }
 
       <section class="rh-block" aria-labelledby="rh-records">
         <h3 id="rh-records">Which records</h3>
@@ -113,13 +62,12 @@
             <table>
               <thead>
                 <tr>
-                  <th scope="col">Lever</th>
+                  <th scope="col">Action</th>
                   <th scope="col">Owner</th>
                   <th scope="col">Channel</th>
                   <th scope="col">Reference</th>
                   <th scope="col">Effective</th>
                   <th scope="col">Status</th>
-                  <th scope="col">Covers</th>
                 </tr>
               </thead>
               <tbody>
@@ -139,18 +87,17 @@
                     <td>{{ a.reference || '—' }}</td>
                     <td>{{ a.effectiveDate ? fmtDate(a.effectiveDate) : '—' }}</td>
                     <td><span [class]="'rh-pill ' + a.status">{{ a.status }}</span></td>
-                    <td class="rh-small-text">
-                      @for (k of a.scopeSegments; track k; let last = $last) {
-                        {{ f.segments.labels[k] }}{{ last ? '' : ', ' }}
-                      }
-                    </td>
                   </tr>
                 }
               </tbody>
             </table>
           </div>
         } @else {
-          <p class="rh-dim">No actions yet.</p>
+          <p class="rh-dim">Actions are created in their channels when the proposal is confirmed.</p>
+        }
+
+        @if (f.actions.length) {
+          <p class="rh-dim rh-small-text rh-after">Each action: proposed → raised (reference exists in its channel) → live (effective date) → done (the checks confirm it).</p>
         }
 
         @if (accept(); as a) {
@@ -158,11 +105,11 @@
             <b>Acceptance {{ a.reference }}</b> · signed: {{ acceptSigned().trustee ? 'Data trustee ✓' : 'Data trustee pending' }}
             @if (f.tier === 'critical') {
               · {{ acceptSigned().qa ? 'Quality approver ✓' : 'Quality approver pending' }}
-              @if (store.role() === 'qa' && !a.qaSigned) {
+              @if (store.role() === 'qa' && !a.qaSigned && a.status === 'raised') {
                 <button type="button" class="rh-btn rh-ghost rh-sm" (click)="open('signQa')">Sign</button>
               }
             }
-            @if (store.role() === 'trustee' && !a.trusteeSigned) {
+            @if (store.role() === 'trustee' && !a.trusteeSigned && a.status === 'raised') {
               <button type="button" class="rh-btn rh-ghost rh-sm" (click)="open('signTrustee')">Sign</button>
             }
             @if (a.reviewBy) {
@@ -248,17 +195,11 @@
     </article>
 
     @switch (dialog()) {
-      @case ('scope') {
-        <app-scope-dialog [finding]="f" [keys]="keys()" (saved)="saveScope($event)" (closed)="dialog.set(null)" />
+      @case ('override') {
+        <app-override-dialog [finding]="f" [block]="overrideOf()" [vocab]="vocab()!" [keys]="keys()" (saved)="saveOverride($event)" (closed)="dialog.set(null)" />
       }
-      @case ('impact') {
-        <app-impact-dialog [finding]="f" (saved)="saveImpact($event)" (closed)="dialog.set(null)" />
-      }
-      @case ('investigate') {
-        <app-investigate-dialog [rootCauses]="vocab()!.rootCauses" (saved)="saveRootCause($event)" (closed)="dialog.set(null)" />
-      }
-      @case ('action') {
-        <app-action-dialog [finding]="f" [keys]="keys()" [vocab]="vocab()!" [registry]="registry()!" (saved)="saveAction($event)" (closed)="dialog.set(null)" />
+      @case ('concur') {
+        <app-concur-dialog [finding]="f" (saved)="saveConcur($event)" (closed)="dialog.set(null)" />
       }
       @case ('signTrustee') {
         @if (accept(); as a) {

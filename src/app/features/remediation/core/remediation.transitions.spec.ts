@@ -1,139 +1,198 @@
 import { describe, expect, it } from 'vitest';
 import { mockDataset } from './remediation.mock';
-import { ActionInput, Dataset, Finding } from './remediation.model';
-import { seedDataset } from './remediation.seed';
-import {
-  addAction,
-  advanceAction,
-  assessImpact,
-  checkStands,
-  concurWithScope,
-  publishCheckChange,
-  recordRootCause,
-  setScope,
-  signAction,
-  simulateCheck,
-} from './remediation.transitions';
-import { advanceTarget, badges, channelFor, checkChangedOn, journey, nextDecision, queueList, segWords, verdict } from './remediation.util';
+import { Dataset, Finding } from './remediation.model';
+import { advanceAction, checkStands, confirmProposal, overrideBlock, publishCheckChange, qaConcur, signAction, simulateCheck } from './remediation.transitions';
+import { advanceTarget, awaitingConfirmation, badges, checkChangedOn, journey, queueList, referenceFor, segWords, verdict } from './remediation.util';
 
 const ID = 't1:missing:Site-A';
 const AT = '2026-11-06T09:00:00Z';
 const f = (d: Dataset): Finding => d.findings[0];
 
-/** A finding that has been scoped, assessed and investigated, ready for actions. */
-function decided(): Dataset {
-  let d = setScope(mockDataset(), ID, { inScope: ['newSinceDetection', 'inFlight', 'recentClosed'], reason: 'closed records cannot be edited' }, AT);
-  d = assessImpact(d, ID, { assessment: 'possible', note: 'traceability', deviationRef: 'DEV-26-1' }, 'trustee', AT);
-  return recordRootCause(d, ID, { rootCauses: ['optional_in_template'], note: 'confirmed with owner', otherSitesChecked: true }, AT);
+const confirmed = (d: Dataset = mockDataset()): Dataset => confirmProposal(d, ID, '', AT);
+
+/** Confirmed, concurred and both acceptance signatures given, then every action advanced. */
+function liveWithSignatures(): Dataset {
+  let d = confirmed();
+  const accept = f(d).actions.find((a) => a.lever === 'accept')!;
+  d = signAction(d, ID, accept.id, 'Sales data trustee', AT);
+  d = signAction(d, ID, accept.id, 'Quality approver', AT);
+  return advanceAction(d, ID, AT);
 }
 
-const stopBleed: ActionInput = { lever: 'stop_bleed', reference: 'CR-1', effectiveDate: '2026-11-01', covers: ['newSinceDetection'], interimControl: 'manual check', reviewBy: null };
+/** A finding with a fix-or-re-scope action raised, as the Rules team sees it. */
+function withCheckChange(): Dataset {
+  const d = mockDataset();
+  d.findings[0].proposal.plan = [{ lever: 'fix_check', leverLabel: 'Fix or re-scope the check', ownerRole: 'Rules team', channel: 'Rule catalogue change', notify: '', scopeSegments: ['inFlight'], interimControl: null, why: 'w' }];
+  return confirmed(d);
+}
 
-describe('finding lifecycle', () => {
+describe('proposal and confirmation', () => {
   it('never changes the dataset it was given', () => {
     const d = mockDataset();
     const before = JSON.stringify(d);
-    setScope(d, ID, { inScope: ['inFlight'], reason: 'x' }, AT);
+    overrideBlock(d, ID, { value: { block: 'scope', inScope: ['inFlight'] }, reason: 'x' }, AT);
+    confirmed(d);
     simulateCheck(d, ID, { newFailures: 'none', backlog: 'same' });
     expect(JSON.stringify(d)).toBe(before);
   });
 
-  it('walks the decisions in order, each one an audit entry with role, date and reason', () => {
-    let d = mockDataset();
-    expect(nextDecision(f(d))).toBe('scope');
-    d = setScope(d, ID, { inScope: ['newSinceDetection', 'inFlight', 'recentClosed'], reason: 'why' }, AT);
-    expect(f(d)).toMatchObject({ state: 'scoped' });
-    expect(f(d).decisions.scope).toMatchObject({ parked: ['historical'], qaConcurrence: true, concurred: false, by: 'Sales data trustee' });
+  it('starts at proposed with the proposal waiting for the trustee', () => {
+    expect(awaitingConfirmation(f(mockDataset()))).toBe(true);
+    expect(journey(f(mockDataset()), mockDataset().vocab).map((s) => s.state)).toEqual(['done', 'now', 'todo', 'todo', 'todo', 'todo', 'todo']);
+  });
+
+  it('confirming as drafted raises every action in its channel with a reference, and moves the finding to raised', () => {
+    const d = confirmed();
+    expect(f(d)).toMatchObject({ stage: 'raised', visibleStatus: 'in_progress' });
+    expect(f(d).confirmation).toMatchObject({ by: 'Sales data trustee', overrides: [], qaConcurred: false, scope: { inScope: ['newSinceDetection', 'inFlight', 'recentClosed'] } });
+    expect(f(d).actions.map((a) => [a.leverLabel, a.status, a.ownerRole])).toEqual([
+      ['Stop the bleed', 'raised', 'MES business owner · Site A'],
+      ['Accept', 'raised', 'Data trustee + Quality approver'],
+    ]);
+    expect(f(d).actions.every((a) => !!a.reference)).toBe(true);
     expect(f(d).signals.backlog.inScopeRemaining).toBe(460);
-    expect(nextDecision(f(d))).toBe('impact');
-    d = assessImpact(d, ID, { assessment: 'possible', note: 'n', deviationRef: 'DEV-26-1' }, 'qa', AT);
-    expect(f(d).decisions.impact).toMatchObject({ by: 'Quality approver', deviationRef: 'DEV-26-1' });
-    expect(badges(f(d)).map((b) => b.label)).toContain('Deviation open');
-    d = recordRootCause(d, ID, { rootCauses: ['optional_in_template'], note: 'n', otherSitesChecked: false }, AT);
-    expect(f(d).state).toBe('investigated');
-    expect(nextDecision(f(d))).toBe('actions');
-    expect(f(d).audit.slice(-3).map((a) => a.event)).toEqual(['scoped', 'impact', 'investigated']);
-    expect(f(d).audit.slice(-3).every((a) => !!a.by && a.at === AT && !!a.text)).toBe(true);
+    const events = f(d).audit.map((a) => a.event);
+    expect(events.slice(-4)).toEqual(['confirmed', 'raised', 'raised', 'qa_requested']);
+    expect(f(d).audit.find((a) => a.event === 'confirmed')?.text).toBe('Proposal confirmed as drafted');
   });
 
-  it('keeps an impact deviation reference only for GxP critical possible or confirmed impact', () => {
-    const d = assessImpact(mockDataset(), ID, { assessment: 'none', note: 'n', deviationRef: 'DEV-1' }, 'trustee', AT);
-    expect(f(d).decisions.impact?.deviationRef).toBeNull();
+  it('keeps an optional comment on the confirmation and in the audit text', () => {
+    const d = confirmProposal(mockDataset(), ID, 'ok by me', AT);
+    expect(f(d).confirmation?.comment).toBe('ok by me');
+    expect(f(d).audit.find((a) => a.event === 'confirmed')?.text).toContain('ok by me');
   });
 
-  it('shows QA concurrence pending until the Quality approver concurs, and queues it for QA', () => {
-    let d = setScope(mockDataset(), ID, { inScope: ['inFlight'], reason: 'r' }, AT);
-    expect(badges(f(d)).map((b) => b.label)).toContain('QA concurrence pending');
+  it('gives deterministic references, and none to a backfill', () => {
+    expect(referenceFor(ID, 0, 'stop_bleed')).toBe(referenceFor(ID, 0, 'stop_bleed'));
+    expect(referenceFor(ID, 0, 'stop_bleed')).toMatch(/^CR-\d{4}$/);
+    expect(referenceFor(ID, 1, 'accept')).toMatch(/^ACC-\d{4}$/);
+    expect(referenceFor(ID, 0, 'backfill')).toBeNull();
+  });
+
+  it('an override replaces the block, keeps the original, and shows once confirmed with the count', () => {
+    let d = overrideBlock(mockDataset(), ID, { value: { block: 'scope', inScope: ['inFlight'] }, reason: 'only open records' }, AT);
+    expect(f(d).proposal.scope).toMatchObject({ inScope: ['inFlight'], parked: ['newSinceDetection', 'recentClosed', 'historical'] });
+    expect(f(d).pendingOverrides?.[0]).toMatchObject({ block: 'scope', from: ['newSinceDetection', 'inFlight', 'recentClosed'], to: ['inFlight'], reason: 'only open records' });
+    d = confirmed(d);
+    expect(f(d).confirmation?.overrides).toHaveLength(1);
+    expect(f(d).confirmation?.scope?.inScope).toEqual(['inFlight']);
+    expect(f(d).pendingOverrides).toBeUndefined();
+    expect(f(d).audit.find((a) => a.event === 'confirmed')?.text).toContain('with 1 override');
+    expect(badges(f(d)).map((b) => b.label)).toContain('Proposal overridden');
+  });
+
+  it('overriding the root cause re-derives the plan from planFor and ends with an Accept for the historical records', () => {
+    const d = overrideBlock(mockDataset(), ID, { value: { block: 'rootCause', key: 'load_logic' }, reason: 'found in the load' }, AT);
+    expect(f(d).proposal.rootCause).toMatchObject({ key: 'load_logic', label: 'Load logic' });
+    expect(f(d).proposal.plan.map((a) => a.lever)).toEqual(['fix_load', 'accept']);
+    expect(f(d).proposal.plan[1]).toMatchObject({ approvals: ['Data trustee', 'Quality approver'], scopeSegments: ['historical'] });
+  });
+
+  it('a second override of the same block replaces the first', () => {
+    let d = overrideBlock(mockDataset(), ID, { value: { block: 'scope', inScope: ['inFlight'] }, reason: 'a' }, AT);
+    d = overrideBlock(d, ID, { value: { block: 'scope', inScope: ['inFlight', 'recentClosed'] }, reason: 'b' }, AT);
+    expect(f(d).pendingOverrides).toHaveLength(1);
+    expect(f(d).pendingOverrides?.[0].reason).toBe('b');
+  });
+
+  it('no overrides or confirmation once confirmed', () => {
+    const d = overrideBlock(confirmed(), ID, { value: { block: 'scope', inScope: ['inFlight'] }, reason: 'late' }, AT);
+    expect(f(d).proposal.scope.inScope).toContain('recentClosed');
+  });
+});
+
+describe('Quality approver', () => {
+  it('sees the confirmed finding in their queue until they concur, and records the deviation', () => {
+    let d = confirmed();
     expect(queueList(d, 'qa', 'Commercial')).toHaveLength(1);
-    d = concurWithScope(d, ID, AT);
-    expect(badges(f(d)).map((b) => b.label)).not.toContain('QA concurrence pending');
-    expect(f(d).audit.at(-1)?.event).toBe('scope_concurred');
+    expect(badges(f(d)).map((b) => b.label)).toContain('QA concurrence pending');
+    d = qaConcur(d, ID, { deviationRef: 'DEV-26-1', note: '' }, AT);
+    expect(f(d).confirmation).toMatchObject({ qaConcurred: true, deviationRef: 'DEV-26-1' });
+    expect(queueList(d, 'qa', 'Commercial')).toHaveLength(0);
+    expect(badges(f(d)).map((b) => b.label)).toContain('Deviation open');
+    expect(f(d).audit.at(-1)).toMatchObject({ event: 'qa_concurred', by: 'Quality approver' });
   });
 
-  it('routes an action to the owner group at the site and goes live when it has a date', () => {
-    const d = addAction(decided(), ID, stopBleed, AT);
-    const a = f(d).actions[0];
-    expect(a).toMatchObject({ ownerRole: 'MES business owner · Site A', channel: 'MES change request', status: 'live', interimControl: 'manual check' });
-    expect(f(d)).toMatchObject({ state: 'actions_open', visibleStatus: 'in_progress' });
-    expect(f(d).signals.bleedStopped.since).toBe('2026-11-01');
-    expect(channelFor(d.registry, 'MES', 'accept', 'Site B')).toMatchObject({ channel: 'Hub acceptance', owner: 'Data trustee' });
+  it('does not queue an unconfirmed proposal for Quality', () => {
+    expect(queueList(mockDataset(), 'qa', 'Commercial')).toHaveLength(0);
   });
+});
 
-  it('keeps an acceptance open until both signatures are present on GxP critical data', () => {
-    let d = addAction(decided(), ID, { lever: 'accept', reference: 'ACC-1', effectiveDate: '2026-11-01', covers: ['historical'], interimControl: null, reviewBy: '2027-11-01' }, AT);
-    const a = () => f(d).actions[0];
-    expect(a()).toMatchObject({ status: 'open', approvals: ['Data trustee', 'Quality approver'] });
+describe('actions and signatures', () => {
+  it('keeps an acceptance raised until both signatures are present on GxP critical data, then it goes live and counts as accepted', () => {
+    let d = confirmed();
+    const accept = () => f(d).actions.find((a) => a.lever === 'accept')!;
+    expect(accept().approvals).toEqual(['Data trustee', 'Quality approver']);
+    d = signAction(d, ID, accept().id, 'Sales data trustee', AT);
+    expect(accept().status).toBe('raised');
+    expect(f(d).signals.backlog.acceptedCount).toBe(0);
+    d = signAction(d, ID, accept().id, 'Quality approver', AT);
+    expect(accept().status).toBe('live');
+    expect(f(d)).toMatchObject({ stage: 'live' });
     expect(f(d).signals.backlog.acceptedCount).toBe(500);
-    expect(advanceTarget(f(d))).toBeUndefined();
-    d = signAction(d, ID, a().id, 'Sales data trustee', AT);
-    expect(a().status).toBe('open');
-    d = signAction(d, ID, a().id, 'Quality approver', AT);
-    expect(a().status).toBe('live');
-    expect(f(d).audit.filter((e) => e.event === 'signed').map((e) => e.text)).toEqual(['Electronic signature: risk accepted · ACC-1', 'Electronic signature: approved · ACC-1']);
+    expect(f(d).audit.filter((e) => e.event === 'signed').map((e) => e.text)).toEqual([
+      `Electronic signature: risk accepted · ${accept().reference}`,
+      `Electronic signature: approved · ${accept().reference}`,
+    ]);
   });
 
-  it('advances the first open action to live, then done', () => {
-    let d = addAction(decided(), ID, { ...stopBleed, effectiveDate: null }, AT);
-    expect(f(d).actions[0].status).toBe('open');
+  it('advance skips an unsigned acceptance, takes raised to live to done, and the last done action verifies the finding', () => {
+    let d = confirmed();
+    expect(advanceTarget(f(d))?.lever).toBe('stop_bleed');
     d = advanceAction(d, ID, AT);
     expect(f(d).actions[0]).toMatchObject({ status: 'live', effectiveDate: '2026-10-26' });
+    expect(f(d).stage).toBe('live');
+    expect(f(d).signals.bleedStopped.since).toBe('2026-10-26');
     d = advanceAction(d, ID, AT);
     expect(f(d).actions[0].status).toBe('done');
-  });
+    expect(f(d).stage).toBe('live');
+    expect(advanceTarget(f(d))).toBeUndefined();
 
-  it('verifies: three clean checks make it fixed going forward, a cleared backlog then closes it, new failures reopen it', () => {
-    let d = addAction(decided(), ID, stopBleed, AT);
+    d = liveWithSignatures();
+    d = advanceAction(advanceAction(d, ID, AT), ID, AT);
+    expect(f(d).actions.every((a) => a.status === 'done')).toBe(true);
+    expect(f(d).stage).toBe('verified');
+  });
+});
+
+describe('verification', () => {
+  it('three clean checks make it fixed going forward, a cleared backlog closes it, new failures send it back to the proposal', () => {
+    let d = advanceAction(confirmed(), ID, AT);
     for (let i = 0; i < 3; i++) d = simulateCheck(d, ID, { newFailures: 'none', backlog: 'same' });
     expect(f(d).signals.bleedStopped.cleanChecks).toBe(3);
     expect(verdict(f(d)).label).toBe('Fixed going forward · backlog open');
-    expect(f(d)).toMatchObject({ fixedGoingForward: true, state: 'verifying', visibleStatus: 'in_progress' });
-    expect(badges(f(d)).map((b) => b.label)).toContain('Fixed going forward');
+    expect(f(d)).toMatchObject({ fixedGoingForward: true, visibleStatus: 'in_progress' });
 
     d = simulateCheck(d, ID, { newFailures: 'none', backlog: 'cleared' });
-    expect(f(d)).toMatchObject({ state: 'closed', visibleStatus: 'fixed', fixedGoingForward: false });
+    expect(f(d)).toMatchObject({ stage: 'closed', visibleStatus: 'fixed', fixedGoingForward: false });
+    expect(f(d).actions.every((a) => a.status === 'done')).toBe(true);
     expect(verdict(f(d)).label).toBe('Fixed');
     expect(f(d).audit.at(-1)?.event).toBe('closed');
-    expect(journey(f(d)).every((s) => s.state === 'done')).toBe(true);
+    expect(journey(f(d), d.vocab).every((s) => s.state === 'done')).toBe(true);
 
     d = simulateCheck(d, ID, { newFailures: 'some', backlog: 'same' });
-    expect(f(d)).toMatchObject({ state: 'scoped', visibleStatus: 'needs_you', cameBack: true });
+    expect(f(d)).toMatchObject({ stage: 'proposed', visibleStatus: 'needs_you', cameBack: true, confirmation: null, actions: [] });
     expect(badges(f(d)).map((b) => b.label)).toContain('Came back');
+    expect(awaitingConfirmation(f(d))).toBe(true);
   });
 
   it('a check with new failures resets the clean-check count', () => {
-    let d = addAction(decided(), ID, stopBleed, AT);
+    let d = advanceAction(confirmed(), ID, AT);
     d = simulateCheck(d, ID, { newFailures: 'none', backlog: 'same' });
     d = simulateCheck(d, ID, { newFailures: 'same', backlog: 'same' });
     expect(f(d).signals.bleedStopped.cleanChecks).toBe(0);
   });
 
-  it('marks where you are in the journey', () => {
-    expect(journey(f(mockDataset())).map((s) => s.state)).toEqual(['done', 'now', 'todo', 'todo', 'todo', 'todo', 'todo']);
-    expect(journey(f(decided())).findIndex((s) => s.state === 'now')).toBe(4);
+  it('does not count clean checks before any action is live', () => {
+    const d = simulateCheck(confirmed(), ID, { newFailures: 'none', backlog: 'same' });
+    expect(f(d).signals.bleedStopped.cleanChecks).toBe(0);
   });
+});
 
-  it('the Rules team publishes a changed check: counts re-baseline and the history marks the change', () => {
-    let d = addAction(decided(), ID, { lever: 'fix_check', reference: 'RC-1', effectiveDate: null, covers: ['inFlight'], interimControl: null, reviewBy: null }, AT);
+describe('Rules team', () => {
+  it('publishes a changed check: counts re-baseline and the history marks the change', () => {
+    let d = withCheckChange();
+    expect(queueList(d, 'rules', 'Commercial')).toHaveLength(1);
     d = publishCheckChange(d, ID, 'only major deviations', AT);
     expect(f(d).actions[0]).toMatchObject({ status: 'done', outcome: 'changed' });
     expect(f(d).segments.inFlight).toBe(30);
@@ -143,22 +202,23 @@ describe('finding lifecycle', () => {
     expect(f(d).audit.at(-1)).toMatchObject({ event: 'check_changed', by: 'Rules team + Quality approver' });
   });
 
-  it('the Rules team can let the check stand', () => {
-    let d = addAction(decided(), ID, { lever: 'fix_check', reference: 'RC-1', effectiveDate: null, covers: ['inFlight'], interimControl: null, reviewBy: null }, AT);
-    expect(queueList(d, 'rules', 'Commercial')).toHaveLength(1);
+  it('can let the check stand', () => {
+    let d = withCheckChange();
     d = checkStands(d, ID, AT);
     expect(f(d).actions[0]).toMatchObject({ status: 'done', outcome: 'stands' });
     expect(queueList(d, 'rules', 'Commercial')).toHaveLength(0);
   });
+});
 
+describe('audit trail and selectors', () => {
   it('audit entries only ever grow', () => {
     let d = mockDataset();
     let length = f(d).audit.length;
     const steps = [
-      (x: Dataset) => setScope(x, ID, { inScope: ['inFlight'], reason: 'r' }, AT),
-      (x: Dataset) => assessImpact(x, ID, { assessment: 'none', note: 'n', deviationRef: null }, 'trustee', AT),
-      (x: Dataset) => recordRootCause(x, ID, { rootCauses: ['optional_in_template'], note: 'n', otherSitesChecked: false }, AT),
-      (x: Dataset) => addAction(x, ID, stopBleed, AT),
+      (x: Dataset) => overrideBlock(x, ID, { value: { block: 'scope', inScope: ['inFlight'] }, reason: 'r' }, AT),
+      (x: Dataset) => confirmed(x),
+      (x: Dataset) => qaConcur(x, ID, { deviationRef: 'DEV-1', note: '' }, AT),
+      (x: Dataset) => advanceAction(x, ID, AT),
       (x: Dataset) => simulateCheck(x, ID, { newFailures: 'none', backlog: 'same' }),
     ];
     for (const step of steps) {
@@ -167,18 +227,14 @@ describe('finding lifecycle', () => {
       length = f(d).audit.length;
     }
   });
-});
 
-describe('selectors', () => {
   it('leads with the segments, never the total', () => {
     expect(segWords(f(mockDataset()))).toBe('40 new · 100 open · 360 recent · 500 historical');
   });
 
-  it('seeding marks findings past Needs you as concurred and leaves the input alone', () => {
-    const d = mockDataset();
-    d.findings[0].decisions.scope = { inScope: ['inFlight'], parked: [], reason: 'r', by: 'b', qaConcurrence: true, at: AT };
-    d.findings[0].visibleStatus = 'in_progress';
-    expect(seedDataset(d).findings[0].decisions.scope?.concurred).toBe(true);
-    expect(d.findings[0].decisions.scope?.concurred).toBeUndefined();
+  it('marks where the finding is in the seven-stage strip', () => {
+    const d = advanceAction(confirmed(), ID, AT);
+    expect(journey(f(d), d.vocab).findIndex((s) => s.state === 'now')).toBe(4);
+    expect(journey(f(d), d.vocab).map((s) => s.label)).toEqual(['Detected', 'Proposed', 'Confirmed', 'Raised', 'Live', 'Verified', 'Closed']);
   });
 });

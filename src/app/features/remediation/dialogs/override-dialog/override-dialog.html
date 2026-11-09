@@ -1,0 +1,41 @@
+<app-modal [title]="'Override the proposed ' + blockLabel()" confirmLabel="Record override" (confirmed)="save()" (closed)="closed.emit()">
+  <p>The proposal stays on record; your change and reason are recorded beside it.</p>
+  @switch (block()) {
+    @case ('scope') {
+      <fieldset class="rh-opts">
+        <legend class="sr-only">Segments in scope</legend>
+        @for (key of keys(); track key) {
+          <label class="rh-opt">
+            <input type="checkbox" [checked]="scopeNow().includes(key)" (change)="toggleSegment(key, $any($event.target).checked)" />
+            {{ finding().segments.labels[key] }}
+          </label>
+        }
+      </fieldset>
+    }
+    @case ('rootCause') {
+      <fieldset class="rh-opts rh-labelled">
+        <legend class="sr-only">Root cause</legend>
+        @for (r of vocab().rootCauses; track r.key) {
+          <label class="rh-opt">
+            <input type="radio" name="rh-rc" [value]="r.key" [checked]="causeNow() === r.key" (change)="cause.set(r.key)" />
+            {{ r.label }}
+          </label>
+        }
+      </fieldset>
+    }
+    @case ('plan') {
+      <fieldset class="rh-opts rh-labelled">
+        <legend class="sr-only">Levers</legend>
+        @for (l of levers(); track l.key) {
+          <label class="rh-opt">
+            <input type="checkbox" [checked]="leversNow().includes(l.key)" (change)="toggleLever(l.key, $any($event.target).checked)" />
+            {{ l.label }}
+          </label>
+        }
+      </fieldset>
+      <p class="rh-dim rh-small-text">Owner and channel follow from the lever and site; they are not editable here.</p>
+    }
+  }
+  <label for="rh-override-why">Why (required)</label>
+  <textarea #field id="rh-override-why" [value]="reason()" [attr.aria-invalid]="missing() ? 'true' : null" (input)="reason.set($any($event.target).value); missing.set(false)"></textarea>
+</app-modal>

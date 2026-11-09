@@ -29,10 +29,19 @@ export function mockDataset(): Dataset {
     targetWorkingDays: 5,
     pastTarget: true,
     impactScore: 10,
-    state: 'new',
+    stage: 'proposed',
     visibleStatus: 'needs_you',
     fixedGoingForward: false,
-    decisions: { scope: null, impact: null, investigation: null },
+    proposal: {
+      scope: { inScope: ['newSinceDetection', 'inFlight', 'recentClosed'], parked: ['historical'], rationale: 'Open and recent records can be corrected; closed ones go to acceptance.' },
+      rootCause: { key: 'optional_in_template', label: 'Optional in source template', confidence: 0.85, summary: 'Likely optional in the entry template.', evidence: ['70% at Site A'] },
+      plan: [
+        { lever: 'stop_bleed', leverLabel: 'Stop the bleed', ownerRole: 'MES business owner · Site A', channel: 'MES change request', notify: 'Teams channel', scopeSegments: ['newSinceDetection'], interimControl: 'Manual check', why: 'Stops new failures.' },
+        { lever: 'accept', leverLabel: 'Accept', ownerRole: 'Data trustee + Quality approver', channel: 'Hub acceptance', notify: '', scopeSegments: ['historical'], interimControl: null, why: 'Closed records will not be corrected.', reviewBy: '2027-05-01', approvals: ['Data trustee', 'Quality approver'] },
+      ],
+      qa: { assessment: 'possible', requiresDeviation: true, rationale: 'GxP critical, 500 closed records parked.', concurrenceNeeded: true },
+    },
+    confirmation: null,
     actions: [],
     signals: { bleedStopped: { cleanChecks: 0, required: 3, since: null }, backlog: { inScopeRemaining: 500, acceptedCount: 0 } },
     history: [
@@ -50,7 +59,10 @@ export function mockDataset(): Dataset {
       asOf: '2026-10-26',
       runs: ['2026-10-12', '2026-10-19'],
       symptoms: { missing: { label: 'Missing' } },
-      rootCauses: [{ key: 'optional_in_template', label: 'Optional in source template' }],
+      rootCauses: [
+        { key: 'optional_in_template', label: 'Optional in source template' },
+        { key: 'load_logic', label: 'Load logic' },
+      ],
       levers: {
         stop_bleed: { label: 'Stop the bleed', meaning: 'm' },
         backfill: { label: 'Backfill under control', meaning: 'm' },
@@ -58,6 +70,9 @@ export function mockDataset(): Dataset {
         fix_load: { label: 'Fix the load', meaning: 'm' },
         fix_check: { label: 'Fix or re-scope the check', meaning: 'm' },
       },
+      stages: ['detected', 'proposed', 'confirmed', 'raised', 'live', 'verified', 'closed'],
+      stageLabels: { detected: 'Detected', proposed: 'Proposed', confirmed: 'Confirmed', raised: 'Raised', live: 'Live', verified: 'Verified', closed: 'Closed' },
+      planFor: { optional_in_template: ['stop_bleed', 'backfill'], load_logic: ['fix_load'] },
       visibleStatuses: { needs_you: 'Needs you', in_progress: 'In progress', fixed: 'Fixed' },
       targetWorkingDays: { critical: { scope: 5, actions: 15 }, relevant: { scope: 15, actions: 30 }, business: { scope: 30, actions: 45 } },
       tiers: { critical: 'GxP critical', relevant: 'GxP relevant', business: 'Business' },

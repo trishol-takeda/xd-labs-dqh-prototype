@@ -1,6 +1,30 @@
-import { BACKLOG_REDUCED_REMAINING, CHECK_CHANGE_REMAINING, ENGINE, NEW_FAILURE_FALLBACK_DIVISOR, QA_ROLE, RULES_ROLE, RUN_INTERVAL_DAYS, SOME_NEW_REMAINING } from './remediation.constants';
-import { ActionInput, Dataset, Finding, ImpactInput, InvestigationInput, Role, ScopeInput, SimulationInput } from './remediation.model';
-import { addDays, advanceTarget, channelFor, fmtDate, full, openCheckChange, segmentKeysFor, signalState, trusteeOf } from './remediation.util';
+import {
+  BACKLOG_REDUCED_REMAINING,
+  CHECK_CHANGE_REMAINING,
+  ENGINE,
+  HUB,
+  NEW_FAILURE_FALLBACK_DIVISOR,
+  QA_ROLE,
+  RULES_ROLE,
+  RUN_INTERVAL_DAYS,
+  SOME_NEW_REMAINING,
+} from './remediation.constants';
+import { ConcurInput, Dataset, Finding, FindingAction, Override, OverrideInput, PlanAction, SegmentKey, SimulationInput } from './remediation.model';
+import {
+  addDays,
+  advanceTarget,
+  fmtDate,
+  full,
+  inScopeKeys,
+  leverPlan,
+  openCheckChange,
+  parkedRecords,
+  planFromRootCause,
+  referenceFor,
+  segmentKeysFor,
+  signalState,
+  trusteeOf,
+} from './remediation.util';
 
 /**
  * The lifecycle rules as pure functions: each takes the dataset and returns a new one, never touching the input.
@@ -16,88 +40,120 @@ function apply(d: Dataset, id: string, change: (f: Finding, draft: Dataset) => v
   return draft;
 }
 
-/* ---------- the trustee's four decisions ---------- */
+const segmentsOf = (f: Finding, keys: readonly SegmentKey[]): number => keys.reduce((sum, k) => sum + f.segments[k], 0);
 
-export function setScope(d: Dataset, id: string, input: ScopeInput, at: string): Dataset {
+/* ---------- the trustee's one step ---------- */
+
+/**
+ * Replaces one block of the proposal. The reason is required by the caller; the original stays on record in the override,
+ * staged until the trustee confirms. Overriding the root cause re-derives the plan from `planFor`.
+ */
+export function overrideBlock(d: Dataset, id: string, input: OverrideInput, at: string): Dataset {
   return apply(d, id, (f, draft) => {
-    const keys = segmentKeysFor(draft.vocab, draft.registry.tables.find((t) => t.id === f.table));
+    if (f.stage !== 'proposed') return;
     const by = trusteeOf(draft, f);
-    f.decisions.scope = {
-      inScope: input.inScope,
-      parked: keys.filter((k) => !input.inScope.includes(k)),
-      reason: input.reason,
+    const p = f.proposal;
+    const v = input.value;
+    let from: unknown;
+    let to: unknown;
+    if (v.block === 'scope') {
+      const keys = segmentKeysFor(draft.vocab, draft.registry.tables.find((t) => t.id === f.table));
+      from = p.scope.inScope;
+      to = v.inScope;
+      p.scope = { ...p.scope, inScope: v.inScope, parked: keys.filter((k) => !v.inScope.includes(k)) };
+    } else if (v.block === 'rootCause') {
+      const label = draft.vocab.rootCauses.find((r) => r.key === v.key)?.label ?? v.key;
+      from = p.rootCause.key;
+      to = v.key;
+      p.rootCause = { key: v.key, label, confidence: 1, summary: `Overridden by the trustee: ${label}.`, evidence: [] };
+      p.plan = planFromRootCause(draft, f, v.key);
+    } else {
+      from = p.plan.map((a) => a.lever);
+      to = v.levers;
+      p.plan = v.levers.map((lever) => leverPlan(draft, f, lever, 'Chosen by the trustee'));
+    }
+    const staged: Override = { block: v.block, from, to, reason: input.reason, by };
+    f.pendingOverrides = [...(f.pendingOverrides ?? []).filter((o) => o.block !== v.block), staged];
+    f.audit.push({ at, by, event: 'override_staged', text: `Override of ${v.block === 'rootCause' ? 'root cause' : v.block === 'plan' ? 'action plan' : 'scope'}: ${input.reason}` });
+  });
+}
+
+/** One click: confirms the proposal as drafted or as overridden, raises the actions in their channels, and hands it on to Quality. */
+export function confirmProposal(d: Dataset, id: string, comment: string, at: string): Dataset {
+  return apply(d, id, (f, draft) => {
+    if (f.stage !== 'proposed') return;
+    const p = f.proposal;
+    const by = trusteeOf(draft, f);
+    const overrides = f.pendingOverrides ?? [];
+    f.confirmation = {
       by,
-      qaConcurrence: f.tier === 'critical',
-      concurred: false,
       at,
+      overrides,
+      comment,
+      qaConcurred: !p.qa.concurrenceNeeded,
+      qaImpact: p.qa.assessment,
+      deviationRef: null,
+      scope: { inScope: [...p.scope.inScope] },
     };
-    f.state = 'scoped';
-    f.signals.backlog.inScopeRemaining = input.inScope.filter((k) => k !== 'newSinceDetection').reduce((sum, k) => sum + f.segments[k], 0);
-    f.audit.push({ at, by, event: 'scoped', text: `Scope set: ${input.reason}` });
-  });
-}
-
-export function concurWithScope(d: Dataset, id: string, at: string): Dataset {
-  return apply(d, id, (f) => {
-    if (f.decisions.scope) f.decisions.scope.concurred = true;
-    f.audit.push({ at, by: QA_ROLE, event: 'scope_concurred', text: 'Scope concurred' });
-  });
-}
-
-export function assessImpact(d: Dataset, id: string, input: ImpactInput, role: Role, at: string): Dataset {
-  return apply(d, id, (f, draft) => {
-    const critical = f.tier === 'critical';
-    const by = role === 'qa' ? QA_ROLE : trusteeOf(draft, f);
-    const deviationRef = critical && input.assessment !== 'none' ? input.deviationRef : null;
-    f.decisions.impact = { assessment: input.assessment, note: input.note, deviationRef, by };
-    f.audit.push({ at, by, event: 'impact', text: `Impact ${input.assessment}${deviationRef ? `; deviation ${deviationRef}` : ''}: ${input.note}` });
-  });
-}
-
-export function recordRootCause(d: Dataset, id: string, input: InvestigationInput, at: string): Dataset {
-  return apply(d, id, (f, draft) => {
-    const by = trusteeOf(draft, f);
-    f.decisions.investigation = { rootCauses: input.rootCauses, note: input.note, otherSitesChecked: input.otherSitesChecked, by, at };
-    f.state = 'investigated';
-    const labels = input.rootCauses.map((k) => draft.vocab.rootCauses.find((r) => r.key === k)?.label ?? k).join(', ');
-    f.audit.push({ at, by, event: 'investigated', text: `Root cause: ${labels} · ${input.note}` });
-  });
-}
-
-/** Plan one action. An acceptance stays open until every required signature is present; other levers go live with a date. */
-export function addAction(d: Dataset, id: string, input: ActionInput, at: string): Dataset {
-  return apply(d, id, (f, draft) => {
-    const lever = draft.vocab.levers[input.lever];
-    const route = channelFor(draft.registry, f.sourceSystem, input.lever, f.site);
-    const accept = input.lever === 'accept';
-    const live = !accept && !!input.effectiveDate;
-    f.actions.push({
-      id: `${f.id}:a${f.actions.length + 1}`,
-      lever: input.lever,
-      leverLabel: lever.label,
-      ownerRole: route.owner,
-      channel: route.channel,
-      reference: input.reference,
-      effectiveDate: input.effectiveDate,
-      status: live ? 'live' : 'open',
-      interimControl: input.interimControl,
-      scopeSegments: input.covers,
-      approvals: accept ? (f.tier === 'critical' ? ['Data trustee', QA_ROLE] : ['Data trustee']) : [],
-      reviewBy: input.reviewBy,
+    f.actions = p.plan.map((a: PlanAction, i): FindingAction => ({
+      ...a,
+      id: `${f.id}:a${i + 1}`,
+      approvals: a.approvals ?? [],
+      reviewBy: a.reviewBy ?? null,
+      reference: referenceFor(f.id, i, a.lever),
+      effectiveDate: null,
+      status: 'raised',
       trusteeSigned: false,
       qaSigned: false,
-    });
-    if (accept) {
-      const covered = input.covers.reduce((sum, k) => sum + f.segments[k], 0);
-      const coveredInScope = input.covers.filter((k) => f.decisions.scope?.inScope.includes(k)).reduce((sum, k) => sum + f.segments[k], 0);
-      f.signals.backlog.acceptedCount += covered;
-      f.signals.backlog.inScopeRemaining = Math.max(0, f.signals.backlog.inScopeRemaining - coveredInScope);
-    }
-    f.state = 'actions_open';
+    }));
+    f.stage = 'raised';
     f.visibleStatus = 'in_progress';
-    if (live && !f.signals.bleedStopped.since) f.signals.bleedStopped.since = input.effectiveDate;
-    f.audit.push({ at, by: trusteeOf(draft, f), event: 'action_added', text: `Action: ${lever.label} via ${route.channel}${input.reference ? ` (${input.reference})` : ''}` });
+    f.cameBack = false;
+    f.signals.backlog.inScopeRemaining = segmentsOf(f, p.scope.inScope.filter((k) => k !== 'newSinceDetection'));
+    delete f.pendingOverrides;
+    f.audit.push({
+      at,
+      by,
+      event: 'confirmed',
+      text: `Proposal confirmed${overrides.length ? ` with ${overrides.length} override${overrides.length === 1 ? '' : 's'}: ${overrides.map((o) => `${o.block} (${o.reason})`).join('; ')}` : ' as drafted'}${comment ? ` · ${comment}` : ''}`,
+    });
+    for (const a of f.actions) {
+      f.audit.push({ at, by: HUB, event: 'raised', text: `${a.leverLabel} raised with ${a.ownerRole} via ${a.channel}${a.reference ? ` (${a.reference})` : ''}` });
+    }
+    if (p.qa.concurrenceNeeded) {
+      f.audit.push({ at, by: HUB, event: 'qa_requested', text: `Sent to the Quality approver for concurrence; impact pre-assessed as ${p.qa.assessment}` });
+    }
   });
+}
+
+/** The Quality approver concurs in their own lane and, where the proposal requires it, records the deviation reference. */
+export function qaConcur(d: Dataset, id: string, input: ConcurInput, at: string): Dataset {
+  return apply(d, id, (f) => {
+    if (!f.confirmation) return;
+    const deviationRef = f.proposal.qa.requiresDeviation ? input.deviationRef : null;
+    f.confirmation.qaConcurred = true;
+    f.confirmation.deviationRef = deviationRef;
+    f.audit.push({
+      at,
+      by: QA_ROLE,
+      event: 'qa_concurred',
+      text: `Scope and plan concurred; impact ${f.proposal.qa.assessment}${deviationRef ? `; deviation ${deviationRef} raised` : ''}${input.note ? ` · ${input.note}` : ''}`,
+    });
+  });
+}
+
+/** An acceptance going live: the records it covers are counted as accepted and leave the in-scope backlog. */
+function goLive(f: Finding, a: FindingAction, asOf: string): void {
+  a.status = 'live';
+  a.effectiveDate = a.effectiveDate ?? asOf;
+  f.stage = 'live';
+  if (!f.signals.bleedStopped.since) f.signals.bleedStopped.since = a.effectiveDate;
+  if (a.lever === 'accept') {
+    const covered = segmentsOf(f, a.scopeSegments);
+    const coveredInScope = segmentsOf(f, a.scopeSegments.filter((k) => inScopeKeys(f).includes(k)));
+    f.signals.backlog.acceptedCount += covered;
+    f.signals.backlog.inScopeRemaining = Math.max(0, f.signals.backlog.inScopeRemaining - coveredInScope);
+  }
 }
 
 /** Electronic signature on an acceptance. The action goes live only when every required signature is present. */
@@ -109,28 +165,24 @@ export function signAction(d: Dataset, id: string, actionId: string, who: string
     if (approver) a.qaSigned = true;
     else a.trusteeSigned = true;
     f.audit.push({ at, by: who, event: 'signed', text: `Electronic signature: ${approver ? 'approved' : 'risk accepted'} · ${a.reference || ''}` });
-    if (a.trusteeSigned && (f.tier !== 'critical' || a.qaSigned)) {
-      a.status = 'live';
-      a.effectiveDate = a.effectiveDate ?? draft.vocab.asOf;
-    }
+    if (a.status === 'raised' && a.trusteeSigned && (f.tier !== 'critical' || a.qaSigned)) goLive(f, a, draft.vocab.asOf);
   });
 }
 
 /* ---------- prototype controls: the fixers' side ---------- */
 
-/** Moves the first open action to live (effective today), or the first live action to done. */
+/** Moves the first raised action to live (effective today), or the first live action to done; the last one done verifies the finding. */
 export function advanceAction(d: Dataset, id: string, at: string): Dataset {
   return apply(d, id, (f, draft) => {
     const a = advanceTarget(f);
     if (!a) return;
-    if (a.status === 'open') {
-      a.status = 'live';
-      a.effectiveDate = a.effectiveDate ?? draft.vocab.asOf;
-      if (!f.signals.bleedStopped.since) f.signals.bleedStopped.since = a.effectiveDate;
+    if (a.status === 'raised') {
+      goLive(f, a, draft.vocab.asOf);
       f.audit.push({ at, by: a.ownerRole, event: 'action_live', text: `${a.leverLabel} live (${a.reference || a.channel})` });
     } else {
       a.status = 'done';
       f.audit.push({ at, by: a.ownerRole, event: 'action_done', text: `${a.leverLabel} done` });
+      if (f.actions.every((x) => x.status === 'done')) f.stage = 'verified';
       if (a.lever === 'fix_check') f.signals.backlog.inScopeRemaining = f.segments.inFlight;
     }
   });
@@ -179,31 +231,37 @@ function nextNewFailures(f: Finding, choice: SimulationInput['newFailures']): nu
   return choice === 'some' ? Math.max(1, Math.round(previous * SOME_NEW_REMAINING)) : previous;
 }
 
-/** After a check: closed when both signals hold, back to the trustee if a closed finding fails again, otherwise verifying. */
+/**
+ * After a check: a closed finding that fails again goes back to the proposal (confirmation and actions cleared, "Came back");
+ * both signals holding closes it; otherwise it stays in progress, verified once every action is done.
+ */
 function settle(f: Finding, newFailing: number, at: string): void {
   const { bleedOk, backlogOk } = signalState(f);
   const sg = f.signals;
-  if (f.visibleStatus === 'fixed' && newFailing > 0) {
-    f.state = 'scoped';
+  if (f.stage === 'closed' && newFailing > 0) {
+    f.stage = 'proposed';
+    f.confirmation = null;
+    f.actions = [];
+    delete f.pendingOverrides;
     f.visibleStatus = 'needs_you';
     f.cameBack = true;
     f.fixedGoingForward = false;
     f.audit.push({ at, by: ENGINE, event: 'came_back', text: `${full(newFailing)} new records failing after closure. Finding reopened.` });
     return;
   }
-  if (f.visibleStatus === 'fixed' || !f.actions.length) {
+  if (f.stage === 'closed' || !f.actions.length) {
     f.audit.push({ at, by: ENGINE, event: 'check', text: `Check: ${full(newFailing)} new failures` });
     return;
   }
   if (bleedOk && backlogOk) {
-    f.state = 'closed';
+    f.stage = 'closed';
     f.visibleStatus = 'fixed';
     f.fixedGoingForward = false;
     f.cameBack = false;
+    for (const a of f.actions) a.status = 'done';
     f.audit.push({ at, by: ENGINE, event: 'closed', text: 'Both signals held. Finding closed.' });
     return;
   }
-  f.state = 'verifying';
   f.visibleStatus = 'in_progress';
   f.fixedGoingForward = bleedOk && !backlogOk;
   f.audit.push({ at, by: ENGINE, event: 'check', text: `Check: ${full(newFailing)} new failures, ${full(sg.backlog.inScopeRemaining)} in scope remaining` });
@@ -211,18 +269,19 @@ function settle(f: Finding, newFailing: number, at: string): void {
 
 /** Appends a weekly check, recomputes both verification signals and moves the finding on. */
 export function simulateCheck(d: Dataset, id: string, input: SimulationInput): Dataset {
-  return apply(d, id, (f) => {
+  return apply(d, id, (f, draft) => {
     const run = addDays(f.history[f.history.length - 1].run, RUN_INTERVAL_DAYS);
     const newFailing = nextNewFailures(f, input.newFailures);
     const sg = f.signals;
     if (input.backlog === 'cleared') sg.backlog.inScopeRemaining = 0;
     else if (input.backlog === 'reduced') sg.backlog.inScopeRemaining = Math.round(sg.backlog.inScopeRemaining * BACKLOG_REDUCED_REMAINING);
 
-    const parked = f.decisions.scope ? f.decisions.scope.parked.reduce((sum, k) => sum + f.segments[k], 0) - sg.backlog.acceptedCount : 0;
+    const keys = segmentKeysFor(draft.vocab, draft.registry.tables.find((t) => t.id === f.table));
+    const parked = Math.max(0, parkedRecords(f, keys) - sg.backlog.acceptedCount);
     const version = f.history[f.history.length - 1].ruleVersion;
     f.history.push({ run, failing: Math.max(0, sg.backlog.inScopeRemaining + sg.backlog.acceptedCount + parked + newFailing), newFailing, ruleVersion: version });
 
-    if (f.actions.some((a) => a.status !== 'open')) sg.bleedStopped.cleanChecks = newFailing === 0 ? sg.bleedStopped.cleanChecks + 1 : 0;
+    if (f.actions.some((a) => a.status === 'live' || a.status === 'done')) sg.bleedStopped.cleanChecks = newFailing === 0 ? sg.bleedStopped.cleanChecks + 1 : 0;
     settle(f, newFailing, `${run}T06:00:00Z`);
   });
 }

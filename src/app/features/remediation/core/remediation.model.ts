@@ -1,15 +1,15 @@
-/** Shapes of the four JSON files in public/data/remediation (build pack v2), plus the prototype's own view types. */
+/** Shapes of the four JSON files in public/data/remediation (build pack v3), plus the prototype's own view types. */
 
 export type Tier = 'critical' | 'relevant' | 'business';
 export type Role = 'trustee' | 'qa' | 'rules' | 'leader';
 export type ScreenState = 'normal' | 'loading' | 'empty' | 'error';
 export type VisibleStatus = 'needs_you' | 'in_progress' | 'fixed';
-export type FindingState = 'new' | 'scoped' | 'investigated' | 'actions_open' | 'verifying' | 'closed' | 'accepted';
+export type Stage = 'detected' | 'proposed' | 'confirmed' | 'raised' | 'live' | 'verified' | 'closed';
+export type Block = 'scope' | 'rootCause' | 'plan';
 export type SegmentKey = 'newSinceDetection' | 'inFlight' | 'recentClosed' | 'historical';
 export type LeverKey = 'stop_bleed' | 'backfill' | 'accept' | 'fix_load' | 'fix_check';
-export type ActionStatus = 'open' | 'live' | 'done';
-export type DecisionKey = 'scope' | 'impact' | 'investigate' | 'actions';
-export type Assessment = 'none' | 'possible' | 'confirmed';
+export type ActionStatus = 'proposed' | 'raised' | 'live' | 'done';
+export type Assessment = 'none' | 'possible';
 export type NewFailuresChoice = 'none' | 'some' | 'same';
 export type BacklogChoice = 'same' | 'reduced' | 'cleared';
 export type TableKind = 'transactional' | 'reference';
@@ -22,6 +22,10 @@ export interface Vocab {
   symptoms: Record<string, { label: string }>;
   rootCauses: { key: string; label: string }[];
   levers: Record<LeverKey, { label: string; meaning: string }>;
+  stages: Stage[];
+  stageLabels: Record<Stage, string>;
+  /** Root cause key → the levers it calls for. */
+  planFor: Record<string, LeverKey[]>;
   visibleStatuses: Record<VisibleStatus, string>;
   targetWorkingDays: Record<Tier, { scope: number; actions: number }>;
   tiers: Record<Tier, string>;
@@ -108,29 +112,45 @@ export interface Segments {
   labels: Record<SegmentKey, string>;
 }
 
-export interface ScopeDecision {
-  inScope: SegmentKey[];
-  parked: SegmentKey[];
+/** One action as proposed by the system; becomes a FindingAction when the trustee confirms. */
+export interface PlanAction {
+  lever: LeverKey;
+  leverLabel: string;
+  ownerRole: string;
+  channel: string;
+  notify: string;
+  scopeSegments: SegmentKey[];
+  interimControl: string | null;
+  why: string;
+  reviewBy?: string;
+  approvals?: string[];
+}
+
+export interface Proposal {
+  scope: { inScope: SegmentKey[]; parked: SegmentKey[]; rationale: string };
+  rootCause: { key: string; label: string; confidence: number; summary: string; evidence: string[] };
+  plan: PlanAction[];
+  qa: { assessment: Assessment; requiresDeviation: boolean; rationale: string; concurrenceNeeded: boolean };
+}
+
+/** An override replaces one block of the proposal; the original stays on record in `from`. */
+export interface Override {
+  block: Block;
+  from: unknown;
+  to: unknown;
   reason: string;
   by: string;
-  qaConcurrence: boolean;
-  concurred?: boolean;
-  at: string;
 }
 
-export interface ImpactDecision {
-  assessment: Assessment;
-  note: string;
+export interface Confirmation {
+  by: string;
+  at: string;
+  overrides: Override[];
+  comment: string;
+  qaConcurred: boolean;
+  qaImpact: Assessment;
   deviationRef: string | null;
-  by: string;
-}
-
-export interface InvestigationDecision {
-  rootCauses: string[];
-  note: string;
-  otherSitesChecked: boolean;
-  by: string;
-  at: string;
+  scope?: { inScope: SegmentKey[] };
 }
 
 export interface FindingAction {
@@ -139,6 +159,7 @@ export interface FindingAction {
   leverLabel: string;
   ownerRole: string;
   channel: string;
+  why?: string;
   reference: string | null;
   effectiveDate: string | null;
   status: ActionStatus;
@@ -198,11 +219,14 @@ export interface Finding {
   targetWorkingDays: number;
   pastTarget: boolean;
   impactScore: number;
-  state: FindingState;
+  stage: Stage;
   visibleStatus: VisibleStatus;
   fixedGoingForward: boolean;
   cameBack?: boolean;
-  decisions: { scope: ScopeDecision | null; impact: ImpactDecision | null; investigation: InvestigationDecision | null };
+  proposal: Proposal;
+  confirmation: Confirmation | null;
+  /** Overrides recorded since the proposal was last confirmed; they become the confirmation's record. */
+  pendingOverrides?: Override[];
   actions: FindingAction[];
   signals: Signals;
   history: HistoryRun[];
@@ -223,30 +247,19 @@ export interface Dataset {
 
 /* ---------- inputs to transitions ---------- */
 
-export interface ScopeInput {
-  inScope: SegmentKey[];
+export type OverrideValue =
+  | { block: 'scope'; inScope: SegmentKey[] }
+  | { block: 'rootCause'; key: string }
+  | { block: 'plan'; levers: LeverKey[] };
+
+export interface OverrideInput {
+  value: OverrideValue;
   reason: string;
 }
 
-export interface ImpactInput {
-  assessment: Assessment;
-  note: string;
+export interface ConcurInput {
   deviationRef: string | null;
-}
-
-export interface InvestigationInput {
-  rootCauses: string[];
   note: string;
-  otherSitesChecked: boolean;
-}
-
-export interface ActionInput {
-  lever: LeverKey;
-  reference: string | null;
-  effectiveDate: string | null;
-  covers: SegmentKey[];
-  interimControl: string | null;
-  reviewBy: string | null;
 }
 
 export interface SimulationInput {

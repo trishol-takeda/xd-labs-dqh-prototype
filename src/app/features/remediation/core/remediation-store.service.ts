@@ -1,20 +1,6 @@
 import { Injectable, computed, signal } from '@angular/core';
 import { DEFAULT_DOMAIN, REMEDIATION_DATA_FILES, ROLE_LABEL, TOAST_MS } from './remediation.constants';
-import {
-  ActionInput,
-  Dataset,
-  Finding,
-  FindingAction,
-  ImpactInput,
-  InvestigationInput,
-  Product,
-  RegistryTable,
-  Role,
-  ScopeInput,
-  ScreenState,
-  SimulationInput,
-} from './remediation.model';
-import { seedDataset } from './remediation.seed';
+import { ConcurInput, Dataset, Finding, FindingAction, OverrideInput, Product, RegistryTable, Role, ScreenState, SimulationInput } from './remediation.model';
 import * as lifecycle from './remediation.transitions';
 import { advanceTarget, byImpact, queueList } from './remediation.util';
 
@@ -60,7 +46,7 @@ export class RemediationStore {
         this.json<{ rules: Dataset['rules'] }>(REMEDIATION_DATA_FILES.rules),
       ]);
       this.loaded = { vocab, registry, findings: findings.findings, rules: rules.rules };
-      this.data.set(seedDataset(this.loaded));
+      this.data.set(structuredClone(this.loaded));
       this.loadStatus.set('ready');
     } catch {
       this.loadStatus.set('error');
@@ -70,7 +56,7 @@ export class RemediationStore {
   /** Back to the seeded start state: same data, trustee of Manufacturing, normal screen. */
   reset(): void {
     if (!this.loaded) return;
-    this.data.set(seedDataset(this.loaded));
+    this.data.set(structuredClone(this.loaded));
     this.role.set('trustee');
     this.myDomain.set(DEFAULT_DOMAIN);
     this.screenState.set('normal');
@@ -97,22 +83,16 @@ export class RemediationStore {
     return this.findings().find((f) => f.id === id);
   }
 
-  /* ---------- decisions ---------- */
+  /* ---------- the trustee's confirmation and the other roles' steps ---------- */
 
-  setScope(f: Finding, input: ScopeInput): void {
-    this.change(lifecycle.setScope(this.dataset(), f.id, input, now()), 'Scope saved.');
+  override(f: Finding, input: OverrideInput): void {
+    this.change(lifecycle.overrideBlock(this.dataset(), f.id, input, now()), 'Override recorded. Confirm when ready.');
   }
-  concur(f: Finding): void {
-    this.change(lifecycle.concurWithScope(this.dataset(), f.id, now()), 'Scope concurred.');
+  confirm(f: Finding, comment: string): void {
+    this.change(lifecycle.confirmProposal(this.dataset(), f.id, comment, now()), 'Confirmed. Actions raised.');
   }
-  assessImpact(f: Finding, input: ImpactInput): void {
-    this.change(lifecycle.assessImpact(this.dataset(), f.id, input, this.role(), now()), 'Impact recorded.');
-  }
-  recordRootCause(f: Finding, input: InvestigationInput): void {
-    this.change(lifecycle.recordRootCause(this.dataset(), f.id, input, now()), 'Root cause recorded.');
-  }
-  addAction(f: Finding, input: ActionInput): void {
-    this.change(lifecycle.addAction(this.dataset(), f.id, input, now()), 'Action added.');
+  concur(f: Finding, input: ConcurInput): void {
+    this.change(lifecycle.qaConcur(this.dataset(), f.id, input, now()), 'Concurred.');
   }
   sign(f: Finding, action: FindingAction, who: string): void {
     this.change(lifecycle.signAction(this.dataset(), f.id, action.id, who, now()), 'Signed.');
