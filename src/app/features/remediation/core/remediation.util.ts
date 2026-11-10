@@ -93,8 +93,106 @@ export function channelFor(reg: Registry, system: string, lever: LeverKey, site:
 /** The finding waits for the trustee to confirm the system's proposal. */
 export const awaitingConfirmation = (f: Finding): boolean => f.stage === 'proposed';
 
-/** Confirmed, but the Quality approver has not yet concurred. */
+/** Confirmed, but the Quality approver has not yet concurred (includes a plan held for Quality). */
 export const awaitingConcurrence = (f: Finding): boolean => !!f.confirmation && f.proposal.qa.concurrenceNeeded && !f.confirmation.qaConcurred;
+
+/** An action the owner declined: the finding is back with the trustee until it is re-planned. */
+export const declinedAction = (f: Finding): FindingAction | undefined => f.actions.find((a) => a.status === 'declined');
+
+/** What the trustee has to do next on this finding, if anything. */
+export function nextDecision(f: Finding): 'confirm' | 'replan' | null {
+  if (f.stage === 'proposed') return 'confirm';
+  return declinedAction(f) ? 'replan' : null;
+}
+
+/** The ticked actions of the proposal are only Accept on GxP critical data: Quality has to concur before anything is raised. */
+export function acceptOnly(f: Finding): boolean {
+  const ticked = f.proposal.plan.filter((a) => a.include !== false);
+  return f.tier === 'critical' && ticked.length > 0 && ticked.every((a) => a.lever === 'accept');
+}
+
+/** Same table and symptom at other sites that are still waiting for a proposal to be confirmed. */
+export const siblingsAtProposed = (d: Dataset, f: Finding): Finding[] => d.findings.filter((x) => x.id !== f.id && x.table === f.table && x.symptom === f.symptom && x.stage === 'proposed');
+
+/* ---------- working days, due dates and the escalation ladder ---------- */
+
+function isWorkday(d: Date): boolean {
+  return d.getUTCDay() !== 0 && d.getUTCDay() !== 6;
+}
+
+export function addWorkdays(iso: string, days: number): string {
+  const d = new Date(iso);
+  let left = days;
+  while (left > 0) {
+    d.setUTCDate(d.getUTCDate() + 1);
+    if (isWorkday(d)) left--;
+  }
+  return d.toISOString().slice(0, 10);
+}
+
+export function workdaysBetween(from: string, to: string): number {
+  const d = new Date(from);
+  const end = new Date(to);
+  let n = 0;
+  while (d < end) {
+    d.setUTCDate(d.getUTCDate() + 1);
+    if (isWorkday(d)) n++;
+  }
+  return n;
+}
+
+/** When the owner should have accepted, and when the change should be live, counted from the day the request was sent. */
+export function dueDates(f: Finding, a: FindingAction): { acceptBy: string; liveBy: string } {
+  const sent = (a.sentAt ?? f.confirmation?.at ?? f.firstSeen).slice(0, 10);
+  return { acceptBy: addWorkdays(sent, a.acceptByDays ?? 0), liveBy: addWorkdays(sent, a.liveByDays ?? 0) };
+}
+
+/** Days past the relevant target (accept-by while sent, live-by once accepted) and the ladder step reached. It never changes a status. */
+export function escalationOf(f: Finding, a: FindingAction, vocab: Vocab): { daysOver: number; label: string } | null {
+  if (a.archived || (a.status !== 'raised' && a.status !== 'accepted')) return null;
+  const { acceptBy, liveBy } = dueDates(f, a);
+  const daysOver = workdaysBetween(a.status === 'raised' ? acceptBy : liveBy, vocab.asOf);
+  if (daysOver <= 0) return null;
+  const step = vocab.escalation.filter((e) => daysOver >= e.after).pop();
+  return step ? { daysOver, label: step.label } : null;
+}
+
+export interface NextStep {
+  who: string;
+  text: string;
+  due?: string;
+  over?: boolean;
+  note?: string;
+}
+
+/** The numbered "What happens next" list for a confirmed finding: Quality, each owner, the signers, the checks. */
+export function nextSteps(f: Finding, vocab: Vocab): NextStep[] {
+  const c = f.confirmation;
+  if (!c || f.stage === 'closed') return [];
+  const steps: NextStep[] = [];
+  const quality = f.proposal.qa.requiresDeviation ? ' and raises the deviation' : '';
+  if (c.heldForQa) steps.push({ who: QA_ROLE, text: 'reviews an Accept-only plan on GxP critical data before anything is raised', due: `within ${vocab.targetWorkingDays[f.tier].scope} working days` });
+  else if (awaitingConcurrence(f)) steps.push({ who: QA_ROLE, text: `concurs with the scope and plan${quality}`, due: `within ${vocab.targetWorkingDays[f.tier].scope} working days` });
+  for (const a of f.actions) {
+    const { acceptBy, liveBy } = dueDates(f, a);
+    const records = a.scopeSegments.reduce((n, k) => n + (f.segments[k] || 0), 0);
+    if (a.status === 'raised' && a.lever === 'accept') {
+      steps.push({ who: a.ownerRole, text: `sign the acceptance of ${full(records)} closed records`, due: `by ${fmtDate(acceptBy)} · review again ${a.reviewBy ? fmtDate(a.reviewBy) : ''}` });
+    } else if (a.status === 'raised') {
+      steps.push({ who: a.ownerRole, text: `accepts or declines ${a.leverLabel}`, due: `by ${fmtDate(acceptBy)}`, over: acceptBy < vocab.asOf, note: vocab.nextSteps.raised });
+    } else if (a.status === 'accepted') {
+      steps.push({ who: a.ownerRole, text: `makes the change: ${a.leverLabel}${a.interimControl ? ' · interim control in place' : ''}`, due: `live by ${fmtDate(liveBy)}`, over: liveBy < vocab.asOf });
+    } else if (a.status === 'declined') {
+      steps.push({ who: 'You', text: `re-plan ${a.leverLabel}: ${a.declineReason ?? 'declined by the owner'}`, due: 'now', over: true, note: vocab.nextSteps.declined });
+    } else if (a.status === 'live' && a.lever !== 'accept') {
+      steps.push({ who: 'The checks', text: `confirm ${a.leverLabel}: ${f.signals.bleedStopped.cleanChecks} of ${f.signals.bleedStopped.required} clean so far` });
+    }
+  }
+  const live = f.actions.some((a) => a.status === 'live' || a.status === 'done');
+  if (f.signals.backlog.inScopeRemaining > 0 && live) steps.push({ who: 'The checks', text: `watch the backlog clear: ${full(f.signals.backlog.inScopeRemaining)} in scope remaining` });
+  if (!steps.length) steps.push({ who: '', text: 'Nothing for anyone to do: the checks are confirming the fix.' });
+  return steps;
+}
 
 /** In scope now: the confirmed scope once there is one, the proposed scope before. */
 export const inScopeKeys = (f: Finding): SegmentKey[] => f.confirmation?.scope?.inScope ?? f.proposal.scope.inScope;
@@ -117,6 +215,8 @@ export function badges(f: Finding): BadgeView[] {
   if (f.confirmation?.overrides.length) list.push({ kind: 'badge', label: 'Proposal overridden' });
   if (hasOpenCheckChange(f)) list.push({ kind: 'badge', label: 'Check disputed' });
   if (f.cameBack) list.push({ kind: 'badge', label: 'Came back' });
+  if (f.reviewDue) list.push({ kind: 'over', label: 'Acceptance due for review' });
+  if (f.confirmation?.heldForQa) list.push({ kind: 'badge', label: 'Held for Quality' });
   if (awaitingConcurrence(f)) list.push({ kind: 'badge', label: 'QA concurrence pending' });
   return list;
 }
@@ -179,14 +279,14 @@ export function closedAt(f: Finding): string | null {
 export function journey(f: Finding, vocab: Vocab): JourneyStep[] {
   const c = f.confirmation;
   const sg = f.signals;
-  const raised = f.actions.filter((a) => a.status !== 'proposed').length;
+  const accepted = f.actions.filter((a) => a.status === 'accepted' || a.status === 'live' || a.status === 'done').length;
   const firstLive = f.actions.map((a) => a.effectiveDate).filter((x): x is string => !!x).sort()[0];
   const closed = f.stage === 'closed';
   const notes: Record<Stage, string> = {
     detected: `by the checks on ${fmtDate(f.firstSeen)}`,
     proposed: 'scope, cause, plan drafted',
-    confirmed: c ? `by ${c.by} on ${fmtDate(c.at)}` : 'one click, or override',
-    raised: f.actions.length ? `${raised} of ${f.actions.length} in their channels` : 'actions sent to owners',
+    confirmed: c ? `by ${c.by} on ${fmtDate(c.at)}${c.heldForQa ? ' · held for Quality' : ''}` : 'one click, or override',
+    raised: f.actions.length ? `${accepted} of ${f.actions.length} accepted by owners` : 'actions sent to owners',
     live: firstLive ? `since ${fmtDate(firstLive)}` : 'change in production',
     verified: `${sg.bleedStopped.cleanChecks} of ${sg.bleedStopped.required} clean checks`,
     closed: closed ? 'nothing in scope' : 'both signals hold',
@@ -202,10 +302,17 @@ export function journey(f: Finding, vocab: Vocab): JourneyStep[] {
 /** An acceptance still waiting for signatures cannot go live. */
 export const waitingForSignature = (f: Finding, a: FindingAction): boolean => a.lever === 'accept' && !(a.trusteeSigned && (f.tier !== 'critical' || a.qaSigned));
 
-/** First raised action that can go live (unsigned acceptances are skipped), else the first live action. */
+/** The next action to move on: raised → accepted (unsigned acceptances are skipped), then accepted → live, then live → done. */
 export function advanceTarget(f: Finding): FindingAction | undefined {
-  return f.actions.find((a) => a.status === 'raised' && !waitingForSignature(f, a)) ?? f.actions.find((a) => a.status === 'live');
+  return (
+    f.actions.find((a) => a.status === 'raised' && !waitingForSignature(f, a)) ??
+    f.actions.find((a) => a.status === 'accepted') ??
+    f.actions.find((a) => a.status === 'live')
+  );
 }
+
+/** The action the owner declines in the prototype: the first one sent and not yet answered. */
+export const declineTarget = (f: Finding): FindingAction | undefined => f.actions.find((a) => a.status === 'raised');
 
 export function acceptanceSigned(f: Finding, a: FindingAction): { trustee: boolean; qa: boolean } {
   const effective = a.status === 'live' || a.status === 'done';
@@ -230,12 +337,16 @@ export function approversFor(f: Finding): string[] {
 export function leverPlan(d: Dataset, f: Finding, lever: LeverKey, why: string): PlanAction {
   const accept = lever === 'accept';
   const route = accept ? { owner: approversFor(f).join(' + '), channel: HUB_ACCEPTANCE_CHANNEL, notify: '' } : channelFor(d.registry, f.sourceSystem, lever, f.site);
+  const targets = d.vocab.targetWorkingDays[f.tier];
   return {
     lever,
     leverLabel: d.vocab.levers[lever].label,
     ownerRole: route.owner,
     channel: route.channel,
     notify: route.notify,
+    include: true,
+    acceptByDays: targets.scope,
+    liveByDays: targets.actions,
     scopeSegments: accept ? ['historical'] : [...OVERRIDE_PLAN_SEGMENTS],
     interimControl: null,
     why,
@@ -307,8 +418,11 @@ export function exportText(f: Finding, tablePlainName: string, nowIso: string): 
   const c = f.confirmation;
   lines.push('', 'PROPOSAL (drafted by the system from the data)');
   lines.push(` Scope: in ${p.scope.inScope.join(', ') || '—'} · parked ${p.scope.parked.join(', ') || '—'} · ${p.scope.rationale}`);
-  lines.push(` Root cause: ${p.rootCause.label} (${Math.round(p.rootCause.confidence * 100)}% confidence) · ${p.rootCause.summary}`);
-  for (const e of p.rootCause.evidence) lines.push(`   - ${e}`);
+  const rc = p.rootCause;
+  lines.push(` Root cause: ${rc.label} (${rc.strength} evidence, ${rc.signalsFired} of ${rc.signalsTotal} signals fired)`);
+  for (const e of rc.signals ?? []) lines.push(`   signal ${e.signal} = ${e.value} (${e.threshold}) ${!e.applies ? 'n/a' : e.fired ? 'fired' : 'not fired'}`);
+  if (rc.rule) lines.push(`   mapping: ${rc.rule}`);
+  lines.push(` Plan: ${p.plan.map((a) => `${a.leverLabel} → ${a.ownerRole} via ${a.channel}${a.include === false ? ' (not included)' : ''}`).join(' | ')}`);
   lines.push(` Quality: ${p.qa.assessment} · ${p.qa.rationale}`);
   lines.push('', 'CONFIRMATION');
   if (c) {

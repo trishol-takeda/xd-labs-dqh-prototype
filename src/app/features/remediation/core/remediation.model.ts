@@ -1,4 +1,4 @@
-/** Shapes of the four JSON files in public/data/remediation (build pack v3), plus the prototype's own view types. */
+/** Shapes of the four JSON files in public/data/remediation (build pack v4), plus the prototype's own view types. */
 
 export type Tier = 'critical' | 'relevant' | 'business';
 export type Role = 'trustee' | 'qa' | 'rules' | 'leader';
@@ -6,9 +6,12 @@ export type ScreenState = 'normal' | 'loading' | 'empty' | 'error';
 export type VisibleStatus = 'needs_you' | 'in_progress' | 'fixed';
 export type Stage = 'detected' | 'proposed' | 'confirmed' | 'raised' | 'live' | 'verified' | 'closed';
 export type Block = 'scope' | 'rootCause' | 'plan';
+/** The sections of the finding screen; their order follows the stage. */
+export type BodyBlock = 'proposal' | 'next' | 'records' | 'fields' | 'actions' | 'signals' | 'samples' | 'related' | 'history';
 export type SegmentKey = 'newSinceDetection' | 'inFlight' | 'recentClosed' | 'historical';
 export type LeverKey = 'stop_bleed' | 'backfill' | 'accept' | 'fix_load' | 'fix_check';
-export type ActionStatus = 'proposed' | 'raised' | 'live' | 'done';
+export type ActionStatus = 'proposed' | 'raised' | 'accepted' | 'live' | 'done' | 'declined';
+export type Strength = 'strong' | 'moderate' | 'weak' | 'trustee';
 export type Assessment = 'none' | 'possible';
 export type NewFailuresChoice = 'none' | 'some' | 'same';
 export type BacklogChoice = 'same' | 'reduced' | 'cleared';
@@ -26,6 +29,14 @@ export interface Vocab {
   stageLabels: Record<Stage, string>;
   /** Root cause key → the levers it calls for. */
   planFor: Record<string, LeverKey[]>;
+  actionStatusLabels: Record<ActionStatus, string>;
+  /** One line per owner step, shown under "What happens next". */
+  nextSteps: Partial<Record<'raised' | 'accepted' | 'live' | 'declined', string>>;
+  /** Working days past target → who is told. Changes who is notified, never the status. */
+  escalation: { after: number; label: string; to: string | null }[];
+  /** Tiers whose confirmation is a signed decision. */
+  confirmationStepUp: Record<Tier, boolean>;
+  provenance: { fromWorkbook: string[]; derived: string[]; simulated: string[]; rule: string };
   visibleStatuses: Record<VisibleStatus, string>;
   targetWorkingDays: Record<Tier, { scope: number; actions: number }>;
   tiers: Record<Tier, string>;
@@ -124,11 +135,37 @@ export interface PlanAction {
   why: string;
   reviewBy?: string;
   approvals?: string[];
+  /** Ticked in the plan; unticked actions are left out of the confirmation. */
+  include?: boolean;
+  acceptByDays?: number;
+  liveByDays?: number;
+}
+
+/** One of the data signals behind a proposed root cause. */
+export interface RootCauseSignal {
+  signal: string;
+  label: string;
+  value: string | number;
+  unit: 'share' | 'date' | 'fields' | 'class';
+  threshold: string;
+  fired: boolean;
+  applies: boolean;
+  detail?: string[];
 }
 
 export interface Proposal {
   scope: { inScope: SegmentKey[]; parked: SegmentKey[]; rationale: string };
-  rootCause: { key: string; label: string; confidence: number; summary: string; evidence: string[] };
+  rootCause: {
+    key: string;
+    label: string;
+    strength: Strength;
+    signalsFired: number;
+    signalsTotal: number;
+    narration?: string | null;
+    narrationIsTemplate?: boolean;
+    signals?: RootCauseSignal[];
+    rule?: string;
+  };
   plan: PlanAction[];
   qa: { assessment: Assessment; requiresDeviation: boolean; rationale: string; concurrenceNeeded: boolean };
 }
@@ -151,6 +188,8 @@ export interface Confirmation {
   qaImpact: Assessment;
   deviationRef: string | null;
   scope?: { inScope: SegmentKey[] };
+  /** GxP critical, Accept-only plan: nothing is raised until the Quality approver concurs. */
+  heldForQa?: boolean;
 }
 
 export interface FindingAction {
@@ -170,6 +209,15 @@ export interface FindingAction {
   trusteeSigned?: boolean;
   qaSigned?: boolean;
   outcome?: 'changed' | 'stands';
+  notify?: string;
+  include?: boolean;
+  acceptByDays?: number;
+  liveByDays?: number;
+  /** Date the request was sent to the owner; the escalation ladder counts from it. */
+  sentAt?: string;
+  declineReason?: string;
+  /** Kept on the finding after a re-plan or an acceptance review; shown struck through. */
+  archived?: boolean;
 }
 
 export interface Signals {
@@ -223,6 +271,10 @@ export interface Finding {
   visibleStatus: VisibleStatus;
   fixedGoingForward: boolean;
   cameBack?: boolean;
+  /** An acceptance reached its review date and the finding reopened at Proposed. */
+  reviewDue?: boolean;
+  /** Actions replaced by a re-plan or a lapsed acceptance; never removed, shown struck through. */
+  supersededActions?: FindingAction[];
   proposal: Proposal;
   confirmation: Confirmation | null;
   /** Overrides recorded since the proposal was last confirmed; they become the confirmation's record. */
@@ -255,6 +307,14 @@ export type OverrideValue =
 export interface OverrideInput {
   value: OverrideValue;
   reason: string;
+}
+
+export interface ConfirmInput {
+  comment: string;
+  /** Confirmed with a password step-up (GxP critical). */
+  signed: boolean;
+  /** Sibling findings (same table and symptom, other sites) confirmed together with the same plan. */
+  alsoSiteIds: string[];
 }
 
 export interface ConcurInput {

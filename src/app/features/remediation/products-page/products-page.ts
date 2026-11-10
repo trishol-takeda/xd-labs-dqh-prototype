@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, signal } f
 import { RouterLink } from '@angular/router';
 import { StatePanel } from '../../../ui/state-panel/state-panel';
 import { RemediationStore } from '../core/remediation-store.service';
-import { inScopeScore, ofProduct, openOf, plural, segWords } from '../core/remediation.util';
+import { PROPOSAL_READY, REPLAN_LABEL } from '../core/remediation.constants';
+import { inScopeScore, nextDecision, ofProduct, openOf, plural, segWords } from '../core/remediation.util';
 import { ProductCard, ProductGrid } from '../shared/product-grid/product-grid';
 
 /**
@@ -41,6 +42,6 @@ export class ProductsPage {
   /** The single highest-impact finding waiting for this trustee. */
   protected readonly start = computed(() => {
     const first = this.store.queue()[0];
-    return first ? { finding: first } : null;
+    return first ? { finding: first, next: nextDecision(first) === 'replan' ? REPLAN_LABEL : PROPOSAL_READY } : null;
   });
 }

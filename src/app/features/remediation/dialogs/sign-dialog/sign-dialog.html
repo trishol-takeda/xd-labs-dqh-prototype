@@ -2,5 +2,5 @@
   <p>Re-enter your password to apply your electronic signature. Meaning: <b>{{ meaning() }}</b>.</p>
   <label for="rh-sign-pw">Password</label>
   <input id="rh-sign-pw" type="password" autocomplete="current-password" [value]="password()" [attr.aria-invalid]="missing() ? 'true' : null" (input)="password.set($any($event.target).value); missing.set(false)" />
-  <p class="rh-small">Signed as {{ who() }} · {{ stamp }} · bound to {{ action().reference || 'this acceptance' }}</p>
+  <p class="rh-small">Manifestation: <b>[signer name]</b> · {{ who() }} · {{ stamp }} · bound to {{ action().reference || 'this acceptance' }}. The prototype shows the role; production shows the name.</p>
 </app-modal>

@@ -14,7 +14,7 @@ Hash routing, so deep links work on any static host.
 
 ## The model in one paragraph
 
-Trustee → Data product → Table → Field → Check → Failing records → **Finding** → Decisions → Actions → Verification. A finding is one table × symptom × site and is already computed in the data. Its failing records are split into four population segments (new since detection, open, recent, historical); the headline is the segments, never the total. The system drafts a proposal (scope, root cause with evidence, action plan, Quality pre-assessment); the trustee confirms it in one click or overrides a block with a reason, and the Quality approver concurs in their own lane. Seven stages: Detected → Proposed → Confirmed → Raised → Live → Verified → Closed. Actions are routed to an owner group at a site; electronic signatures are required on acceptances. Two signals decide closure (bleed stopped, backlog cleared or accepted) and only the simulated checks close or reopen a finding. Four roles: Data trustee, Quality approver, Rules team, Leadership. Every decision appends to an audit history.
+Trustee → Data product → Table → Field → Check → Failing records → **Finding** → Decisions → Actions → Verification. A finding is one table × symptom × site and is already computed in the data. Its failing records are split into four population segments (new since detection, open, recent, historical); the headline is the segments, never the total. The system drafts a proposal (scope, root cause with evidence, action plan, Quality pre-assessment); the trustee confirms it in one click or overrides a block with a reason, and the Quality approver concurs in their own lane. Seven stages: Detected → Proposed → Confirmed → Raised → Live → Verified → Closed. Actions are routed to an owner group at a site; electronic signatures are required on acceptances. Two signals decide closure (bleed stopped, backlog cleared or accepted) and only the simulated checks close or reopen a finding. Four roles: Data trustee, Quality approver, Rules team, Leadership. Every decision appends to an audit history. v4 adds: a tick per proposed action (unticked actions are left out); owners accept or decline each action, a decline returns the finding to the trustee for a Re-plan that keeps the declined action struck through; confirming is signed (password step-up) on GxP critical data; an Accept-only plan on GxP critical data is held for the Quality approver; one confirmation can cover the same plan at other sites; a lapsed acceptance reopens its finding at Proposed; an escalation ladder shows who is told when an action is past its target; root cause is shown as signals (n of m fired), never as a percentage.
 
 ## Screens
 
@@ -23,7 +23,7 @@ Trustee → Data product → Table → Field → Check → Failing records → *
 | `/#/my-domain` | **My Domain** tab (DAD-4278), behind the `my-domain` feature flag: set up scope, home, products, tables, dimensions, rules, failure analysis, issue. See [docs/MY_DOMAIN.md](docs/MY_DOMAIN.md) |
 | `/#/remediation` | **Data Remediation** tab: role landing (a trustee gets *Start here* and their own products) |
 | `/#/remediation/all` | All products |
-| `/#/remediation/overview` | Overview (leadership): headline, three numbers, trend, where to look first, domains, breakdowns |
+| `/#/remediation/overview` | Overview (leadership): headline, three numbers, patterns, domain × symptom matrix, trend, where, who is fixing it, data provenance. Read-only: no call to action |
 | `/#/remediation/p/:productId` | Product: its tables (a single-table product opens its table) |
 | `/#/remediation/t/:tableId` | Table: all checks, findings in Needs you / In progress / Fixed by impact score |
 | `/#/remediation/f/:findingId` | Finding: journey, proposal card (confirm or override), segments, failing fields, actions, signals, history |
@@ -38,7 +38,8 @@ Trustee → Data product → Table → Field → Check → Failing records → *
 
 | File | Source |
 |---|---|
-| `public/data/remediation/{vocab,registry,findings,rules}.json` | Remediation Hub build pack v3 (`tmp/remediation-hub-build-pack-v3`). Read-only: loaded once, mutated in memory, never hand-edited |
+| `public/data/remediation/{vocab,registry,findings,rules}.json` | Remediation Hub build pack v4 (`tmp/remediation-hub-build-pack-v4`). Read-only: loaded once, mutated in memory, never hand-edited |
+| `docs/remediation/` | Context from the product owner: [lifecycle and compliance model](docs/remediation/lifecycle-and-compliance-model.md) and [storyboard, one real cause](docs/remediation/storyboard-one-real-cause.md). They decide where the build prompt is silent |
 
 ## Code map
 

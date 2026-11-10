@@ -12,7 +12,7 @@
       <h3 id="rh-start-title">Start here</h3>
       <p class="rh-t">{{ s.finding.products[0] }} · {{ s.finding.symptomLabel }} · {{ s.finding.site }}</p>
       <p class="rh-m">
-        {{ s.finding.tablePlainName }} · {{ segWords(s.finding) }} · <b>Proposal ready to confirm</b>
+        {{ s.finding.tablePlainName }} · {{ segWords(s.finding) }} · <b>{{ s.next }}</b>
         @if (s.finding.pastTarget) {
           · <span class="over">{{ s.finding.ageWorkingDays }} days, past target</span>
         }

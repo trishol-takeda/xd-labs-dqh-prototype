@@ -21,7 +21,7 @@ export class RegisterPage {
     const asOf = this.store.data()?.vocab.asOf ?? '';
     const list: { finding: Finding; action: FindingAction }[] = [];
     for (const finding of this.store.findings()) {
-      for (const action of finding.actions.filter((a) => a.lever === 'accept')) list.push({ finding, action });
+      for (const action of [...finding.actions, ...(finding.supersededActions ?? [])].filter((a) => a.lever === 'accept')) list.push({ finding, action });
     }
     return list
       .sort((x, y) => (x.action.reviewBy ?? '').localeCompare(y.action.reviewBy ?? ''))

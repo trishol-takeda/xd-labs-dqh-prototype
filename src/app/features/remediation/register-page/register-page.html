@@ -17,10 +17,13 @@
       </thead>
       <tbody>
         @for (row of rows(); track row.action.id) {
-          <tr>
+          <tr [class.rh-superseded]="row.action.archived">
             <td>
               <a [routerLink]="['/remediation', 'f', row.finding.id]">{{ row.finding.products[0] }} · {{ row.finding.symptomLabel }} · {{ row.finding.site }}</a><br />
               <span class="rh-dim">{{ row.finding.tablePlainName }}</span>
+              @if (row.action.archived) {
+                <br /><span class="rh-dim rh-small-text">superseded</span>
+              }
             </td>
             <td class="num">{{ full(row.records) }}</td>
             <td>

@@ -1,123 +1,179 @@
 @let f = finding();
 @let p = f.proposal;
 @let c = f.confirmation;
-<section class="rh-prop" aria-labelledby="rh-prop-title">
+<section class="rh-prop" [class.rh-collapsed]="collapsed()" aria-labelledby="rh-prop-title">
   <div class="rh-ph">
     <h3 id="rh-prop-title">{{ c ? 'Confirmed proposal' : 'Proposal' }}</h3>
+    @if (c) {
+      <span class="rh-dim rh-small-text">{{ p.rootCause.label }} · {{ f.actions.length }} {{ f.actions.length === 1 ? 'action' : 'actions' }} · scope {{ scopeCount() }} of {{ keys().length }} segments</span>
+      <button type="button" class="rh-toggle rh-small-text" [attr.aria-expanded]="open()" (click)="open.set(!open())">{{ open() ? 'Hide details' : 'Show details' }}</button>
+    }
     <span class="rh-who">Drafted by the system from the data · {{ fmtDate(drafted()) }}</span>
   </div>
 
-  <div class="rh-pb" [class.rh-overridden]="overridden('scope')">
-    <div class="rh-k">Scope<small>what can be corrected</small></div>
-    <div class="rh-v">
-      <div class="rh-segtiles">
-        @for (k of keys(); track k) {
-          <span [class]="inScope().includes(k) ? 'in' : 'pk'">{{ f.segments.labels[k] }} · {{ inScope().includes(k) ? 'in scope' : 'parked' }}</span>
+  @if (!collapsed()) {
+    <div class="rh-pb" [class.rh-overridden]="overridden('scope')">
+      <div class="rh-k">Scope<small>what can be corrected</small></div>
+      <div class="rh-v">
+        <div class="rh-segtiles">
+          @for (k of keys(); track k) {
+            <span [class]="inScope().includes(k) ? 'in' : 'pk'">{{ f.segments.labels[k] }} · {{ inScope().includes(k) ? 'in scope' : 'parked' }}</span>
+          }
+        </div>
+        <div class="rh-conf rh-gap">{{ p.scope.rationale }}</div>
+        @if (overridden('scope'); as o) {
+          <div class="rh-ovnote">Overridden by {{ o.by }}: {{ o.reason }}</div>
         }
       </div>
-      <div class="rh-conf rh-gap">{{ p.scope.rationale }}</div>
-      @if (overridden('scope'); as o) {
-        <div class="rh-ovnote">Overridden by {{ o.by }}: {{ o.reason }}</div>
-      }
+      <div class="rh-ov">
+        @if (!c && canAct()) {
+          <button type="button" class="rh-lnk" (click)="overrideBlock.emit('scope')">Override</button>
+        }
+      </div>
     </div>
-    <div class="rh-ov">
-      @if (!c && canAct()) {
-        <button type="button" class="rh-lnk" (click)="overrideBlock.emit('scope')">Override</button>
-      }
-    </div>
-  </div>
 
-  <div class="rh-pb" [class.rh-overridden]="overridden('rootCause')">
-    <div class="rh-k">Root cause<small>proposed from the pattern</small></div>
-    <div class="rh-v">
-      <p class="rh-sum">{{ p.rootCause.summary }}</p>
-      <div class="rh-conf"><b>{{ p.rootCause.label }}</b> · {{ percent() }}% confidence · from the data pattern, narrated for reading</div>
-      @if (p.rootCause.evidence.length) {
-        <ul class="rh-ev">
-          @for (e of p.rootCause.evidence; track $index) {
-            <li>{{ e }}</li>
+    <div class="rh-pb" [class.rh-overridden]="overridden('rootCause')">
+      <div class="rh-k">Root cause<small>proposed from the pattern</small></div>
+      <div class="rh-v">
+        <div class="rh-conf rh-gap-b">
+          <b class="rh-rc-label">{{ p.rootCause.label }}</b>
+          <span [class]="'rh-chip ' + strengthChip()">{{ strength() }}</span>
+          @if (p.rootCause.signalsTotal) {
+            {{ p.rootCause.signalsFired }} of {{ p.rootCause.signalsTotal }} signals fired
           }
-        </ul>
-      }
-      @if (overridden('rootCause'); as o) {
-        <div class="rh-ovnote">Overridden by {{ o.by }}: {{ o.reason }}</div>
-      }
+        </div>
+        @if (p.rootCause.signals?.length) {
+          <div class="rh-plan-wrap">
+            <table class="rh-signal-table">
+              <thead>
+                <tr>
+                  <th scope="col">Signal (computed from the data)</th>
+                  <th scope="col" class="num">Value</th>
+                  <th scope="col">Threshold</th>
+                  <th scope="col"><span class="sr-only">Result</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (e of p.rootCause.signals; track e.signal) {
+                  <tr [class.rh-na]="!e.applies">
+                    <td>
+                      {{ e.label }}
+                      @if (e.detail) {
+                        <div class="rh-why">{{ e.detail.join(', ') }}</div>
+                      }
+                    </td>
+                    <td class="num"><b>{{ value(e) }}</b></td>
+                    <td class="rh-why">{{ e.threshold }}</td>
+                    <td>
+                      @if (!e.applies) {
+                        <span class="rh-dim">n/a</span>
+                      } @else if (e.fired) {
+                        <span class="rh-fired">fired</span>
+                      } @else {
+                        <span class="rh-dim">not fired</span>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+        @if (p.rootCause.narration) {
+          <div class="rh-why rh-italic">Narration (template over the signals, not a record): {{ p.rootCause.narration }}</div>
+        }
+        @if (p.rootCause.rule) {
+          <div class="rh-conf rh-gap">Mapping: {{ p.rootCause.rule }}</div>
+        }
+        @if (overridden('rootCause'); as o) {
+          <div class="rh-ovnote">Overridden by {{ o.by }}: {{ o.reason }}</div>
+        }
+      </div>
+      <div class="rh-ov">
+        @if (!c && canAct()) {
+          <button type="button" class="rh-lnk" (click)="overrideBlock.emit('rootCause')">Override</button>
+        }
+      </div>
     </div>
-    <div class="rh-ov">
-      @if (!c && canAct()) {
-        <button type="button" class="rh-lnk" (click)="overrideBlock.emit('rootCause')">Override</button>
-      }
-    </div>
-  </div>
 
-  <div class="rh-pb" [class.rh-overridden]="overridden('plan')">
-    <div class="rh-k">Action plan<small>follows from the root cause</small></div>
-    <div class="rh-v">
-      <div class="rh-plan-wrap">
-        <table class="rh-plan">
-          <tbody>
-            @for (a of p.plan; track a.lever) {
-              <tr>
-                <td>
-                  <b>{{ a.leverLabel }}</b>
-                  <div class="rh-why">{{ a.why }}</div>
-                </td>
-                <td>
-                  {{ a.ownerRole }}
-                  <div class="rh-why">
-                    {{ a.channel }}
-                    @if (a.interimControl) {
-                      · interim: {{ a.interimControl }}
-                    }
-                    @if (a.lever === 'accept' && a.reviewBy) {
-                      · review by {{ fmtDate(a.reviewBy) }} · signed by {{ (a.approvals ?? []).join(' and ') }}
-                    }
-                  </div>
-                </td>
-                <td class="rh-why">
-                  @for (k of a.scopeSegments; track k; let last = $last) {
-                    {{ f.segments.labels[k] }}{{ last ? '' : ', ' }}
+    <div class="rh-pb" [class.rh-overridden]="overridden('plan')">
+      <div class="rh-k">Action plan<small>follows from the root cause</small></div>
+      <div class="rh-v">
+        <div class="rh-plan-wrap">
+          <table class="rh-plan">
+            <tbody>
+              @for (a of p.plan; track $index; let i = $index) {
+                <tr [class.rh-off]="a.include === false">
+                  @if (!c && canAct()) {
+                    <td class="rh-sel">
+                      <input type="checkbox" [checked]="a.include !== false" [attr.aria-label]="'Include ' + a.leverLabel" (change)="includeChange.emit({ index: i, include: $any($event.target).checked })" />
+                    </td>
                   }
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
+                  <td>
+                    <b>{{ a.leverLabel }}</b>
+                    <div class="rh-why">{{ a.why }}</div>
+                    @if (a.include === false) {
+                      <div class="rh-why">Not included</div>
+                    }
+                  </td>
+                  <td>
+                    {{ a.ownerRole }}
+                    <div class="rh-why">
+                      {{ a.channel }}
+                      @if (a.interimControl) {
+                        · interim: {{ a.interimControl }}
+                      }
+                      @if (a.lever === 'accept' && a.reviewBy) {
+                        · review by {{ fmtDate(a.reviewBy) }} · signed by {{ (a.approvals ?? []).join(' and ') }}
+                      }
+                    </div>
+                    <div class="rh-why">accept within {{ a.acceptByDays }} working days · live within {{ a.liveByDays }}</div>
+                  </td>
+                  <td class="rh-why">
+                    @for (k of a.scopeSegments; track k; let last = $last) {
+                      {{ f.segments.labels[k] }}{{ last ? '' : ', ' }}
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        @if (overridden('plan'); as o) {
+          <div class="rh-ovnote">Overridden by {{ o.by }}: {{ o.reason }}</div>
+        }
       </div>
-      @if (overridden('plan'); as o) {
-        <div class="rh-ovnote">Overridden by {{ o.by }}: {{ o.reason }}</div>
-      }
+      <div class="rh-ov">
+        @if (!c && canAct()) {
+          <button type="button" class="rh-lnk" (click)="overrideBlock.emit('plan')">Override</button>
+        }
+      </div>
     </div>
-    <div class="rh-ov">
-      @if (!c && canAct()) {
-        <button type="button" class="rh-lnk" (click)="overrideBlock.emit('plan')">Override</button>
-      }
-    </div>
-  </div>
 
-  <div class="rh-pb">
-    <div class="rh-k">Quality<small>pre-assessed</small></div>
-    <div class="rh-v">
-      <p class="rh-sum rh-sum-sm">
-        <b>{{ p.qa.requiresDeviation ? 'Possible impact.' : 'No impact expected.' }}</b> {{ p.qa.rationale }}
-      </p>
-      <div class="rh-conf">
-        @if (p.qa.concurrenceNeeded) {
-          Goes to the Quality approver after you confirm{{ p.qa.requiresDeviation ? '; they raise the deviation.' : '.' }}
-        } @else {
-          No Quality step needed for this tier.
-        }
-        @if (c) {
-          @if (c.qaConcurred && p.qa.concurrenceNeeded) {
-            <b>Concurred{{ c.deviationRef ? ' · deviation ' + c.deviationRef : '' }}</b>
-          } @else if (p.qa.concurrenceNeeded) {
-            <b>Pending</b>
+    <div class="rh-pb">
+      <div class="rh-k">Quality<small>pre-assessed</small></div>
+      <div class="rh-v">
+        <p class="rh-sum rh-sum-sm">
+          <b>{{ p.qa.requiresDeviation ? 'Possible impact.' : 'No impact expected.' }}</b> {{ p.qa.rationale }}
+        </p>
+        <div class="rh-conf">
+          @if (p.qa.concurrenceNeeded) {
+            Goes to the Quality approver after you confirm{{ p.qa.requiresDeviation ? '; they raise the deviation.' : '.' }}
+          } @else {
+            No Quality step needed for this tier.
           }
-        }
+          @if (c) {
+            @if (c.qaConcurred && p.qa.concurrenceNeeded) {
+              <b>Concurred{{ c.deviationRef ? ' · deviation ' + c.deviationRef : '' }}</b>
+            } @else if (p.qa.concurrenceNeeded) {
+              <b>{{ c.heldForQa ? 'Held for Quality' : 'Pending' }}</b>
+            }
+          }
+        </div>
       </div>
+      <div class="rh-ov"></div>
     </div>
-    <div class="rh-ov"></div>
-  </div>
+  }
 
   @if (c) {
     <div class="rh-confirmed">
@@ -133,9 +189,25 @@
     </div>
   } @else if (canAct()) {
     <div class="rh-confirm">
-      <button type="button" class="rh-btn" (click)="confirmed.emit(comment().trim())">{{ confirmLabel }}</button>
+      <button type="button" class="rh-btn" [disabled]="ticked() === 0" (click)="confirm()">{{ confirmLabel() }}</button>
       <input type="text" placeholder="Comment (optional)" aria-label="Comment" [value]="comment()" (input)="comment.set($any($event.target).value)" />
-      <span class="rh-dim rh-small-text">Confirming creates the actions in their channels. Overrides need a reason.</span>
+      @if (siblings().length) {
+        <fieldset class="rh-also">
+          <legend class="sr-only">Also confirm at other sites</legend>
+          @for (s of siblings(); track s.id) {
+            <label><input type="checkbox" (change)="toggleSite(s.id, $any($event.target).checked)" /> Also confirm for {{ s.site }} (same proposal, their own owners)</label>
+          }
+        </fieldset>
+      }
+      <span class="rh-dim rh-small-text rh-full">
+        @if (signedTier()) {
+          GxP critical: confirming is a signed decision and re-authenticates.
+        }
+        Confirming sends the ticked actions to their owners. Untick one to leave it out; overrides need a reason.
+        @if (held()) {
+          <b class="rh-warn">Only Accept is ticked: this goes to the Quality approver before anything is raised.</b>
+        }
+      </span>
     </div>
   } @else {
     <div class="rh-confirm"><span class="rh-dim">Waiting for the data trustee to confirm.</span></div>
