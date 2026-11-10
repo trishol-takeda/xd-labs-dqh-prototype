@@ -1,8 +1,9 @@
 import { Injectable, computed, signal } from '@angular/core';
-import { DEFAULT_DOMAIN, REMEDIATION_DATA_FILES, ROLE_LABEL, TOAST_MS } from './remediation.constants';
-import { ConcurInput, Dataset, Finding, FindingAction, OverrideInput, Product, RegistryTable, Role, ScreenState, SimulationInput } from './remediation.model';
+import { DECLINE_REASON, DEFAULT_DOMAIN, REMEDIATION_DATA_FILES, ROLE_LABEL, TOAST_MS } from './remediation.constants';
+import { ConcurInput, ConfirmInput, Dataset, Finding, FindingAction, OverrideInput, Product, RegistryTable, Role, ScreenState, SimulationInput } from './remediation.model';
+import { seedDataset } from './remediation.seed';
 import * as lifecycle from './remediation.transitions';
-import { advanceTarget, byImpact, queueList } from './remediation.util';
+import { acceptOnly, advanceTarget, byImpact, declineTarget, queueList } from './remediation.util';
 
 export type LoadStatus = 'idle' | 'loading' | 'ready' | 'error';
 
@@ -46,7 +47,7 @@ export class RemediationStore {
         this.json<{ rules: Dataset['rules'] }>(REMEDIATION_DATA_FILES.rules),
       ]);
       this.loaded = { vocab, registry, findings: findings.findings, rules: rules.rules };
-      this.data.set(structuredClone(this.loaded));
+      this.data.set(seedDataset(this.loaded));
       this.loadStatus.set('ready');
     } catch {
       this.loadStatus.set('error');
@@ -56,7 +57,7 @@ export class RemediationStore {
   /** Back to the seeded start state: same data, trustee of Manufacturing, normal screen. */
   reset(): void {
     if (!this.loaded) return;
-    this.data.set(structuredClone(this.loaded));
+    this.data.set(seedDataset(this.loaded));
     this.role.set('trustee');
     this.myDomain.set(DEFAULT_DOMAIN);
     this.screenState.set('normal');
@@ -88,8 +89,15 @@ export class RemediationStore {
   override(f: Finding, input: OverrideInput): void {
     this.change(lifecycle.overrideBlock(this.dataset(), f.id, input, now()), 'Override recorded. Confirm when ready.');
   }
-  confirm(f: Finding, comment: string): void {
-    this.change(lifecycle.confirmProposal(this.dataset(), f.id, comment, now()), 'Confirmed. Actions raised.');
+  includeAction(f: Finding, index: number, include: boolean): void {
+    this.data.set(lifecycle.setPlanInclude(this.dataset(), f.id, index, include));
+  }
+  confirm(f: Finding, input: ConfirmInput): void {
+    const held = acceptOnly(f);
+    this.change(lifecycle.confirmProposal(this.dataset(), f.id, input, now()), held ? 'Confirmed. Held for Quality before raising.' : 'Confirmed. Actions sent to their owners.');
+  }
+  replan(f: Finding): void {
+    this.change(lifecycle.replan(this.dataset(), f.id, now()), 'Re-plan: review the proposal and confirm again.');
   }
   concur(f: Finding, input: ConcurInput): void {
     this.change(lifecycle.qaConcur(this.dataset(), f.id, input, now()), 'Concurred.');
@@ -110,7 +118,17 @@ export class RemediationStore {
 
   /* ---------- prototype controls ---------- */
 
-  /** Marks the finding's first open action live, then done. */
+  /** The owner declines the first action that was sent: the finding goes back to the trustee. */
+  decline(): void {
+    const f = this.activeFinding();
+    if (!f || !declineTarget(f)) {
+      this.showToast('No sent action to decline.');
+      return;
+    }
+    this.change(lifecycle.declineAction(this.dataset(), f.id, DECLINE_REASON, now()), 'Owner declined. Back to the trustee.');
+  }
+
+  /** Moves the finding's next action on: accepted by the owner, then live, then done. */
   advance(): void {
     const f = this.activeFinding();
     if (!f || !advanceTarget(f)) {

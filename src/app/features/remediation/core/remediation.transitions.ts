@@ -1,5 +1,7 @@
 import {
   BACKLOG_REDUCED_REMAINING,
+  GLOBAL_SITE,
+  REPLAN_WHY,
   CHECK_CHANGE_REMAINING,
   ENGINE,
   HUB,
@@ -9,10 +11,13 @@ import {
   RUN_INTERVAL_DAYS,
   SOME_NEW_REMAINING,
 } from './remediation.constants';
-import { ConcurInput, Dataset, Finding, FindingAction, Override, OverrideInput, PlanAction, SegmentKey, SimulationInput } from './remediation.model';
+import { ConcurInput, ConfirmInput, Dataset, Finding, FindingAction, Override, OverrideInput, PlanAction, SegmentKey, SimulationInput } from './remediation.model';
 import {
+  acceptOnly,
   addDays,
   advanceTarget,
+  declineTarget,
+  declinedAction,
   fmtDate,
   full,
   inScopeKeys,
@@ -65,7 +70,7 @@ export function overrideBlock(d: Dataset, id: string, input: OverrideInput, at: 
       const label = draft.vocab.rootCauses.find((r) => r.key === v.key)?.label ?? v.key;
       from = p.rootCause.key;
       to = v.key;
-      p.rootCause = { key: v.key, label, confidence: 1, summary: `Overridden by the trustee: ${label}.`, evidence: [] };
+      p.rootCause = { key: v.key, label, strength: 'trustee', signalsFired: 0, signalsTotal: 0, narration: null, rule: 'Set by the trustee; see the override reason' };
       p.plan = planFromRootCause(draft, f, v.key);
     } else {
       from = p.plan.map((a) => a.lever);
@@ -78,61 +83,106 @@ export function overrideBlock(d: Dataset, id: string, input: OverrideInput, at: 
   });
 }
 
-/** One click: confirms the proposal as drafted or as overridden, raises the actions in their channels, and hands it on to Quality. */
-export function confirmProposal(d: Dataset, id: string, comment: string, at: string): Dataset {
+/** Switches one proposed action on or off. Unticked actions stay visible but are left out of the confirmation. */
+export function setPlanInclude(d: Dataset, id: string, index: number, include: boolean): Dataset {
+  return apply(d, id, (f) => {
+    const a = f.proposal.plan[index];
+    if (f.stage === 'proposed' && a) a.include = include;
+  });
+}
+
+function sentenceOverrides(overrides: readonly Override[]): string {
+  if (!overrides.length) return ' as drafted';
+  const plural = overrides.length === 1 ? '' : 's';
+  return ` with ${overrides.length} override${plural}: ${overrides.map((o) => `${o.block} (${o.reason})`).join('; ')}`;
+}
+
+function raiseText(a: FindingAction): string {
+  return `${a.leverLabel} raised with ${a.ownerRole} via ${a.channel}${a.reference ? ` (${a.reference})` : ''}`;
+}
+
+/**
+ * Confirms one finding: the ticked actions are created and sent to their owners. On GxP critical data the confirmation is signed;
+ * an Accept-only plan is held for the Quality approver and nothing is raised until they concur.
+ */
+function confirmOne(f: Finding, draft: Dataset, input: Pick<ConfirmInput, 'comment' | 'signed'>, at: string, together?: string): void {
+  const p = f.proposal;
+  const by = trusteeOf(draft, f);
+  const overrides = f.pendingOverrides ?? [];
+  const held = acceptOnly(f);
+  const ticked = p.plan.filter((a) => a.include !== false);
+  f.confirmation = {
+    by,
+    at,
+    overrides,
+    comment: input.comment,
+    qaConcurred: !p.qa.concurrenceNeeded,
+    qaImpact: p.qa.assessment,
+    deviationRef: null,
+    scope: { inScope: [...p.scope.inScope] },
+    ...(held ? { heldForQa: true } : {}),
+  };
+  f.actions = ticked.map((a: PlanAction, i): FindingAction => ({
+    ...a,
+    id: `${f.id}:a${i + 1}`,
+    approvals: a.approvals ?? [],
+    reviewBy: a.reviewBy ?? null,
+    sentAt: at.slice(0, 10),
+    reference: referenceFor(f.id, i, a.lever),
+    effectiveDate: null,
+    status: held ? 'proposed' : 'raised',
+    trusteeSigned: false,
+    qaSigned: false,
+  }));
+  f.stage = held ? 'confirmed' : 'raised';
+  f.visibleStatus = 'in_progress';
+  f.cameBack = false;
+  f.reviewDue = false;
+  f.signals.backlog.inScopeRemaining = segmentsOf(f, p.scope.inScope.filter((k) => k !== 'newSinceDetection'));
+  delete f.pendingOverrides;
+  const signed = input.signed ? ' (electronic signature: confirmed scope, root cause and plan)' : '';
+  const hold = held ? ' — Accept is the only action: held for Quality concurrence before raising' : '';
+  const note = [input.comment, together].filter(Boolean).join(' · ');
+  f.audit.push({
+    at,
+    by,
+    event: input.signed ? 'confirmed_signed' : 'confirmed',
+    text: `Proposal confirmed${signed}${hold}${sentenceOverrides(overrides)}${note ? ` · ${note}` : ''}`,
+  });
+  if (!held) for (const a of f.actions) f.audit.push({ at, by: HUB, event: 'raised', text: raiseText(a) });
+  if (p.qa.concurrenceNeeded) f.audit.push({ at, by: HUB, event: 'qa_requested', text: `Sent to the Quality approver for concurrence; impact pre-assessed as ${p.qa.assessment}` });
+}
+
+/** One click: confirms the proposal (and, if asked, the same plan at the other sites), raises the ticked actions with their owners. */
+export function confirmProposal(d: Dataset, id: string, input: ConfirmInput, at: string): Dataset {
   return apply(d, id, (f, draft) => {
     if (f.stage !== 'proposed') return;
-    const p = f.proposal;
-    const by = trusteeOf(draft, f);
-    const overrides = f.pendingOverrides ?? [];
-    f.confirmation = {
-      by,
-      at,
-      overrides,
-      comment,
-      qaConcurred: !p.qa.concurrenceNeeded,
-      qaImpact: p.qa.assessment,
-      deviationRef: null,
-      scope: { inScope: [...p.scope.inScope] },
-    };
-    f.actions = p.plan.map((a: PlanAction, i): FindingAction => ({
-      ...a,
-      id: `${f.id}:a${i + 1}`,
-      approvals: a.approvals ?? [],
-      reviewBy: a.reviewBy ?? null,
-      reference: referenceFor(f.id, i, a.lever),
-      effectiveDate: null,
-      status: 'raised',
-      trusteeSigned: false,
-      qaSigned: false,
-    }));
-    f.stage = 'raised';
-    f.visibleStatus = 'in_progress';
-    f.cameBack = false;
-    f.signals.backlog.inScopeRemaining = segmentsOf(f, p.scope.inScope.filter((k) => k !== 'newSinceDetection'));
-    delete f.pendingOverrides;
-    f.audit.push({
-      at,
-      by,
-      event: 'confirmed',
-      text: `Proposal confirmed${overrides.length ? ` with ${overrides.length} override${overrides.length === 1 ? '' : 's'}: ${overrides.map((o) => `${o.block} (${o.reason})`).join('; ')}` : ' as drafted'}${comment ? ` · ${comment}` : ''}`,
-    });
-    for (const a of f.actions) {
-      f.audit.push({ at, by: HUB, event: 'raised', text: `${a.leverLabel} raised with ${a.ownerRole} via ${a.channel}${a.reference ? ` (${a.reference})` : ''}` });
-    }
-    if (p.qa.concurrenceNeeded) {
-      f.audit.push({ at, by: HUB, event: 'qa_requested', text: `Sent to the Quality approver for concurrence; impact pre-assessed as ${p.qa.assessment}` });
+    confirmOne(f, draft, input, at);
+    for (const siblingId of input.alsoSiteIds) {
+      const sibling = draft.findings.find((x) => x.id === siblingId);
+      if (!sibling || sibling.stage !== 'proposed') continue;
+      sibling.proposal.plan.forEach((a, i) => (a.include = f.proposal.plan[i]?.include !== false));
+      confirmOne(sibling, draft, { comment: input.comment, signed: input.signed }, at, `confirmed together with ${f.site}`);
     }
   });
 }
 
-/** The Quality approver concurs in their own lane and, where the proposal requires it, records the deviation reference. */
+/** The Quality approver concurs in their own lane and, where the proposal requires it, records the deviation reference. A held plan is raised now. */
 export function qaConcur(d: Dataset, id: string, input: ConcurInput, at: string): Dataset {
   return apply(d, id, (f) => {
     if (!f.confirmation) return;
     const deviationRef = f.proposal.qa.requiresDeviation ? input.deviationRef : null;
     f.confirmation.qaConcurred = true;
     f.confirmation.deviationRef = deviationRef;
+    if (f.confirmation.heldForQa) {
+      for (const a of f.actions) {
+        a.status = 'raised';
+        a.sentAt = at.slice(0, 10);
+        f.audit.push({ at, by: HUB, event: 'raised', text: raiseText(a) });
+      }
+      f.stage = 'raised';
+      f.confirmation.heldForQa = false;
+    }
     f.audit.push({
       at,
       by: QA_ROLE,
@@ -169,22 +219,60 @@ export function signAction(d: Dataset, id: string, actionId: string, who: string
   });
 }
 
-/* ---------- prototype controls: the fixers' side ---------- */
+/* ---------- prototype controls: the owners' side ---------- */
 
-/** Moves the first raised action to live (effective today), or the first live action to done; the last one done verifies the finding. */
+/**
+ * Moves the next action on: sent → accepted by the owner → live (effective today) → done.
+ * An Accept cannot leave "sent" until it is signed; the last action done verifies the finding.
+ */
 export function advanceAction(d: Dataset, id: string, at: string): Dataset {
   return apply(d, id, (f, draft) => {
     const a = advanceTarget(f);
     if (!a) return;
     if (a.status === 'raised') {
+      a.status = 'accepted';
+      f.audit.push({ at, by: a.ownerRole, event: 'action_accepted', text: `${a.leverLabel} accepted by the owner${a.reference ? ` (${a.reference})` : ''}` });
+    } else if (a.status === 'accepted') {
       goLive(f, a, draft.vocab.asOf);
-      f.audit.push({ at, by: a.ownerRole, event: 'action_live', text: `${a.leverLabel} live (${a.reference || a.channel})` });
+      f.audit.push({ at, by: a.ownerRole, event: 'live', text: `${a.leverLabel} live (${a.reference || a.channel})` });
     } else {
       a.status = 'done';
       f.audit.push({ at, by: a.ownerRole, event: 'action_done', text: `${a.leverLabel} done` });
       if (f.actions.every((x) => x.status === 'done')) f.stage = 'verified';
       if (a.lever === 'fix_check') f.signals.backlog.inScopeRemaining = f.segments.inFlight;
     }
+  });
+}
+
+/** The owner declines: the finding goes back to the trustee, with the reason, until it is re-planned. */
+export function declineAction(d: Dataset, id: string, reason: string, at: string): Dataset {
+  return apply(d, id, (f) => {
+    const a = declineTarget(f);
+    if (!a) return;
+    a.status = 'declined';
+    a.declineReason = reason;
+    f.stage = 'confirmed';
+    f.visibleStatus = 'needs_you';
+    f.audit.push({ at, by: a.ownerRole, event: 'action_declined', text: `${a.leverLabel} declined: ${reason}` });
+  });
+}
+
+/** Re-plan after a decline: the proposal reopens with the declined action re-routed to the global owner and the others unticked. Nothing is removed. */
+export function replan(d: Dataset, id: string, at: string): Dataset {
+  return apply(d, id, (f, draft) => {
+    const declined = declinedAction(f);
+    if (!declined) return;
+    f.supersededActions = [...(f.supersededActions ?? []), ...f.actions.map((a) => ({ ...a, archived: true }))];
+    f.actions = [];
+    f.proposal.plan = f.proposal.plan.map((a) =>
+      a.lever === declined.lever
+        ? { ...a, include: true, ownerRole: a.ownerRole.replace(` · ${f.site}`, ` · ${GLOBAL_SITE}`), why: REPLAN_WHY }
+        : { ...a, include: false },
+    );
+    f.confirmation = null;
+    f.stage = 'proposed';
+    f.visibleStatus = 'needs_you';
+    f.audit.push({ at, by: trusteeOf(draft, f), event: 'replan', text: `Re-planning after decline of ${declined.leverLabel}` });
   });
 }
 

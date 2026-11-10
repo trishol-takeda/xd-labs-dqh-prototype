@@ -4,74 +4,143 @@
   <p class="rh-hero">
     <span [class]="m.down ? 'rh-down' : 'rh-up'">{{ m.down ? 'Fewer new failures' : 'More new failures' }}</span>
     than four weeks ago: {{ m.down ? 'down' : 'up' }} {{ m.pct }}%.
-    {{ m.needs.length }} {{ plural(m.needs.length, 'finding') }} {{ m.needs.length === 1 ? 'needs' : 'need' }} a decision{{ m.pastTarget ? ', ' + m.pastTarget + ' past target.' : '.' }}
+    {{ m.openCount }} open {{ plural(m.openCount, 'finding') }} across {{ m.productCount }} data {{ plural(m.productCount, 'product') }}{{ m.pastTarget ? '; ' + m.pastTarget + ' past target.' : '.' }}
   </p>
-  <p class="rh-hero-sub">As of {{ fmtDate(asOf()) }}. Counts leave out records that are closed and will not be corrected.</p>
+  <p class="rh-hero-sub">As of {{ fmtDate(asOf()) }}. What is wrong, where, and who is fixing it. Nothing here needs leadership action; trustees work the findings.</p>
 
   <div class="rh-big3">
-    <a class="rh-big rh-bad" routerLink="/remediation/all">
-      <div class="rh-v">{{ m.needs.length }}</div>
-      <div class="rh-l">{{ plural(m.needs.length, 'finding') }} {{ m.needs.length === 1 ? 'needs' : 'need' }} a decision</div>
-      <div class="rh-d">of {{ m.openCount }} open</div>
-    </a>
-    <a class="rh-big" [class.rh-bad]="m.pastTarget" routerLink="/remediation/all">
+    <div class="rh-big rh-bad">
+      <div class="rh-v">{{ m.openCount }}</div>
+      <div class="rh-l">open findings</div>
+      <div class="rh-d">{{ m.waiting }} waiting for a trustee · {{ m.withOwners }} with owners or being verified</div>
+    </div>
+    <div class="rh-big">
+      <div class="rh-v">{{ compact(m.records) }}</div>
+      <div class="rh-l">records to correct</div>
+      <div class="rh-d">open, recent and new; closed history excluded</div>
+    </div>
+    <div class="rh-big" [class.rh-bad]="m.pastTarget">
       <div class="rh-v">{{ m.pastTarget }}</div>
       <div class="rh-l">past target</div>
       <div class="rh-d">oldest {{ m.oldestDays }} working days</div>
-    </a>
-    <div class="rh-big">
-      <div class="rh-v">{{ compact(m.now) }}</div>
-      <div class="rh-l">new failures this week</div>
-      <div class="rh-d">{{ m.down ? '↓' : '↑' }} {{ compact(m.delta < 0 ? -m.delta : m.delta) }} vs four weeks ago</div>
     </div>
   </div>
 
-  <section class="rh-chart" aria-labelledby="rh-chart-title">
-    <h3 id="rh-chart-title">New failures per week</h3>
-    <p class="rh-cap">The line that should fall. It drops when a stop-the-bleed action goes live.</p>
-    <svg [attr.viewBox]="'0 0 ' + chartWidth + ' ' + chartHeight" preserveAspectRatio="none" role="img" aria-label="New failures per week">
-      <path [attr.d]="chart().area" fill="var(--danger-bg)" />
-      <path [attr.d]="chart().line" fill="none" stroke="var(--danger-fg)" stroke-width="2" />
-      <circle [attr.cx]="chart().x" [attr.cy]="chart().y" r="4" fill="var(--danger-fg)" />
-    </svg>
-    <div class="rh-chart-axis">
-      <span>{{ fmtDate(m.runs[0]) }}</span><span>{{ compact(m.now) }} this week</span><span>{{ fmtDate(m.runs[m.runs.length - 1]) }}</span>
-    </div>
+  <section class="rh-panel" aria-labelledby="rh-patterns-title">
+    <h3 id="rh-patterns-title">Patterns</h3>
+    <ul class="rh-patterns">
+      @for (p of m.patterns; track p.headline) {
+        <li>{{ p.headline }}<span>{{ p.detail }}</span></li>
+      }
+    </ul>
   </section>
 
-  <section class="rh-first" aria-labelledby="rh-first-title">
-    <h3 id="rh-first-title">Where to look first</h3>
-    @for (item of first(); track item.finding.id) {
-      <a [routerLink]="['/remediation', 'f', item.finding.id]">
-        <span class="rh-rank">{{ item.rank }}</span>
-        <span>
-          <span class="rh-t">{{ item.finding.products[0] }} · {{ item.finding.symptomLabel }} · {{ item.finding.site }}</span><br />
-          <span class="rh-m">{{ item.finding.tablePlainName }} · {{ segWords(item.finding) }}</span>
-        </span>
-        <span class="rh-next" [class.over]="item.finding.pastTarget">{{ item.next }}</span>
-      </a>
-    }
-  </section>
-
-  <div class="rh-doms">
-    @for (dom of m.domains; track dom.name) {
-      <a class="rh-domt" [routerLink]="['/remediation', 'p', dom.productId]">
-        <div class="rh-n">{{ dom.name }}</div>
-        <div class="rh-v">{{ dom.open }}</div>
-        <div class="rh-l">open findings</div>
-        @if (dom.pastTarget) {
-          <div class="rh-o">{{ dom.pastTarget }} past target</div>
-        } @else {
-          <div class="rh-l rh-green">none past target</div>
-        }
-      </a>
-    }
-  </div>
-
-  <p class="rh-more">
-    <button type="button" class="rh-toggle" [attr.aria-expanded]="showMore()" (click)="showMore.set(!showMore())">{{ showMore() ? 'Hide breakdowns' : 'Show breakdowns' }}</button>
-  </p>
-  @if (showMore() && breakdown(); as b) {
-    <app-overview-breakdown [model]="b" [trend]="m.trend" />
+  @if (provenance(); as pv) {
+    <section class="rh-panel rh-dashed" aria-labelledby="rh-prov-title">
+      <h3 id="rh-prov-title">
+        Data provenance
+        <button type="button" class="rh-toggle rh-small-text" [attr.aria-expanded]="showProvenance()" (click)="showProvenance.set(!showProvenance())">{{ showProvenance() ? 'Hide' : 'Show' }}</button>
+      </h3>
+      @if (showProvenance()) {
+        <div class="rh-prov">
+          <p><b>From the workbook:</b> {{ pv.fromWorkbook.join(' · ') }}</p>
+          <p><b>Derived by rule:</b> {{ pv.derived.join(' · ') }}</p>
+          <p><b>Simulated in this prototype:</b> {{ pv.simulated.join(' · ') }}</p>
+          <p class="rh-dim">{{ pv.rule }}</p>
+        </div>
+      }
+    </section>
   }
+
+  <section class="rh-panel" aria-labelledby="rh-matrix-title">
+    <h3 id="rh-matrix-title">What is wrong, by domain and data product</h3>
+    <div class="rh-rec-wrap">
+      <table class="rh-matrix">
+        <thead>
+          <tr>
+            <th scope="col">Domain · data product</th>
+            @for (s of m.symptoms; track s.key) {
+              <th scope="col">{{ s.label }}</th>
+            }
+            <th scope="col" class="num">Records</th>
+            <th scope="col" class="num">Past target</th>
+            <th scope="col" class="num">New failures, 4 wk</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (dom of m.matrix; track dom.name) {
+            <tr class="rh-dom">
+              <td>{{ dom.name }}</td>
+              @for (n of dom.counts; track $index) {
+                <td>{{ n }}</td>
+              }
+              <td class="num">{{ compact(dom.records) }}</td>
+              <td class="num">{{ dom.pastTarget }}</td>
+              <td></td>
+            </tr>
+            @for (row of dom.products; track row.productId) {
+              <tr>
+                <td>
+                  <a [routerLink]="['/remediation', 'p', row.productId]">{{ row.name }}</a>
+                  <span class="rh-dim rh-small-text">{{ row.tierLabel }}</span>
+                </td>
+                @for (cell of row.cells; track $index) {
+                  <td><span [class]="'rh-cell c' + cell.heat">{{ cell.count || '·' }}</span></td>
+                }
+                <td class="num">{{ compact(row.records) }}</td>
+                <td class="num">{{ row.pastTarget || '·' }}</td>
+                <td class="num">
+                  @if (row.trend < 0) {
+                    <span class="rh-trend rh-good">↓ {{ compact(-row.trend) }}</span>
+                  } @else if (row.trend > 0) {
+                    <span class="rh-trend rh-worse">↑ {{ compact(row.trend) }}</span>
+                  } @else {
+                    <span class="rh-trend rh-dim">→</span>
+                  }
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="rh-dim rh-small-text rh-after">Cells count open findings. Records exclude closed history that will not be corrected.</p>
+  </section>
+
+  <div class="rh-two">
+    <section class="rh-chart" aria-labelledby="rh-chart-title">
+      <h3 id="rh-chart-title">New failures per week</h3>
+      <p class="rh-cap">The line that should fall. It drops when a prevent-new-failures action goes live.</p>
+      <svg [attr.viewBox]="'0 0 ' + chartWidth + ' ' + chartHeight" preserveAspectRatio="none" role="img" aria-label="New failures per week">
+        <path [attr.d]="chart().area" fill="var(--danger-bg)" />
+        <path [attr.d]="chart().line" fill="none" stroke="var(--danger-fg)" stroke-width="2" />
+        <circle [attr.cx]="chart().x" [attr.cy]="chart().y" r="4" fill="var(--danger-fg)" />
+      </svg>
+      <div class="rh-chart-axis">
+        <span>{{ fmtDate(m.runs[0]) }}</span><span>{{ compact(m.now) }} this week</span><span>{{ fmtDate(m.runs[m.runs.length - 1]) }}</span>
+      </div>
+    </section>
+    <section class="rh-panel">
+      <h3>Where</h3>
+      <div class="rh-bars">
+        @for (bar of m.bySite; track bar.label) {
+          <span>{{ bar.label }}</span>
+          <div class="rh-b red" [style.width.%]="width(bar.value, m.bySite)"></div>
+          <span class="rh-n">{{ bar.text }}</span>
+        }
+      </div>
+      <h3 class="rh-gap-top">Who is fixing it</h3>
+      @if (m.byOwner.length) {
+        <div class="rh-bars">
+          @for (bar of m.byOwner; track bar.label) {
+            <span>{{ bar.label }}</span>
+            <div class="rh-b blue" [style.width.%]="width(bar.value, m.byOwner)"></div>
+            <span class="rh-n">{{ bar.text }}</span>
+          }
+        </div>
+      } @else {
+        <p class="rh-dim">No actions planned yet.</p>
+      }
+    </section>
+  </div>
 }

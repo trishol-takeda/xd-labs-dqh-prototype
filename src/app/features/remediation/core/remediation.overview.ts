@@ -1,69 +1,67 @@
-import { LARGEST_FINDINGS, TOP_FINDINGS, TREND_COMPARE_WEEKS } from './remediation.constants';
+import { LOAD_DEFECT_SYMPTOM, OWNER_BAR_LIMIT, TOP_SYSTEMS, TREND_COMPARE_WEEKS } from './remediation.constants';
 import { Dataset, Finding, Product } from './remediation.model';
-import { actionable, byImpact, compact, ofProduct, openOf, plural } from './remediation.util';
+import { actionable, compact, ofProduct, openOf, plural } from './remediation.util';
 
-/** Pure selectors behind the Overview screen: everything is computed from the findings, nothing is stored. */
+/**
+ * Pure selectors behind the Overview. Leadership does not remediate: every figure here is computed from the findings,
+ * nothing asks the viewer to do anything, and no person is named.
+ */
 
-export interface DomainTile {
+export interface Bar {
+  label: string;
+  value: number;
+  text: string;
+}
+
+export interface Pattern {
+  headline: string;
+  detail: string;
+}
+
+export interface MatrixCell {
+  count: number;
+  /** Heat band: 0 none, 1 one finding, 2 two or three, 3 four or more. */
+  heat: 0 | 1 | 2 | 3;
+}
+
+export interface MatrixRow {
   name: string;
-  open: number;
-  pastTarget: number;
-  /** The domain's product with most open findings: where the tile links to. */
+  tierLabel: string;
   productId: string;
+  cells: MatrixCell[];
+  records: number;
+  pastTarget: number;
+  /** Change in weekly new failures over four weeks: negative is good. */
+  trend: number;
+}
+
+export interface MatrixDomain {
+  name: string;
+  counts: number[];
+  records: number;
+  pastTarget: number;
+  products: MatrixRow[];
 }
 
 export interface OverviewModel {
   runs: string[];
   trend: number[];
   now: number;
-  /** Change in weekly new failures against four weeks ago. */
   delta: number;
   pct: number;
   down: boolean;
-  needs: Finding[];
   openCount: number;
-  pastTarget: number;
-  oldestDays: number;
-  top: Finding[];
-  domains: DomainTile[];
-}
-
-export interface Bar {
-  label: string;
-  value: number;
-  text: string;
-  tone: 'red' | 'blue' | '';
-}
-
-export interface ProductRow {
-  product: Product;
-  open: number;
+  productCount: number;
+  waiting: number;
+  withOwners: number;
   records: number;
   pastTarget: number;
   oldestDays: number;
-}
-
-export interface DomainRow {
-  name: string;
-  open: number;
-  records: number;
-  pastTarget: number;
-  products: ProductRow[];
-}
-
-export interface BreakdownModel {
-  open: number;
-  records: number;
-  pastTarget: number;
-  critical: number;
-  engineeringPct: number;
-  fixedGoingForward: number;
-  bySymptom: Bar[];
+  patterns: Pattern[];
+  symptoms: { key: string; label: string }[];
+  matrix: MatrixDomain[];
   bySite: Bar[];
   byOwner: Bar[];
-  trendNote: string;
-  domainRows: DomainRow[];
-  largest: Finding[];
 }
 
 function groupByDomain(d: Dataset): Map<string, Product[]> {
@@ -78,101 +76,139 @@ function uniqueOpen(d: Dataset, products: readonly Product[]): Finding[] {
 }
 
 const openCountOf = (d: Dataset, p: Product): number => openOf(ofProduct(d, p)).length;
+const recordsOf = (list: readonly Finding[]): number => list.reduce((sum, f) => sum + actionable(f), 0);
 
-export function weeklyNewFailures(d: Dataset): number[] {
-  return d.vocab.runs.map((_, i) => d.findings.reduce((sum, f) => sum + (f.history[i]?.newFailing ?? 0), 0));
+function tally<T>(list: readonly T[], key: (x: T) => string): [string, number][] {
+  const counts = new Map<string, number>();
+  for (const x of list) counts.set(key(x), (counts.get(key(x)) ?? 0) + 1);
+  return [...counts].sort((a, b) => b[1] - a[1]);
+}
+
+export function weeklyNewFailures(d: Dataset, list: readonly Finding[] = d.findings): number[] {
+  return d.vocab.runs.map((_, i) => list.reduce((sum, f) => sum + (f.history[i]?.newFailing ?? 0), 0));
+}
+
+/** Change in weekly new failures against four weeks before the latest run. */
+export function fourWeekDelta(trend: readonly number[]): number {
+  return (trend.at(-1) ?? 0) - (trend[Math.max(0, trend.length - 1 - TREND_COMPARE_WEEKS)] ?? 0);
+}
+
+const heatOf = (n: number): MatrixCell['heat'] => {
+  if (n === 0) return 0;
+  if (n === 1) return 1;
+  return n <= 3 ? 2 : 3;
+};
+
+/** Four generated sentences: the commonest symptom and its likeliest cause, the load defects, the busiest site, the product furthest past target. */
+function patternsOf(d: Dataset, open: readonly Finding[], waiting: number): Pattern[] {
+  const patterns: Pattern[] = [];
+  const total = open.length;
+  const [topSymptom] = tally(open, (f) => f.symptom);
+  if (topSymptom) {
+    const [key, count] = topSymptom;
+    const same = open.filter((f) => f.symptom === key);
+    const systems = tally(same, (f) => f.sourceSystem).slice(0, TOP_SYSTEMS).map(([name]) => name);
+    const cause = tally(same, (f) => f.proposal.rootCause.label)[0]?.[0] ?? '';
+    patterns.push({
+      headline: `${d.vocab.symptoms[key]?.label ?? key} is the most common problem: ${count} of ${total} open findings (${Math.round((100 * count) / total)}%), mostly in ${systems.join(' and ')}.`,
+      detail: `Most likely root cause proposed: ${cause}.`,
+    });
+  }
+  const load = open.filter((f) => f.symptom === LOAD_DEFECT_SYMPTOM);
+  if (load.length) {
+    patterns.push({
+      headline: `${Math.round((100 * load.length) / total)}% of findings are load defects, not business data entry: ${load.length} findings where the platform does not generate technical fields.`,
+      detail: 'These sit with Data engineering; no trustee or site action can fix them.',
+    });
+  }
+  const [topSite] = tally(open, (f) => f.site);
+  if (topSite) {
+    patterns.push({
+      headline: `${topSite[0]} carries the most open findings (${topSite[1]}).`,
+      detail: 'Where a symptom is concentrated at one site, the proposed cause is usually the local entry template rather than the system.',
+    });
+  }
+  const [topOver] = tally(open.filter((f) => f.pastTarget), (f) => f.products[0]);
+  if (topOver) {
+    patterns.push({
+      headline: `${topOver[0]} has the most findings past target (${topOver[1]}).`,
+      detail: `${waiting} ${plural(waiting, 'finding')} overall ${waiting === 1 ? 'is' : 'are'} still waiting for a trustee to confirm a proposal.`,
+    });
+  }
+  return patterns;
 }
 
 export function overviewModel(d: Dataset): OverviewModel {
   const open = openOf(d.findings);
-  const needs = open.filter((f) => f.visibleStatus === 'needs_you');
-  const over = open.filter((f) => f.pastTarget);
+  const waiting = open.filter((f) => f.stage === 'proposed').length;
   const trend = weeklyNewFailures(d);
-  const now = trend[trend.length - 1];
-  const before = trend[Math.max(0, trend.length - 1 - TREND_COMPARE_WEEKS)];
-  const delta = now - before;
-  const domains = [...groupByDomain(d)].map(([name, products]) => {
-    const list = uniqueOpen(d, products);
-    const lead = [...products].sort((a, b) => openCountOf(d, b) - openCountOf(d, a))[0];
-    return { name, open: list.length, pastTarget: list.filter((f) => f.pastTarget).length, productId: lead.id };
-  });
-  return {
-    runs: d.vocab.runs,
-    trend,
-    now,
-    delta,
-    pct: before ? Math.round((100 * Math.abs(delta)) / before) : 0,
-    down: delta <= 0,
-    needs,
-    openCount: open.length,
-    pastTarget: over.length,
-    oldestDays: Math.max(0, ...open.map((f) => f.ageWorkingDays)),
-    top: [...needs].sort(byImpact).slice(0, TOP_FINDINGS),
-    domains,
-  };
-}
+  const delta = fourWeekDelta(trend);
+  const before = trend[Math.max(0, trend.length - 1 - TREND_COMPARE_WEEKS)] ?? 0;
 
-function toBars(entries: { label: string; value: number; text: string; tone?: Bar['tone'] }[]): Bar[] {
-  return entries.map((e): Bar => ({ ...e, tone: e.tone ?? '' })).sort((a, b) => b.value - a.value);
-}
+  const symptoms = Object.entries(d.vocab.symptoms)
+    .filter(([key]) => open.some((f) => f.symptom === key))
+    .map(([key, v]) => ({ key, label: v.label }))
+    .sort((a, b) => open.filter((f) => f.symptom === b.key).length - open.filter((f) => f.symptom === a.key).length);
 
-export function breakdownModel(d: Dataset): BreakdownModel {
-  const open = openOf(d.findings);
-  const records = open.reduce((sum, f) => sum + actionable(f), 0);
-  const trend = weeklyNewFailures(d);
-  const delta = trend[trend.length - 1] - trend[Math.max(0, trend.length - 1 - TREND_COMPARE_WEEKS)];
-
-  const bySymptom = toBars(
-    Object.entries(d.vocab.symptoms)
-      .map(([key, v]) => {
-        const list = open.filter((f) => f.symptom === key);
-        return { label: v.label, value: list.length, text: `${list.length} · ${compact(list.reduce((sum, f) => sum + actionable(f), 0))} records`, tone: key === 'not_generated' ? ('blue' as const) : ('red' as const) };
-      })
-      .filter((x) => x.value > 0),
-  );
-
-  const sites = new Map<string, number>();
-  for (const f of open) sites.set(f.site, (sites.get(f.site) ?? 0) + 1);
-  const bySite = toBars([...sites].map(([label, value]) => ({ label, value, text: String(value) })));
-
-  const owners = new Map<string, number>();
-  for (const f of open) for (const a of f.actions.filter((x) => x.status !== 'done')) owners.set(a.ownerRole, (owners.get(a.ownerRole) ?? 0) + 1);
-  const byOwner = toBars([...owners].map(([label, value]) => ({ label, value, text: `${value} ${plural(value, 'action')}` })));
-
-  const domainRows = [...groupByDomain(d)].map(([name, products]) => {
+  const matrix = [...groupByDomain(d)].map(([name, products]): MatrixDomain => {
     const list = uniqueOpen(d, products);
     return {
       name,
-      open: list.length,
-      records: list.reduce((sum, f) => sum + actionable(f), 0),
+      counts: symptoms.map((s) => list.filter((f) => f.symptom === s.key).length),
+      records: recordsOf(list),
       pastTarget: list.filter((f) => f.pastTarget).length,
       products: [...products]
         .sort((a, b) => openCountOf(d, b) - openCountOf(d, a))
-        .map((product) => {
-          const l = openOf(ofProduct(d, product));
+        .map((p): MatrixRow => {
+          const l = openOf(ofProduct(d, p));
           return {
-            product,
-            open: l.length,
-            records: l.reduce((sum, f) => sum + actionable(f), 0),
+            name: p.name,
+            tierLabel: p.tierLabel,
+            productId: p.id,
+            cells: symptoms.map((s) => {
+              const count = l.filter((f) => f.symptom === s.key).length;
+              return { count, heat: heatOf(count) };
+            }),
+            records: recordsOf(l),
             pastTarget: l.filter((f) => f.pastTarget).length,
-            oldestDays: l.length ? Math.max(...l.map((f) => f.ageWorkingDays)) : 0,
+            trend: fourWeekDelta(weeklyNewFailures(d, ofProduct(d, p))),
           };
         }),
     };
   });
 
+  const owners = new Map<string, number>();
+  for (const f of open) {
+    const planned: { ownerRole: string; status?: string }[] = f.actions.length ? f.actions : f.proposal.plan;
+    for (const a of planned.filter((x) => x.status !== 'done')) {
+      const group = a.ownerRole.replace(/ · Site .$/, '');
+      owners.set(group, (owners.get(group) ?? 0) + 1);
+    }
+  }
+
   return {
-    open: open.length,
-    records,
+    runs: d.vocab.runs,
+    trend,
+    now: trend.at(-1) ?? 0,
+    delta,
+    pct: before ? Math.round((100 * Math.abs(delta)) / before) : 0,
+    down: delta <= 0,
+    openCount: open.length,
+    productCount: new Set(open.flatMap((f) => f.products)).size,
+    waiting,
+    withOwners: open.length - waiting,
+    records: recordsOf(open),
     pastTarget: open.filter((f) => f.pastTarget).length,
-    critical: open.filter((f) => f.tier === 'critical').length,
-    engineeringPct: Math.round((100 * open.filter((f) => f.symptom === 'not_generated').length) / Math.max(1, open.length)),
-    fixedGoingForward: d.findings.filter((f) => f.fixedGoingForward).length,
-    bySymptom,
-    bySite,
-    byOwner,
-    trendNote: `${delta <= 0 ? 'down' : 'up'} ${compact(Math.abs(delta))} in four weeks`,
-    domainRows,
-    largest: [...open].sort(byImpact).slice(0, LARGEST_FINDINGS),
+    oldestDays: Math.max(0, ...open.map((f) => f.ageWorkingDays)),
+    patterns: patternsOf(d, open, waiting),
+    symptoms,
+    matrix,
+    bySite: tally(open, (f) => f.site).map(([label, value]) => ({ label, value, text: String(value) })),
+    byOwner: [...owners]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, OWNER_BAR_LIMIT)
+      .map(([label, value]) => ({ label, value, text: `${value} ${plural(value, 'action')}` })),
   };
 }
+
+export const compactTrend = (n: number): string => compact(Math.abs(n));

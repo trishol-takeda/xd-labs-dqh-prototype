@@ -16,7 +16,7 @@
 
       <app-journey-strip [steps]="steps()" />
 
-      @if (f.visibleStatus === 'fixed') {
+      @if (f.stage === 'closed') {
         <section class="rh-closed" aria-labelledby="rh-closed-title">
           <h3 id="rh-closed-title">Closed{{ closedOn() ? ' on ' + fmtDate(closedOn()!) : '' }}</h3>
           <p>
@@ -26,172 +26,248 @@
         </section>
       }
 
-      <app-proposal-card [finding]="f" [keys]="keys()" [canAct]="canConfirm()" (overrideBlock)="startOverride($event)" (confirmed)="confirm($event)" />
-
-      @if (needsConcurrence()) {
-        <div class="rh-sigbox">
-          <b>Quality concurrence</b> · impact pre-assessed as <b>{{ f.proposal.qa.assessment }}</b
-          >.
-          @if (f.proposal.qa.requiresDeviation) {
-            Raise the deviation and record its reference.
-          }
-          <button type="button" class="rh-btn rh-sm" (click)="open('concur')">Concur{{ f.proposal.qa.requiresDeviation ? ' and record deviation' : '' }}</button>
-        </div>
+      @if (stageNote()) {
+        <p class="rh-stage-note">{{ stageNote() }}</p>
       }
 
-      <section class="rh-block" aria-labelledby="rh-records">
-        <h3 id="rh-records">Which records</h3>
-        <app-segment-tiles [finding]="f" [keys]="keys()" />
-        <p class="rh-total">
-          Total {{ full(f.failingNow) }} records failing · first seen {{ fmtDate(f.firstSeen) }} · {{ f.ageWorkingDays }} working days
-          @if (f.pastTarget) {
-            · <span class="over">past the {{ f.targetWorkingDays }}-day target</span>
-          }
-        </p>
-      </section>
+      @for (block of order(); track block) {
+        @switch (block) {
+          @case ('proposal') {
+            <app-proposal-card
+              [finding]="f"
+              [keys]="keys()"
+              [canAct]="canConfirm()"
+              [siblings]="siblings()"
+              (overrideBlock)="startOverride($event)"
+              (includeChange)="include($event)"
+              (confirmRequested)="requestConfirm($event)"
+            />
 
-      <section class="rh-block" aria-labelledby="rh-failing">
-        <h3 id="rh-failing">What is failing</h3>
-        <app-check-list [items]="fieldItems()" />
-      </section>
-
-      <section class="rh-block" aria-labelledby="rh-actions">
-        <h3 id="rh-actions">Actions</h3>
-        @if (f.actions.length) {
-          <div class="rh-rec-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th scope="col">Action</th>
-                  <th scope="col">Owner</th>
-                  <th scope="col">Channel</th>
-                  <th scope="col">Reference</th>
-                  <th scope="col">Effective</th>
-                  <th scope="col">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (a of f.actions; track a.id) {
-                  <tr>
-                    <td>
-                      <b>{{ a.leverLabel }}</b>
-                      @if (a.interimControl) {
-                        <br /><span class="rh-dim rh-small-text">Interim: {{ a.interimControl }}</span>
-                      }
-                      @if (a.lever === 'accept' && a.reviewBy) {
-                        <br /><span class="rh-dim rh-small-text">Approvers: {{ a.approvals.join(', ') }} · review by {{ fmtDate(a.reviewBy) }}</span>
-                      }
-                    </td>
-                    <td>{{ a.ownerRole }}</td>
-                    <td>{{ a.channel }}</td>
-                    <td>{{ a.reference || '—' }}</td>
-                    <td>{{ a.effectiveDate ? fmtDate(a.effectiveDate) : '—' }}</td>
-                    <td><span [class]="'rh-pill ' + a.status">{{ a.status }}</span></td>
-                  </tr>
+            @if (needsConcurrence()) {
+              <div class="rh-sigbox">
+                <b>Quality concurrence</b> · impact pre-assessed as <b>{{ f.proposal.qa.assessment }}</b
+                >.
+                @if (f.confirmation?.heldForQa) {
+                  This plan is held for you: nothing is raised until you concur.
                 }
-              </tbody>
-            </table>
-          </div>
-        } @else {
-          <p class="rh-dim">Actions are created in their channels when the proposal is confirmed.</p>
-        }
+                @if (f.proposal.qa.requiresDeviation) {
+                  Raise the deviation and record its reference.
+                }
+                <button type="button" class="rh-btn rh-sm" (click)="open('concur')">Concur{{ f.proposal.qa.requiresDeviation ? ' and record deviation' : '' }}</button>
+              </div>
+            }
+          }
 
-        @if (f.actions.length) {
-          <p class="rh-dim rh-small-text rh-after">Each action: proposed → raised (reference exists in its channel) → live (effective date) → done (the checks confirm it).</p>
-        }
+          @case ('next') {
+            @if (steps2().length) {
+              <section class="rh-next" aria-labelledby="rh-next-title">
+                <h3 id="rh-next-title">What happens next</h3>
+                <ol>
+                  @for (s of steps2(); track $index) {
+                    <li>
+                      @if (s.who) {
+                        <b>{{ s.who }}</b>
+                      }
+                      {{ s.text }}
+                      @if (s.due) {
+                        <span class="rh-due" [class.over]="s.over">· {{ s.due }}</span>
+                      }
+                      @if (s.note) {
+                        <br /><span class="rh-due">{{ s.note }}</span>
+                      }
+                    </li>
+                  }
+                </ol>
+              </section>
+            }
+          }
 
-        @if (accept(); as a) {
-          <div class="rh-sigbox">
-            <b>Acceptance {{ a.reference }}</b> · signed: {{ acceptSigned().trustee ? 'Data trustee ✓' : 'Data trustee pending' }}
-            @if (f.tier === 'critical') {
-              · {{ acceptSigned().qa ? 'Quality approver ✓' : 'Quality approver pending' }}
-              @if (store.role() === 'qa' && !a.qaSigned && a.status === 'raised') {
-                <button type="button" class="rh-btn rh-ghost rh-sm" (click)="open('signQa')">Sign</button>
+          @case ('records') {
+            <section class="rh-block" aria-labelledby="rh-records">
+              <h3 id="rh-records">Which records</h3>
+              <app-segment-tiles [finding]="f" [keys]="keys()" />
+              <p class="rh-total">
+                Total {{ full(f.failingNow) }} records failing · first seen {{ fmtDate(f.firstSeen) }} · {{ f.ageWorkingDays }} working days
+                @if (f.pastTarget) {
+                  · <span class="over">past the {{ f.targetWorkingDays }}-day target</span>
+                }
+              </p>
+            </section>
+          }
+
+          @case ('fields') {
+            <section class="rh-block" aria-labelledby="rh-failing">
+              <h3 id="rh-failing">What is failing</h3>
+              <app-check-list [items]="fieldItems()" />
+            </section>
+          }
+
+          @case ('actions') {
+            <section class="rh-block" aria-labelledby="rh-actions">
+              <h3 id="rh-actions">Actions</h3>
+              @if (allActions().length) {
+                <div class="rh-rec-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th scope="col">Action</th>
+                        <th scope="col">Owner</th>
+                        <th scope="col">Channel</th>
+                        <th scope="col">Reference</th>
+                        <th scope="col">Effective</th>
+                        <th scope="col">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (a of allActions(); track $index) {
+                        <tr [class.rh-superseded]="a.archived">
+                          <td>
+                            <b [class.rh-struck]="a.archived">{{ a.leverLabel }}</b>
+                            @if (a.interimControl) {
+                              <br /><span class="rh-dim rh-small-text">Interim: {{ a.interimControl }}</span>
+                            }
+                            @if (a.lever === 'accept' && a.reviewBy) {
+                              <br /><span class="rh-dim rh-small-text">Approvers: {{ a.approvals.join(', ') }} · review by {{ fmtDate(a.reviewBy) }}</span>
+                            }
+                            @if (a.archived) {
+                              <br /><span class="rh-dim rh-small-text">superseded by re-plan</span>
+                            }
+                            @if (a.declineReason) {
+                              <br /><span class="rh-dim rh-small-text">{{ a.declineReason }}</span>
+                            }
+                          </td>
+                          <td>{{ a.ownerRole }}</td>
+                          <td>{{ a.channel }}</td>
+                          <td>{{ a.reference || '—' }}</td>
+                          <td>{{ a.effectiveDate ? fmtDate(a.effectiveDate) : '—' }}</td>
+                          <td>
+                            <span [class]="'rh-pill ' + a.status">{{ actionLabel(a.status) }}</span>
+                            @if (ladder(a); as l) {
+                              <div class="rh-over-days">{{ l.daysOver }} days over · {{ l.label }}</div>
+                            }
+                          </td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+                <p class="rh-dim rh-small-text rh-after">Each action: proposed → sent to the owner (a reference exists) → accepted → live (effective date) → done (the checks confirm it).</p>
+              } @else {
+                <p class="rh-dim">Actions are created in their channels when the proposal is confirmed.</p>
               }
-            }
-            @if (store.role() === 'trustee' && !a.trusteeSigned && a.status === 'raised') {
-              <button type="button" class="rh-btn rh-ghost rh-sm" (click)="open('signTrustee')">Sign</button>
-            }
-            @if (a.reviewBy) {
-              · review by {{ fmtDate(a.reviewBy) }}
-            }
-          </div>
-        }
-        @if (store.role() === 'rules' && checkChange(); as c) {
-          <div class="rh-sigbox">
-            <b>Check change requested</b> · {{ c.reference }}
-            <button type="button" class="rh-btn rh-sm" (click)="open('ruleChange')">Publish changed check</button>
-            <button type="button" class="rh-btn rh-ghost rh-sm" (click)="stands()">The check stands</button>
-          </div>
-        }
-      </section>
 
-      <section class="rh-block" aria-labelledby="rh-working">
-        <h3 id="rh-working">Is it working</h3>
-        <div class="rh-signals">
-          <div [class]="'rh-sig ' + (signals().bleedOk ? 'ok' : 'no')">
-            <h4>Bleed stopped</h4>
-            <div class="rh-v">{{ f.signals.bleedStopped.cleanChecks }} of {{ f.signals.bleedStopped.required }} checks clean</div>
-            <div class="rh-l">{{ f.signals.bleedStopped.since ? 'since ' + fmtDate(f.signals.bleedStopped.since) : 'Not started: no action is live yet' }}</div>
-            <app-spark [values]="newFailuresTrend()" />
-            <div class="rh-l">New failures per week</div>
-          </div>
-          <div [class]="'rh-sig ' + (signals().backlogOk ? 'ok' : 'no')">
-            <h4>Backlog</h4>
-            <div class="rh-v">{{ full(f.signals.backlog.inScopeRemaining) }} in scope remaining</div>
-            <div class="rh-l">{{ full(f.signals.backlog.acceptedCount) }} accepted</div>
-            <app-spark [values]="failingTrend()" dot="var(--muted)" />
-            <div class="rh-l">
-              All failing records per week
-              @if (changedOn(); as on) {
-                · <span class="rh-vmark">the check was changed on {{ fmtDate(on) }}</span>
+              @if (declined(); as d) {
+                @if (store.role() === 'trustee') {
+                  <div class="rh-sigbox rh-replan">
+                    <b>{{ d.leverLabel }} was declined</b> · {{ d.declineReason }}
+                    <button type="button" class="rh-btn rh-sm" (click)="replan()">Re-plan</button>
+                  </div>
+                }
+              }
+
+              @if (accept(); as a) {
+                <div class="rh-sigbox">
+                  <b>Acceptance {{ a.reference }}</b> · signed: {{ acceptSigned().trustee ? 'Data trustee ✓' : 'Data trustee pending' }}
+                  @if (f.tier === 'critical') {
+                    · {{ acceptSigned().qa ? 'Quality approver ✓' : 'Quality approver pending' }}
+                    @if (store.role() === 'qa' && !a.qaSigned && a.status === 'raised') {
+                      <button type="button" class="rh-btn rh-ghost rh-sm" (click)="open('signQa')">Sign</button>
+                    }
+                  }
+                  @if (store.role() === 'trustee' && !a.trusteeSigned && a.status === 'raised') {
+                    <button type="button" class="rh-btn rh-ghost rh-sm" (click)="open('signTrustee')">Sign</button>
+                  }
+                  @if (a.reviewBy) {
+                    · review by {{ fmtDate(a.reviewBy) }}
+                  }
+                </div>
+              }
+              @if (store.role() === 'rules' && checkChange(); as c) {
+                <div class="rh-sigbox">
+                  <b>Check change requested</b> · {{ c.reference }}
+                  <button type="button" class="rh-btn rh-sm" (click)="open('ruleChange')">Publish changed check</button>
+                  <button type="button" class="rh-btn rh-ghost rh-sm" (click)="stands()">The check stands</button>
+                </div>
+              }
+            </section>
+          }
+
+          @case ('signals') {
+            <section class="rh-block" aria-labelledby="rh-working">
+              <h3 id="rh-working">Is it working</h3>
+              <div class="rh-signals">
+                <div [class]="'rh-sig ' + (signals().bleedOk ? 'ok' : 'no')">
+                  <h4>New failures stopped</h4>
+                  <div class="rh-v">{{ f.signals.bleedStopped.cleanChecks }} of {{ f.signals.bleedStopped.required }} checks clean</div>
+                  <div class="rh-l">{{ f.signals.bleedStopped.since ? 'since ' + fmtDate(f.signals.bleedStopped.since) : 'Not started: no action is live yet' }}</div>
+                  <app-spark [values]="newFailuresTrend()" />
+                  <div class="rh-l">New failures per week</div>
+                </div>
+                <div [class]="'rh-sig ' + (signals().backlogOk ? 'ok' : 'no')">
+                  <h4>Backlog</h4>
+                  <div class="rh-v">{{ full(f.signals.backlog.inScopeRemaining) }} in scope remaining</div>
+                  <div class="rh-l">{{ full(f.signals.backlog.acceptedCount) }} accepted</div>
+                  <app-spark [values]="failingTrend()" dot="var(--muted)" />
+                  <div class="rh-l">
+                    All failing records per week
+                    @if (changedOn(); as on) {
+                      · <span class="rh-vmark">the check was changed on {{ fmtDate(on) }}</span>
+                    }
+                  </div>
+                </div>
+              </div>
+              <p [class]="'rh-verdict ' + verdict().kind">{{ verdict().label }}</p>
+            </section>
+          }
+
+          @case ('samples') {
+            <section class="rh-block" aria-labelledby="rh-samples">
+              <h3 id="rh-samples">Sample records</h3>
+              @if (f.recordKeyField) {
+                <app-record-grid [rows]="sampleRows()" [fields]="f.fields" [labels]="f.segments.labels" [sourceSystem]="f.sourceSystem" />
+                <p class="rh-dim rh-small-text rh-after">
+                  ✕ = {{ f.fields[0].problem }}. Use the key to find the record in {{ f.sourceSystem }}.
+                  <a [routerLink]="['/remediation', 'f', f.id, 'records']">Show all records</a>
+                </p>
+              } @else {
+                <p class="rh-dim">Records can’t be listed yet. The data governance team has to name a source-native record key for {{ t.plainName }}.</p>
+              }
+            </section>
+          }
+
+          @case ('related') {
+            @if (related().length) {
+              <section class="rh-block" aria-labelledby="rh-related">
+                <h3 id="rh-related">Same symptom at other sites</h3>
+                <ul class="rh-related">
+                  @for (x of related(); track x.id) {
+                    <li>
+                      <a [routerLink]="['/remediation', 'f', x.id]">{{ x.site }}</a> · {{ segWords(x) }} ·
+                      <app-chip kind="status" [value]="x.visibleStatus">{{ statusLabel[x.visibleStatus] }}</app-chip>
+                    </li>
+                  }
+                </ul>
+              </section>
+            }
+          }
+
+          @case ('history') {
+            <div class="rh-block">
+              <button type="button" class="rh-toggle" [attr.aria-expanded]="showHistory()" (click)="showHistory.set(!showHistory())">
+                {{ showHistory() ? 'Hide history' : 'Show history' }}
+              </button>
+              · <a [routerLink]="['/remediation', 'f', f.id, 'export']">Inspection export</a>
+              @if (showHistory()) {
+                <ul class="rh-hist">
+                  @for (a of auditRows(); track $index) {
+                    <li><b>{{ fmtDate(a.at) }} · {{ a.by }}</b><span class="rh-t">{{ a.text }}</span></li>
+                  }
+                </ul>
               }
             </div>
-          </div>
-        </div>
-        <p [class]="'rh-verdict ' + verdict().kind">{{ verdict().label }}</p>
-      </section>
-
-      <section class="rh-block" aria-labelledby="rh-samples">
-        <h3 id="rh-samples">Sample records</h3>
-        @if (f.recordKeyField) {
-          <app-record-grid [rows]="sampleRows()" [fields]="f.fields" [labels]="f.segments.labels" [sourceSystem]="f.sourceSystem" />
-          <p class="rh-dim rh-small-text rh-after">
-            ✕ = {{ f.fields[0].problem }}. Use the key to find the record in {{ f.sourceSystem }}.
-            <a [routerLink]="['/remediation', 'f', f.id, 'records']">Show all records</a>
-          </p>
-        } @else {
-          <p class="rh-dim">Records can’t be listed yet. The data governance team has to name a source-native record key for {{ t.plainName }}.</p>
+          }
         }
-      </section>
-
-      @if (related().length) {
-        <section class="rh-block" aria-labelledby="rh-related">
-          <h3 id="rh-related">Same symptom at other sites</h3>
-          <ul class="rh-related">
-            @for (x of related(); track x.id) {
-              <li>
-                <a [routerLink]="['/remediation', 'f', x.id]">{{ x.site }}</a> · {{ segWords(x) }} ·
-                <app-chip kind="status" [value]="x.visibleStatus">{{ statusLabel[x.visibleStatus] }}</app-chip>
-              </li>
-            }
-          </ul>
-        </section>
       }
-
-      <div class="rh-block">
-        <button type="button" class="rh-toggle" [attr.aria-expanded]="showHistory()" (click)="showHistory.set(!showHistory())">
-          {{ showHistory() ? 'Hide history' : 'Show history' }}
-        </button>
-        · <a [routerLink]="['/remediation', 'f', f.id, 'export']">Inspection export</a>
-        @if (showHistory()) {
-          <ul class="rh-hist">
-            @for (a of auditRows(); track $index) {
-              <li><b>{{ fmtDate(a.at) }} · {{ a.by }}</b><span class="rh-t">{{ a.text }}</span></li>
-            }
-          </ul>
-        }
-      </div>
     </article>
 
     @switch (dialog()) {
@@ -200,6 +276,9 @@
       }
       @case ('concur') {
         <app-concur-dialog [finding]="f" (saved)="saveConcur($event)" (closed)="dialog.set(null)" />
+      }
+      @case ('confirmSign') {
+        <app-confirm-sign-dialog [who]="trustee()" (signed)="confirmSigned()" (closed)="dialog.set(null)" />
       }
       @case ('signTrustee') {
         @if (accept(); as a) {

@@ -1,4 +1,4 @@
-import { BacklogChoice, Block, LeverKey, NewFailuresChoice, Role, ScreenState, VisibleStatus } from './remediation.model';
+import { BacklogChoice, Block, BodyBlock, Stage, LeverKey, NewFailuresChoice, Role, ScreenState, VisibleStatus } from './remediation.model';
 
 export const REMEDIATION_DATA_FILES = {
   vocab: 'data/remediation/vocab.json',
@@ -40,7 +40,9 @@ export const STATUS_MEANING: Record<VisibleStatus, string> = {
 
 /** Shown on rows and the Start-here panel while a finding waits for the trustee. */
 export const PROPOSAL_READY = 'Proposal ready to confirm';
+export const REPLAN_LABEL = 'Re-plan a declined action';
 export const CONFIRM_LABEL = 'Confirm proposal';
+export const CONFIRM_SIGN_LABEL = 'Confirm and sign';
 export const BLOCK_LABEL: Record<Block, string> = { scope: 'scope', rootCause: 'root cause', plan: 'action plan' };
 
 /** Prefix of the reference an action gets when it is raised in its channel. */
@@ -49,6 +51,9 @@ export const DEFAULT_REFERENCE_PREFIX = 'REF-';
 /** Levers that are raised without a reference (the work is done inside the source system's normal process). */
 export const LEVERS_WITHOUT_REFERENCE: readonly LeverKey[] = ['backfill'];
 export const HUB = 'Hub';
+export const GLOBAL_SITE = 'Global';
+export const REPLAN_WHY = 'Re-planned after the site owner declined: raised with the global owner';
+export const DECLINE_REASON = 'Owner: the template is controlled globally; a site-level change is not possible';
 export const HUB_ACCEPTANCE_CHANNEL = 'Hub acceptance';
 /** An overridden plan covers new and open records, except Accept, which covers the historical ones. */
 export const OVERRIDE_PLAN_SEGMENTS = ['newSinceDetection', 'inFlight'] as const;
@@ -88,8 +93,10 @@ export const DEFAULT_REVIEW_BY = '2027-11-01';
 /** Runs back that "four weeks ago" refers to (the trend has one point per week). */
 export const TREND_COMPARE_WEEKS = 4;
 
-export const TOP_FINDINGS = 5;
-export const LARGEST_FINDINGS = 8;
+export const TOP_SYSTEMS = 2;
+export const OWNER_BAR_LIMIT = 7;
+/** The symptom that only the load can cause: these findings belong to Data engineering. */
+export const LOAD_DEFECT_SYMPTOM = 'not_generated';
 export const FIELD_SUMMARY_COUNT = 4;
 export const RECORDS_PAGE_SIZE = 50;
 export const TOAST_MS = 2200;
@@ -97,3 +104,25 @@ export const TOAST_MS = 2200;
 /** Spread for the deterministic reference numbers of raised actions. */
 export const REFERENCE_BASE = 1000;
 export const REFERENCE_SPREAD = 9000;
+
+/** Order of the finding screen's sections, by stage: the screen leads with what matters now. */
+export const STAGE_BODY_ORDER: Record<Stage, readonly BodyBlock[]> = {
+  detected: ['proposal', 'records', 'fields', 'samples', 'related', 'signals', 'actions', 'history'],
+  proposed: ['proposal', 'records', 'fields', 'samples', 'related', 'signals', 'actions', 'history'],
+  confirmed: ['next', 'actions', 'proposal', 'records', 'fields', 'signals', 'samples', 'related', 'history'],
+  raised: ['next', 'actions', 'proposal', 'signals', 'records', 'fields', 'samples', 'related', 'history'],
+  live: ['signals', 'next', 'actions', 'proposal', 'records', 'fields', 'samples', 'related', 'history'],
+  verified: ['signals', 'next', 'actions', 'proposal', 'records', 'fields', 'samples', 'related', 'history'],
+  closed: ['signals', 'actions', 'proposal', 'records', 'fields', 'samples', 'related', 'history'],
+};
+
+/** One line under the journey strip once the finding has left Proposed. */
+export const STAGE_NOTE: Record<Stage, string> = {
+  detected: '',
+  proposed: '',
+  confirmed: 'Confirmed. The actions are with their owners; nothing is needed from you until one is declined.',
+  raised: 'Actions are with their owners. Nothing is needed from you until one is declined or the checks report back.',
+  live: 'Changes are live. The checks now decide whether it worked.',
+  verified: 'All actions done. Waiting for the checks to hold.',
+  closed: '',
+};

@@ -1,16 +1,17 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { RemediationStore } from '../core/remediation-store.service';
-import { CONFIRM_LABEL } from '../core/remediation.constants';
-import { breakdownModel, overviewModel } from '../core/remediation.overview';
-import { compact, fmtDate, plural, segWords } from '../core/remediation.util';
-import { OverviewBreakdown } from './overview-breakdown/overview-breakdown';
-import { CHART_HEIGHT, CHART_PAD, CHART_WIDTH, CHART_LABEL_ROOM } from './overview.constants';
+import { overviewModel } from '../core/remediation.overview';
+import { compact, fmtDate, plural } from '../core/remediation.util';
+import { CHART_HEIGHT, CHART_LABEL_ROOM, CHART_PAD, CHART_WIDTH } from './overview.constants';
 
-/** Leadership landing, open to everyone: one sentence, three numbers, one chart, five findings, four domains. */
+/**
+ * Leadership view, open to everyone: patterns, not tasks. What is wrong, where, and who is fixing it.
+ * Nothing on this screen asks the viewer to act and nothing names a person.
+ */
 @Component({
   selector: 'app-overview-page',
-  imports: [RouterLink, OverviewBreakdown],
+  imports: [RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './overview-page.html',
 })
@@ -19,19 +20,15 @@ export class OverviewPage {
   protected readonly compact = compact;
   protected readonly fmtDate = fmtDate;
   protected readonly plural = plural;
-  protected readonly segWords = segWords;
   protected readonly chartWidth = CHART_WIDTH;
   protected readonly chartHeight = CHART_HEIGHT;
-  protected readonly showMore = signal(false);
+  protected readonly showProvenance = signal(false);
 
   protected readonly model = computed(() => {
     const d = this.store.data();
     return d ? overviewModel(d) : null;
   });
-  protected readonly breakdown = computed(() => {
-    const d = this.store.data();
-    return d ? breakdownModel(d) : null;
-  });
+  protected readonly provenance = computed(() => this.store.data()?.vocab.provenance);
   protected readonly asOf = computed(() => this.store.data()?.vocab.asOf ?? '');
 
   protected readonly chart = computed(() => {
@@ -45,7 +42,7 @@ export class OverviewPage {
     return { line, area: `${line} L${CHART_WIDTH} ${CHART_HEIGHT} L0 ${CHART_HEIGHT} Z`, x, y };
   });
 
-  protected readonly first = computed(() =>
-    (this.model()?.top ?? []).map((f, i) => ({ finding: f, rank: i + 1, next: CONFIRM_LABEL + (f.pastTarget ? ` · ${f.ageWorkingDays} d` : '') })),
-  );
+  protected width(value: number, bars: readonly { value: number }[]): number {
+    return (100 * value) / Math.max(1, bars[0]?.value ?? 1);
+  }
 }

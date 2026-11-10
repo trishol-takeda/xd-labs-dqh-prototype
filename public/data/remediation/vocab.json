@@ -90,8 +90,8 @@
  ],
  "levers": {
   "stop_bleed": {
-   "label": "Stop the bleed",
-   "meaning": "Prevent new records from failing: make the field mandatory, add validation, fix the interface, retrain."
+   "label": "Prevent new failures",
+   "meaning": "Fix the point of entry so new records stop failing: make the field mandatory, add validation, fix the interface, retrain."
   },
   "backfill": {
    "label": "Backfill under control",
@@ -171,9 +171,25 @@
  "actionStatuses": [
   "proposed",
   "raised",
+  "accepted",
   "live",
-  "done"
+  "done",
+  "declined"
  ],
+ "actionStatusLabels": {
+  "proposed": "Proposed",
+  "raised": "Sent to owner",
+  "accepted": "Accepted by owner",
+  "live": "Live",
+  "done": "Done",
+  "declined": "Declined by owner"
+ },
+ "nextSteps": {
+  "raised": "The owner receives the request with the fields and sample records, and accepts or declines it.",
+  "accepted": "The owner makes the change under their own change control; the Hub reads the date it goes live.",
+  "live": "The checks confirm it: no new failures for the required number of checks, and the backlog clears or is accepted.",
+  "declined": "The trustee re-plans: a different action, a different owner, or acceptance with a reason."
+ },
  "planFor": {
   "optional_in_template": [
    "stop_bleed",
@@ -212,6 +228,77 @@
   ],
   "other": [
    "stop_bleed"
+  ]
+ },
+ "planForNote": "Levers vary by table kind: reference tables drop backfill unless the cause is a missing master record or missing validation; legacy migration on reference data is accept-only; SAP BW interface issues go to the load.",
+ "escalation": [
+  {
+   "after": 0,
+   "label": "Due",
+   "to": null
+  },
+  {
+   "after": 3,
+   "label": "Reminder sent",
+   "to": "owner group"
+  },
+  {
+   "after": 7,
+   "label": "Escalated to site Quality",
+   "to": "site QA"
+  },
+  {
+   "after": 15,
+   "label": "On the monthly review",
+   "to": "domain lead"
+  }
+ ],
+ "confirmationStepUp": {
+  "critical": true,
+  "relevant": false,
+  "business": false
+ },
+ "provenance": {
+  "fromWorkbook": [
+   "tables",
+   "columns",
+   "check definitions, plain names, what-it-checks and what-a-failure-means text",
+   "rule types",
+   "data products and domains",
+   "origin (CDE template / authored)"
+  ],
+  "derived": [
+   "column class (name pattern \u2014 review flagged)",
+   "field display names (dictionary \u2014 editable in the Field names sheet)",
+   "symptom (from rule type)",
+   "tier (assumed from the product list \u2014 confirm with the register)",
+   "root cause and plan (deterministic mapping from signals)",
+   "strength (count of fired signals)"
+  ],
+  "simulated": [
+   "every failing count and weekly history",
+   "sites and the site split",
+   "population segments",
+   "record keys and sample values",
+   "lifecycle, creation and site fields",
+   "owners, channels, references, deviation numbers",
+   "targets and escalation days",
+   "stages, confirmations and audit entries",
+   "quality scores"
+  ],
+  "rule": "Production shows nothing in the simulated list unless it comes from the ledger, the registry or a channel; the narration sentence is a template over the signals and is labelled as such."
+ },
+ "segmentsByKind": {
+  "transactional": [
+   "newSinceDetection",
+   "inFlight",
+   "recentClosed",
+   "historical"
+  ],
+  "reference": [
+   "newSinceDetection",
+   "inFlight",
+   "historical"
   ]
  }
 }

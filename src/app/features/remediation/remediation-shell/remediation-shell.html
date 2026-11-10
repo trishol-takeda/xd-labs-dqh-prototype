@@ -24,8 +24,10 @@
       </div>
     }
     @if (store.activeFindingId()) {
-      <div class="rh-grp">
+      <div class="rh-grp" role="group" aria-label="Owner">
+        <span>Owner</span>
         <button type="button" (click)="store.advance()">Advance action</button>
+        <button type="button" (click)="store.decline()">Declines</button>
       </div>
       <div class="rh-grp" role="group" aria-label="Simulate next check">
         <span>Simulate next check</span>

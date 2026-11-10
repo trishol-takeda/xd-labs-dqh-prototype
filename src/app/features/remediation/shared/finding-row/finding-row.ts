@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { PROPOSAL_READY } from '../../core/remediation.constants';
+import { PROPOSAL_READY, REPLAN_LABEL } from '../../core/remediation.constants';
 import { Finding } from '../../core/remediation.model';
-import { badges, fieldSummary, segWords } from '../../core/remediation.util';
+import { badges, fieldSummary, nextDecision, segWords } from '../../core/remediation.util';
 import { Chip } from '../chip/chip';
 
 /** One finding as a row: symptom · site, the first fields, segments in words, the next decision, tier and badges. */
@@ -21,6 +21,8 @@ export class FindingRow {
   /** What is next for the finding: the proposal waits for the trustee; later stages are named by their stage. */
   protected readonly next = computed(() => {
     const f = this.finding();
-    return f.stage === 'proposed' ? PROPOSAL_READY : '';
+    const next = nextDecision(f);
+    if (next === 'confirm') return PROPOSAL_READY;
+    return next === 'replan' ? REPLAN_LABEL : '';
   });
 }
